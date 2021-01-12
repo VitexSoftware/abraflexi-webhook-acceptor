@@ -1,0 +1,23 @@
+{
+    "name": "vitexsoftware/abraflexi-webhook-acceptor",
+    "description": "AbraFlexi WebHook acceptor",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "info@vitexsoftware.cz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "vitexsoftware/flexibee-bricks": "abraflexi-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "AbraFlexi\\Acceptor\\": "src/AbraFlexi/Acceptor/",
+            "AbraFlexi\\Acceptor\\Ui\\": "src/AbraFlexi/Acceptor/Ui/"
+        }
+    }
+
+}
