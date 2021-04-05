@@ -11,7 +11,8 @@ namespace AbraFlexi\Acceptor;
 define('APP_NAME', 'WebHookAcceptor');
 require_once __DIR__ . '/../vendor/autoload.php';
 
-\Ease\Shared::singleton()->loadConfig('../.env', true);
+\Ease\Shared::singleton()->loadConfig('../.env',true);
+
 
 $hooker = new \AbraFlexi\Bricks\HookReciever();
 //$hooker->debug = true;

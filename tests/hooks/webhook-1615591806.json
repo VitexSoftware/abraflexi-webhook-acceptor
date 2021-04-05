@@ -1,0 +1,119 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656927",
+        "changes": [{
+                "@evidence": "vazba",
+                "@in-version": "3656912",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:30:01.408426",
+                "id": "84083",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656913",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:01.408426",
+                "id": "89336",
+                "external-ids": ["code:VF2-1838/2021", "ext:lms.docs:2021030501"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656914",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:01.408426",
+                "id": "59661",
+                "external-ids": ["code:B+00002223/21"]
+            }, {
+                "@evidence": "rocni-rada",
+                "@in-version": "3656915",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:04.309121",
+                "id": "214",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656916",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:30:04.309121",
+                "id": "89855",
+                "external-ids": ["code:VF1-2278/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656917",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:30:04.309121",
+                "id": "195089",
+                "external-ids": ["code:HOMEOPTIKA300"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656918",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:04.309121",
+                "id": "89855",
+                "external-ids": ["code:VF1-2278/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656919",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:04.623153",
+                "id": "89853",
+                "external-ids": ["code:VF1-2276/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656920",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:30:05.136961",
+                "id": "195090",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656921",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:05.136961",
+                "id": "89855",
+                "external-ids": ["code:VF1-2278/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656922",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:05.136961",
+                "id": "89855",
+                "external-ids": ["code:VF1-2278/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656923",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:05.136961",
+                "id": "89336",
+                "external-ids": ["code:VF2-1838/2021", "ext:lms.docs:2021030501"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656924",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:05.136961",
+                "id": "89855",
+                "external-ids": ["code:VF1-2278/2021"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656925",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:30:05.136961",
+                "id": "84084",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656926",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:05.745362",
+                "id": "89855",
+                "external-ids": ["code:VF1-2278/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656927",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:30:05.891216",
+                "id": "89854",
+                "external-ids": ["code:VF1-2277/2021"]
+            }],
+        "next": "none"
+    }
+}

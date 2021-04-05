@@ -1,0 +1,63 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656604",
+        "changes": [{
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656597",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.107148",
+                "id": "89837",
+                "external-ids": ["code:VF1-2260/2021"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656598",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:19.593999",
+                "id": "84048",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656599",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.593999",
+                "id": "88689",
+                "external-ids": ["code:VF1-1699/2021"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656600",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.593999",
+                "id": "59633",
+                "external-ids": ["code:B+00002198/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656601",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.593999",
+                "id": "59633",
+                "external-ids": ["code:B+00002198/21"]
+            }, {
+                "@evidence": "banka-polozka",
+                "@in-version": "3656602",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.593999",
+                "id": "60927",
+                "external-ids": []
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656603",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.593999",
+                "id": "59633",
+                "external-ids": ["code:B+00002198/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656604",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:19.99596",
+                "id": "59634",
+                "external-ids": ["code:B+00002199/21"]
+            }],
+        "next": "none"
+    }
+}

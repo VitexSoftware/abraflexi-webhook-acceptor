@@ -1,0 +1,224 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656789",
+        "changes": [{
+                "@evidence": "rocni-rada",
+                "@in-version": "3656759",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:41.055241",
+                "id": "214",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656760",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:41.055241",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656761",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:41.055241",
+                "id": "195065",
+                "external-ids": ["code:HOMEINTERNET500"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656762",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:41.055241",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656763",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:41.055241",
+                "id": "195066",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656764",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:41.055241",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656765",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:42.377855",
+                "id": "195067",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656766",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:42.377855",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656767",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:42.377855",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656768",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:42.377855",
+                "id": "89047",
+                "external-ids": ["code:VF2-1549/2021", "ext:lms.docs:2021030212"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656769",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:42.377855",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656770",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:42.377855",
+                "id": "84066",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656771",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:42.787436",
+                "id": "89846",
+                "external-ids": ["code:VF1-2269/2021"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656772",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:43.056742",
+                "id": "59647",
+                "external-ids": ["code:B+00002212/21"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656773",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:43.468074",
+                "id": "84067",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656774",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:43.468074",
+                "id": "88942",
+                "external-ids": ["code:VF2-1444/2021", "ext:lms.docs:2021030107"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656775",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:43.468074",
+                "id": "59647",
+                "external-ids": ["code:B+00002212/21"]
+            }, {
+                "@evidence": "rocni-rada",
+                "@in-version": "3656776",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:43.69961",
+                "id": "214",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656777",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:43.69961",
+                "id": "89847",
+                "external-ids": ["code:VF1-2270/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656778",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:43.69961",
+                "id": "195068",
+                "external-ids": ["code:HOMEBACKBONEPLUS30"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656779",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:43.69961",
+                "id": "89847",
+                "external-ids": ["code:VF1-2270/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656780",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:44.13161",
+                "id": "195069",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656781",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:44.13161",
+                "id": "89847",
+                "external-ids": ["code:VF1-2270/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656782",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:44.13161",
+                "id": "89847",
+                "external-ids": ["code:VF1-2270/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656783",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:44.13161",
+                "id": "88942",
+                "external-ids": ["code:VF2-1444/2021", "ext:lms.docs:2021030107"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656784",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:44.13161",
+                "id": "89847",
+                "external-ids": ["code:VF1-2270/2021"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656785",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:44.13161",
+                "id": "84068",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656786",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:44.56482",
+                "id": "89847",
+                "external-ids": ["code:VF1-2270/2021"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656787",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:44.836956",
+                "id": "59648",
+                "external-ids": ["code:B+00002213/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656788",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:45.107227",
+                "id": "59648",
+                "external-ids": ["code:B+00002213/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656789",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:45.241877",
+                "id": "59651",
+                "external-ids": ["code:B+00002214/21"]
+            }],
+        "next": "none"
+    }
+}

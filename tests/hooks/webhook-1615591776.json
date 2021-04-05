@@ -1,0 +1,14 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656724",
+        "changes": [{
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656724",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:36.035242",
+                "id": "89844",
+                "external-ids": ["code:VF1-2267/2021"]
+            }],
+        "next": "none"
+    }
+}

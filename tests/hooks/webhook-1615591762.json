@@ -1,0 +1,77 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656614",
+        "changes": [{
+                "@evidence": "banka",
+                "@in-version": "3656605",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:20.286868",
+                "id": "59634",
+                "external-ids": ["code:B+00002199/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656606",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:20.451021",
+                "id": "59635",
+                "external-ids": ["code:B+00002200/21"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656607",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.110493",
+                "id": "89838",
+                "external-ids": ["code:VF1-2261/2021"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656608",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:21.321961",
+                "id": "84049",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656609",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.321961",
+                "id": "88779",
+                "external-ids": ["code:VF1-1788/2021"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656610",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.321961",
+                "id": "59635",
+                "external-ids": ["code:B+00002200/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656611",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.321961",
+                "id": "59635",
+                "external-ids": ["code:B+00002200/21"]
+            }, {
+                "@evidence": "banka-polozka",
+                "@in-version": "3656612",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.321961",
+                "id": "60929",
+                "external-ids": []
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656613",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.321961",
+                "id": "59635",
+                "external-ids": ["code:B+00002200/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656614",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:21.695159",
+                "id": "59636",
+                "external-ids": ["code:B+00002201/21"]
+            }],
+        "next": "none"
+    }
+}

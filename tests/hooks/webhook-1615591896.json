@@ -1,0 +1,14 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656931",
+        "changes": [{
+                "@evidence": "smlouva",
+                "@in-version": "3656931",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:31:33.355602",
+                "id": "861",
+                "external-ids": ["code:080202"]
+            }],
+        "next": "none"
+    }
+}

@@ -1,0 +1,91 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656512",
+        "changes": [{
+                "@evidence": "rocni-rada",
+                "@in-version": "3656501",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "215",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656502",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "89834",
+                "external-ids": ["code:VF2-1866/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656503",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "195019",
+                "external-ids": ["code:FTP KABEL, CAT5E, OU"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656504",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "89834",
+                "external-ids": ["code:VF2-1866/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656505",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "195020",
+                "external-ids": ["code:KRYTKA"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656506",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "89834",
+                "external-ids": ["code:VF2-1866/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656507",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "195021",
+                "external-ids": ["code:FTP KABEL DRÁT CAT5E"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656508",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "89834",
+                "external-ids": ["code:VF2-1866/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656509",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:21:00.751937",
+                "id": "195022",
+                "external-ids": []
+            }, {
+                "@evidence": "priloha",
+                "@in-version": "3656510",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:21:01.939275",
+                "id": "8801",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656511",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:21:01.939275",
+                "id": "89834",
+                "external-ids": ["code:VF2-1866/2021"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656512",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:21:04.8928",
+                "id": "89834",
+                "external-ids": ["code:VF2-1866/2021"]
+            }],
+        "next": "none"
+    }
+}

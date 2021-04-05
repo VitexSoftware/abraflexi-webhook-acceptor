@@ -1,0 +1,105 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656671",
+        "changes": [{
+                "@evidence": "banka",
+                "@in-version": "3656658",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:27.831419",
+                "id": "59639",
+                "external-ids": ["code:B+00002204/21"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656659",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:27.880027",
+                "id": "89840",
+                "external-ids": ["code:VF1-2263/2021"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656660",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:27.97698",
+                "id": "59640",
+                "external-ids": ["code:B+00002205/21"]
+            }, {
+                "@evidence": "vazba",
+                "@in-version": "3656661",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:28.333211",
+                "id": "84054",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656662",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:28.333211",
+                "id": "89166",
+                "external-ids": ["code:VF2-1668/2021", "ext:lms.docs:2021030331"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656663",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:28.333211",
+                "id": "59640",
+                "external-ids": ["code:B+00002205/21"]
+            }, {
+                "@evidence": "rocni-rada",
+                "@in-version": "3656664",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "214",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656665",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "89841",
+                "external-ids": ["code:VF1-2264/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656666",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "195049",
+                "external-ids": ["code:SPOJE0"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656667",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "89841",
+                "external-ids": ["code:VF1-2264/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656668",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "195050",
+                "external-ids": ["code:VEREJNAIPNAVIC"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656669",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "89841",
+                "external-ids": ["code:VF1-2264/2021"]
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656670",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "195051",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana-polozka",
+                "@in-version": "3656671",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:28.583497",
+                "id": "195052",
+                "external-ids": []
+            }],
+        "next": "none"
+    }
+}

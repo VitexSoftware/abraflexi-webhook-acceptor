@@ -1,0 +1,21 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656480",
+        "changes": [{
+                "@evidence": "smlouva-polozka",
+                "@in-version": "3656479",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:06:45.654948",
+                "id": "1354",
+                "external-ids": ["code:HOMEOPTIKA500"]
+            }, {
+                "@evidence": "smlouva",
+                "@in-version": "3656480",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:06:45.654948",
+                "id": "859",
+                "external-ids": ["code:187501"]
+            }],
+        "next": "none"
+    }
+}

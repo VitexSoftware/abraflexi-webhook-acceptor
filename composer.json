@@ -11,11 +11,16 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "vitexsoftware/flexibee-bricks": "abraflexi-dev"
+        "vitexsoftware/flexibee-bricks": "abraflexi-dev",
+        "vitexsoftware/ease-fluentpdo": "dev-main"
+    },
+    "require-dev": {
+        "robmorgan/phinx": "dev-master"
     },
     "autoload": {
         "psr-4": {
             "AbraFlexi\\Acceptor\\": "src/AbraFlexi/Acceptor/",
+            "AbraFlexi\\Acceptor\\Saver\\": "src/AbraFlexi/Acceptor/Saver/",
             "AbraFlexi\\Acceptor\\Ui\\": "src/AbraFlexi/Acceptor/Ui/"
         }
     }

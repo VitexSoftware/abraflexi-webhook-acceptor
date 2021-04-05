@@ -1,2 +1,6 @@
 /nbproject/
 /vendor/
+/.env
+/changes.sqlite
+/changes.sqlite-shm
+/changes.sqlite-wal

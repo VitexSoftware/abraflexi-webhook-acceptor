@@ -1,0 +1,56 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656733",
+        "changes": [{
+                "@evidence": "vazba",
+                "@in-version": "3656727",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:29:37.42931",
+                "id": "84062",
+                "external-ids": []
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656728",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:37.42931",
+                "id": "88738",
+                "external-ids": ["code:VF1-1747/2021"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656729",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:37.42931",
+                "id": "59644",
+                "external-ids": ["code:B+00002209/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656730",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:37.42931",
+                "id": "59644",
+                "external-ids": ["code:B+00002209/21"]
+            }, {
+                "@evidence": "banka-polozka",
+                "@in-version": "3656731",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:37.42931",
+                "id": "60938",
+                "external-ids": []
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656732",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:37.42931",
+                "id": "59644",
+                "external-ids": ["code:B+00002209/21"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656733",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:37.615976",
+                "id": "89843",
+                "external-ids": ["code:VF1-2266/2021"]
+            }],
+        "next": "none"
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656487",
+        "changes": [{
+                "@evidence": "cenik",
+                "@in-version": "3656484",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:13:32.746127",
+                "id": "4221",
+                "external-ids": ["code:MASTERLAN"]
+            }, {
+                "@evidence": "dodavatel",
+                "@in-version": "3656485",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:13:32.746127",
+                "id": "1553",
+                "external-ids": []
+            }, {
+                "@evidence": "skladova-karta",
+                "@in-version": "3656486",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:13:32.746127",
+                "id": "9913",
+                "external-ids": []
+            }, {
+                "@evidence": "strom-cenik",
+                "@in-version": "3656487",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:13:33.182858",
+                "id": "1769",
+                "external-ids": []
+            }],
+        "next": "none"
+    }
+}

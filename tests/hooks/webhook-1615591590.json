@@ -1,0 +1,14 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656513",
+        "changes": [{
+                "@evidence": "adresar",
+                "@in-version": "3656513",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:26:28.318788",
+                "id": "4462",
+                "external-ids": ["code:LUKAPO"]
+            }],
+        "next": "none"
+    }
+}

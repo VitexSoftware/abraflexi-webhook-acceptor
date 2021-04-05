@@ -1,0 +1,21 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656500",
+        "changes": [{
+                "@evidence": "cenik",
+                "@in-version": "3656499",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:19:30.739183",
+                "id": "4222",
+                "external-ids": ["code:KRYTKA"]
+            }, {
+                "@evidence": "dodavatel",
+                "@in-version": "3656500",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:19:30.739183",
+                "id": "1554",
+                "external-ids": []
+            }],
+        "next": "none"
+    }
+}

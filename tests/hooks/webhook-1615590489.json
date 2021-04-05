@@ -1,0 +1,21 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656482",
+        "changes": [{
+                "@evidence": "smlouva-polozka",
+                "@in-version": "3656481",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:08:06.236927",
+                "id": "1355",
+                "external-ids": ["code:SLEDOVANIZAKLAD"]
+            }, {
+                "@evidence": "smlouva",
+                "@in-version": "3656482",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:08:06.236927",
+                "id": "859",
+                "external-ids": ["code:187501"]
+            }],
+        "next": "none"
+    }
+}

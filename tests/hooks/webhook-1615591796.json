@@ -1,0 +1,14 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656876",
+        "changes": [{
+                "@evidence": "banka",
+                "@in-version": "3656876",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:56.089521",
+                "id": "59656",
+                "external-ids": ["code:B+00002219/21"]
+            }],
+        "next": "none"
+    }
+}

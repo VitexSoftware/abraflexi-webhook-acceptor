@@ -1,0 +1,28 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656516",
+        "changes": [{
+                "@evidence": "priloha",
+                "@in-version": "3656514",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:26:32.908864",
+                "id": "8802",
+                "external-ids": []
+            }, {
+                "@evidence": "adresar",
+                "@in-version": "3656515",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:26:32.908864",
+                "id": "4462",
+                "external-ids": ["code:LUKAPO"]
+            }, {
+                "@evidence": "adresar",
+                "@in-version": "3656516",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:26:33.094138",
+                "id": "4462",
+                "external-ids": ["code:LUKAPO"]
+            }],
+        "next": "none"
+    }
+}

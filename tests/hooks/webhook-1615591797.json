@@ -1,0 +1,28 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656879",
+        "changes": [{
+                "@evidence": "banka",
+                "@in-version": "3656877",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:56.496542",
+                "id": "59656",
+                "external-ids": ["code:B+00002219/21"]
+            }, {
+                "@evidence": "banka",
+                "@in-version": "3656878",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:56.628252",
+                "id": "59657",
+                "external-ids": ["code:B+00002220/21"]
+            }, {
+                "@evidence": "faktura-vydana",
+                "@in-version": "3656879",
+                "@operation": "update",
+                "@timestamp": "2021-03-13 00:29:56.92269",
+                "id": "89852",
+                "external-ids": ["code:VF1-2275/2021"]
+            }],
+        "next": "none"
+    }
+}

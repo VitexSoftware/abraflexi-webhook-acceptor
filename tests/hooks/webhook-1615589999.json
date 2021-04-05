@@ -1,0 +1,14 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656477",
+        "changes": [{
+                "@evidence": "adresar",
+                "@in-version": "3656477",
+                "@operation": "update",
+                "@timestamp": "2021-03-12 23:59:55.586215",
+                "id": "4435",
+                "external-ids": ["code:TEST5"]
+            }],
+        "next": "none"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656495",
+        "changes": [{
+                "@evidence": "cenik",
+                "@in-version": "3656493",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:17:48.961558",
+                "id": "4222",
+                "external-ids": ["code:KRYTKA"]
+            }, {
+                "@evidence": "skladova-karta",
+                "@in-version": "3656494",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:17:48.961558",
+                "id": "9914",
+                "external-ids": []
+            }, {
+                "@evidence": "strom-cenik",
+                "@in-version": "3656495",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:17:49.151799",
+                "id": "1770",
+                "external-ids": []
+            }],
+        "next": "none"
+    }
+}

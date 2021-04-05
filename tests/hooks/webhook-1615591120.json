@@ -1,0 +1,14 @@
+{
+    "winstrom": {
+        "@globalVersion": "3656496",
+        "changes": [{
+                "@evidence": "typ-atributu",
+                "@in-version": "3656496",
+                "@operation": "create",
+                "@timestamp": "2021-03-13 00:18:34.532914",
+                "id": "87",
+                "external-ids": ["code:BARVA"]
+            }],
+        "next": "none"
+    }
+}
