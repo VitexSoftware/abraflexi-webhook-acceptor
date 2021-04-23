@@ -4,15 +4,29 @@ AbraFlexi WebHook Acceptor
 Listen for AbraFlexi changes
 
 
+![Logo](package-logo.svg?raw=true)
+
 Savers
 ------
 
- * Api    - 
- * Kafka  -
- * PdoSQL -
+ * Api    - push to some api (act as proxy) - not yet finished
+ * Kafka  - store data in nosql database  - not yet finished
+ * PdoSQL - store data in postgresql, mysql, mssql etc. 
 
 
 
+Installation
+------------
+
+```shell
+sudo apt install lsb-release wget
+echo "deb http://repo.vitexsoftware.cz $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
+sudo wget -O /etc/apt/trusted.gpg.d/vitexsoftware.gpg http://repo.vitexsoftware.cz/keyring.gpg
+sudo apt update
+sudo apt install abraflexi-webhook-acceptor-DATABASE 
+```
+
+Please choose your database adapter: **multi-abraflexi-setup-mysql**, **multi-abraflexi-setup-pgsql** a **multi-abraflexi-setup-sqlite**
 
 
 Database configuration

@@ -1,0 +1,141 @@
+#!/bin/sh
+# postinst script for abraflexi-webhook-acceptor
+set -e
+
+. /usr/share/debconf/confmodule
+
+db_get composer/WEB_USER
+WEBUSER=$RET
+mkdir -p /var/lib/abraflexi-webhook-acceptor /var/lib/composer
+chown $WEBUSER /var/lib/abraflexi-webhook-acceptor /var/lib/composer -R
+echo '{}' > /usr/lib/abraflexi-webhook-acceptor/composer.lock
+chown $WEBUSER /usr/lib/abraflexi-webhook-acceptor/composer.lock
+su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer -o install -d /usr/lib/abraflexi-webhook-acceptor/'
+
+
+if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
+    . /usr/share/dbconfig-common/dpkg/postinst
+    dbc_generate_include_args="-U -o template_infile=/usr/lib/abraflexi-webhook-acceptor/.env.template"
+    dbc_generate_include=template:/etc/abraflexi-webhook-acceptor/.env
+    dbc_generate_include_owner="root:www-data"
+    dbc_generate_include_perms="664"
+    dbc_dbfile_owner="www-data:www-data"
+    dbc_dbfile_perms="0664"
+    dbc_dbuser=multiabraflexisetup
+    dbc_dbname=multiabraflexisetup
+
+    dbc_go abraflexi-webhook-acceptor "$@"
+    phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
+
+	if [ -f /var/lib/abraflexi-webhook-acceptor/multiabraflexisetup ] ; then
+            chown root:www-data /var/lib/abraflexi-webhook-acceptor/
+            chmod ug+rw /var/lib/abraflexi-webhook-acceptor/
+            chown root:www-data /var/lib/abraflexi-webhook-acceptor/multiabraflexisetup
+            chmod ug+rw /var/lib/abraflexi-webhook-acceptor/multiabraflexisetup
+        fi
+    
+
+fi
+
+
+
+pathfind() {
+    OLDIFS="$IFS"
+    IFS=:
+    for p in $PATH; do
+        if [ -x "$p/$*" ]; then
+            IFS="$OLDIFS"
+            return 0
+        fi
+    done
+    IFS="$OLDIFS"
+    return 1
+}
+
+
+lighttpd_install() {
+	if [ -d /etc/lighttpd/conf-available ] && [ ! -f /etc/lighttpd/conf-available/50-abraflexi-webhook-acceptor.conf ] ; then
+		if pathfind lighty-enable-mod; then
+			ln -s /etc/abraflexi-webhook-acceptor/lighttpd.conf /etc/lighttpd/conf-available/50-abraflexi-webhook-acceptor.conf
+			if ! { lighty-enable-mod abraflexi-webhook-acceptor fastcgi fastcgi-php || [ $? -eq 2 ]; } then
+				return 1
+			fi
+		fi
+	fi
+}
+
+[ ! -e /usr/share/apache2/apache2-maintscript-helper ] || \
+    . /usr/share/apache2/apache2-maintscript-helper
+apache_install() {
+        if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
+	    if [ -d /etc/apache2/conf-available ] && [ ! -e /etc/apache2/conf-available/abraflexi-webhook-acceptor.conf ]; then
+                ln -s /etc/abraflexi-webhook-acceptor/apache.conf /etc/apache2/conf-available/abraflexi-webhook-acceptor.conf
+	    fi
+            # Remove old symlink if present
+            if [ -d /etc/apache2/conf.d ] && [ -h /etc/apache2/conf.d/abraflexi-webhook-acceptor ]; then
+                rm /etc/apache2/conf.d/abraflexi-webhook-acceptor
+            fi
+            # Enable the configuration
+            apache2_invoke enconf abraflexi-webhook-acceptor.conf
+        fi
+}
+
+    . /usr/share/debconf/confmodule
+
+
+case "$1" in
+    configure)
+	# Handle webserver reconfiguration/restart ; stolen from zabbix package
+	db_get abraflexi-webhook-acceptor/reconfigure-webserver || true
+	webservers="$RET"
+	restart=""
+
+	for webserver in $webservers; do
+            webserver=${webserver%,}
+            case "$webserver" in
+                lighttpd)
+		    lighttpd_install
+                    ;;
+                apache2)
+		    apache_install
+                    ;;
+            esac
+            pathfind $webserver || continue
+            restart="$restart $webserver"
+        done
+
+        db_get abraflexi-webhook-acceptor/restart-webserver || true
+	res="$RET"
+	db_stop || true
+	if [ "$res" = "true" ]; then
+            for webserver in $restart; do
+		webserver=${webserver%,}
+		# Redirection of 3 is needed because Debconf uses it and it might
+                # be inherited by webserver. See bug #446324.
+		if pathfind invoke-rc.d; then
+                    invoke-rc.d $webserver reload 3>/dev/null || true
+		else
+                    /etc/init.d/$webserver reload 3>/dev/null || true
+		fi
+            done
+	fi
+
+
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+
+
+
+#DEBHELPER#
+
+exit 0

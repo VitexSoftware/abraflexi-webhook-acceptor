@@ -29,21 +29,17 @@ dbreset:
 
 demo: dbreset migration demodata
 
-hourly:
-	cd lib; php -f executor.php h
-daily:
-	cd lib; php -f executor.php d
-monthly:
-	cd lib; php -f executor.php m
-
 postinst:
 	DEBCONF_DEBUG=developer /usr/share/debconf/frontend /var/lib/dpkg/info/multi-flexibee-setup.postinst configure $(nextversion)
 
 redeb:
-	 sudo apt -y purge multi-flexibee-setup; rm ../multi-flexibee-setup_*_all.deb ; debuild -us -uc ; sudo gdebi  -n ../multi-flexibee-setup_*_all.deb ; sudo apache2ctl restart
+	 sudo apt -y purge abraflexi-webhook-acceptor; rm ../abraflexi-webhook-acceptor_*_all.deb ; debuild -us -uc ; sudo gdebi  -n ../abraflexi-webhook-acceptor_*_all.deb ; sudo apache2ctl restart
 
 deb:
 	debuild -i -us -uc -b
+
+reset:
+	vendor/bin/phinx seed:run -c ./phinx-adapter.php  -s Reset
 
 testload:
 	cd tests; php ./loadhooks.php
@@ -53,21 +49,21 @@ dimage:
 
 drun: dimage
 	docker run  -dit --name abraflexi-webhook-acceptorSetup -p 8080:80 vitexsoftware/abraflexi-webhook-acceptor
-	firefox http://localhost:8080/multi-flexibee-setup?login=demo\&password=demo
+	firefox http://localhost:8080/abraflexi-webhook-acceptor?login=demo\&password=demo
 
 vagrant:
 	vagrant destroy -f
 	vagrant up
-#	firefox http://localhost:8080/multi-flexibee-setup?login=demo\&password=demo
+#	firefox http://localhost:8080/abraflexi-webhook-acceptor?login=demo\&password=demo
 
 release:
 	echo Release v$(nextversion)
-	docker build -t vitexsoftware/multi-flexibee-setup:$(nextversion) .
+	docker build -t vitexsoftware/abraflexi-webhook-acceptor:$(nextversion) .
 	dch -v $(nextversion) `git log -1 --pretty=%B | head -n 1`
 	debuild -i -us -uc -b
 	git commit -a -m "Release v$(nextversion)"
 	git tag -a $(nextversion) -m "version $(nextversion)"
-	docker push vitexsoftware/multi-flexibee-setup:$(nextversion)
-	docker push vitexsoftware/multi-flexibee-setup:latest
+	docker push vitexsoftware/abraflexi-webhook-acceptor:$(nextversion)
+	docker push vitexsoftware/abraflexi-webhook-acceptor:latest
 
 

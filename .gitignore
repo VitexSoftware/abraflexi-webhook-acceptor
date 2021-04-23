@@ -4,3 +4,12 @@
 /changes.sqlite
 /changes.sqlite-shm
 /changes.sqlite-wal
+/debian/abraflexi-webhook-acceptor/
+/debian/abraflexi-webhook-acceptor-sqlite/
+/debian/abraflexi-webhook-acceptor-mysql/
+/debian/abraflexi-webhook-acceptor-pgsql/
+/debian/abraflexi-webhook-acceptor-pgsql.substvars
+/debian/abraflexi-webhook-acceptor-mysql.substvars
+/debian/abraflexi-webhook-acceptor-sqlite.substvars
+/debian/abraflexi-webhook-acceptor.postrm.debhelper
+/debian/abraflexi-webhook-acceptor.substvars

@@ -1,0 +1,18 @@
+src/favicon.ico                           usr/share/abraflexi-webhook-acceptor
+db/migrations/*				  usr/lib/abraflexi-webhook-acceptor/db/migrations
+db/seeds/*				  usr/lib/abraflexi-webhook-acceptor/db/seeds
+debian/conf/composer.json                 usr/lib/abraflexi-webhook-acceptor
+phinx-adapter.php			  usr/lib/abraflexi-webhook-acceptor
+debian/conf/abraflexi-webhook-acceptor.conf    etc/apache2/conf-available
+debian/conf/abraflexi-webhook-acceptor.service etc/avahi/services
+debian/cz.vitexsoftware.abraflexi_webhook_acceptor.metainfo.xml    usr/share/metainfo/
+debian/cz.vitexsoftware.abraflexi_webhook_acceptor.desktop         usr/share/applications/
+abraflexi-webhook-acceptor.svg            usr/share/icons/hicolor/scalable/apps/
+#i18n/cs_CZ/LC_MESSAGES/*.mo               usr/share/locale/cs_CZ/LC_MESSAGES/
+#i18n/en_US/LC_MESSAGES/*.mo               usr/share/locale/en_US/LC_MESSAGES/
+
+src/*.php				usr/share/abraflexi-webhook-acceptor
+src/AbraFlexi/Acceptor/*.php		usr/lib/abraflexi-webhook-acceptor/Acceptor
+src/AbraFlexi/Acceptor/Saver/*.php	usr/lib/abraflexi-webhook-acceptor/Acceptor/Saver
+#src/AbraFlexi/Acceptor/Ui/*.php		usr/lib/abraflexi-webhook-acceptor/Acceptor/Ui
+

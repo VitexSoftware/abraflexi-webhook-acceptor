@@ -1,0 +1,48 @@
+Source: abraflexi-webhook-acceptor
+Section: office
+Priority: optional
+Maintainer: CyberVitexus <info@vitexsoftware.cz>
+Build-Depends: debhelper (>=11~)
+Standards-Version: 4.1.4
+Homepage: https://github.com/VitexSoftware/abraflexi-webhook-acceptor
+
+Package: abraflexi-webhook-acceptor
+Multi-Arch: foreign
+Depends: ${misc:Depends}, php-vitexsoftware-abraflexi-bricks, php-cli, locales-all, php-vitexsoftware-ease-fluentpdo, abraflexi-webhook-acceptor-sqlite|abraflexi-webhook-acceptor-mysql|abraflexi-webhook-acceptor-pgsql, libjs-jquery-datatables
+Suggests: abraflexi-server,php-abraflexi-config, abraflexi-digest, abraflexi-matcher, abraflexi-reminder, abraflexi-contract-invoices, abraflexi-mailer, abraflexi-email-importer
+Pre-Depends: php-robmorgan-phinx
+Replaces: multi-flexibee-setup
+Architecture: all
+Description: Listen for AbraFlexi changes
+ Acceptor listen for AbraFlexi change notifiation and store in SQL database.
+
+Package: abraflexi-webhook-acceptor-sqlite
+Multi-Arch: foreign
+Depends: ${misc:Depends},abraflexi-webhook-acceptor, dbconfig-sqlite3, php-sqlite3, sqlite3
+Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-pgsql
+Replaces: multi-flexibee-setup-sqlite
+Architecture: all
+Description: sqlite support for multiabraflexi setup
+ Mandatory dependencies for use Multi FlexiBee setup with SQLite database
+
+Package: abraflexi-webhook-acceptor-mysql
+Multi-Arch: foreign
+Depends: ${misc:Depends},abraflexi-webhook-acceptor, dbconfig-mysql, php-mysql, php-robmorgan-phinx
+Conflicts: abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-pgsql
+Replaces: multi-flexibee-setup-mysql
+Suggests: mariadb-server
+Architecture: all
+Description: mariadb support for multiabraflexi setup
+ Mandatory dependencies for use Multi FlexiBee setup with MySQL/MariaDB databas
+
+Package: abraflexi-webhook-acceptor-pgsql
+Multi-Arch: foreign
+Depends: ${misc:Depends},abraflexi-webhook-acceptor, dbconfig-pgsql, php-pgsql, php-robmorgan-phinx
+Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-sqlite
+Suggests: postgresql
+Replaces: multi-flexibee-setup-pqsql
+Architecture: all
+Description: postgres support for multiabraflexi setup
+ Mandatory dependencies for use Multi FlexiBee setup with PostgreSQL database
+
+

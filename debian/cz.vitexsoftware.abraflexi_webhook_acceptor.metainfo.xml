@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>cz.vitexsoftware.abraflexi_webhook_acceptor</id>
+  
+  <name>AbraFlexi WebHook Acceptor</name>
+  <summary>Listen for AbraFlexi changes</summary>
+  
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  
+  <description>
+    <p>
+      
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">cz.vitexsoftware.abraflexi_webhook_acceptor_desktop</launchable>
+  <screenshots>
+  </screenshots>
+</component>
+

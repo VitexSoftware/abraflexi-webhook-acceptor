@@ -1,0 +1,40 @@
+#!/bin/sh
+# prerm script for abraflexi-webhook-acceptor
+#
+# see: dh_installdeb(1)
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+if [ -f /usr/share/dbconfig-common/dpkg/prerm ]; then
+    . /usr/share/dbconfig-common/dpkg/prerm
+    dbc_go abraflexi-webhook-acceptor "$@"
+fi
+
+case "$1" in
+    remove|upgrade|deconfigure|purge)
+
+     if [ "$1" = "purge" ]; then
+         rm -f /etc/abraflexi-webhook-acceptor/.env
+         if which ucf >/dev/null 2>&1; then
+             ucf --purge /etc/abraflexi-webhook-acceptor/.env
+             ucfr --purge /etc/abraflexi-webhook-acceptor/.env
+         fi
+     fi
+
+        rm -rf /usr/lib/abraflexi-webhook-acceptor/composer.lock /var/lib/abraflexi-webhook-acceptor
+    ;;
+
+    failed-upgrade)
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0
