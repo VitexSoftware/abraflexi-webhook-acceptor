@@ -38,8 +38,8 @@ class HookReciever extends \AbraFlexi\Changes {
     /**
      * Prijmac WebHooku
      */
-    public function __construct() {
-        parent::__construct(null, ['debug' => \Ease\Functions::cfg('APP_DEBUG')]);
+    public function __construct($properties  = []) {
+        parent::__construct(null, $properties);
 
         foreach (explode('|', \Ease\Functions::cfg('WHA_SAVER')) as $saverClass) {
             $saverClass = '\\AbraFlexi\\Acceptor\\Saver\\' . $saverClass;

@@ -14,7 +14,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 \Ease\Shared::singleton()->loadConfig('../.env', true);
 
-$hooker = new HookReciever();
+$hooker = new HookReciever(['throwException' => false, 'debug' => true]);
 $hooker->logBanner();
 
 //$hooker->debug = true;
