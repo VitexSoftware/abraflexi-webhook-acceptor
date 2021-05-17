@@ -13,8 +13,13 @@ if (file_exists('./vendor/autoload.php')) {
 }
 
 
-$shared = \Ease\Shared::singleton();
-$shared->loadConfig(__DIR__ . '/.env', true);
+$cfg = __DIR__ . '/.env';
+
+if(file_exists($cfg)){
+    \Ease\Shared::singleton()->loadConfig($cfg, true);
+}
+
+
 
 $prefix = file_exists('./db/') ? './db/' : '../db/';
 

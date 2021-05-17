@@ -13,3 +13,4 @@
 /debian/abraflexi-webhook-acceptor-sqlite.substvars
 /debian/abraflexi-webhook-acceptor.postrm.debhelper
 /debian/abraflexi-webhook-acceptor.substvars
+/.vagrant/

@@ -4,8 +4,7 @@
   "version": "0.1",
   "type": "project",
   "require": {
-    "deb/ease-bootstrap4-widgets-abraflexi": "*",
-    "deb/ease-bootstrap4-widgets": "*",
+    "deb/abraflexi": "*",
     "deb/ease-fluentpdo": "*"
   },
   "license": "MIT",
@@ -21,9 +20,9 @@
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
-            "AbraFlexi\\Acceptor\\": "./Acceptor/",
-            "AbraFlexi\\Acceptor\\Saver\\": "./Acceptor/Saver/",
-            "AbraFlexi\\Acceptor\\Ui\\": "./Acceptor/Ui/"
+      "AbraFlexi\\Acceptor\\": "./Acceptor/",
+      "AbraFlexi\\Acceptor\\Saver\\": "./Acceptor/Saver/",
+      "AbraFlexi\\Acceptor\\Ui\\": "./Acceptor/Ui/"
     }
   },
   "repositories": [

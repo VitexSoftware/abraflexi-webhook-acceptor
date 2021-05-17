@@ -5,13 +5,21 @@ set -e
 . /usr/share/debconf/confmodule
 
 db_get composer/WEB_USER
-WEBUSER=$RET
+
+if [ -z "${RET}" ];
+then
+    WEBUSER=www-data
+else
+    WEBUSER=$RET
+fi
+
+echo $WEBUSER
+
 mkdir -p /var/lib/abraflexi-webhook-acceptor /var/lib/composer
 chown $WEBUSER /var/lib/abraflexi-webhook-acceptor /var/lib/composer -R
 echo '{}' > /usr/lib/abraflexi-webhook-acceptor/composer.lock
 chown $WEBUSER /usr/lib/abraflexi-webhook-acceptor/composer.lock
 su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer -o install -d /usr/lib/abraflexi-webhook-acceptor/'
-
 
 if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
     . /usr/share/dbconfig-common/dpkg/postinst
@@ -21,17 +29,17 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
     dbc_generate_include_perms="664"
     dbc_dbfile_owner="www-data:www-data"
     dbc_dbfile_perms="0664"
-    dbc_dbuser=multiabraflexisetup
-    dbc_dbname=multiabraflexisetup
+    dbc_dbuser=webhookacceptor
+    dbc_dbname=webhookacceptor
 
     dbc_go abraflexi-webhook-acceptor "$@"
     phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 
-	if [ -f /var/lib/abraflexi-webhook-acceptor/multiabraflexisetup ] ; then
+	if [ -f /var/lib/abraflexi-webhook-acceptor/webhookacceptor ] ; then
             chown root:www-data /var/lib/abraflexi-webhook-acceptor/
             chmod ug+rw /var/lib/abraflexi-webhook-acceptor/
-            chown root:www-data /var/lib/abraflexi-webhook-acceptor/multiabraflexisetup
-            chmod ug+rw /var/lib/abraflexi-webhook-acceptor/multiabraflexisetup
+            chown root:www-data /var/lib/abraflexi-webhook-acceptor/webhookacceptor
+            chmod ug+rw /var/lib/abraflexi-webhook-acceptor/webhookacceptor
         fi
     
 

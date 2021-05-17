@@ -39,4 +39,3 @@ Database configuration
  *   DB_PASSWORD - database user password
  *   DB_SETUP    - database setup command (executed directly after connect)
 
-
