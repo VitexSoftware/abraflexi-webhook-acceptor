@@ -1,10 +1,12 @@
 {
   "name": "vitexsoftware/abraflexi-webhook-acceptor",
   "description": "Tool used to setup AbraFlexi multiinstance",
-  "version": "0.1",
+  "version": "0.5",
   "type": "project",
   "require": {
     "deb/abraflexi": "*",
+    "deb/ease-bricks": "*",
+    "deb/abraflexi-bricks": "*",
     "deb/ease-fluentpdo": "*"
   },
   "license": "MIT",
@@ -36,23 +38,19 @@
     },
     {
       "type": "path",
-      "url": "/usr/share/php/AbraFlexi/"
-    },
-    {
-      "type": "path",
       "url": "/usr/share/php/EaseBricks/"
     },
     {
       "type": "path",
-      "url": "/usr/share/php/EaseTWB4/"
-    },
-    {
-      "type": "path",
-      "url": "/usr/share/php/EaseFluentPDO/"
+      "url": "/usr/share/php/AbraFlexi/"
     },
     {
       "type": "path",
       "url": "/usr/share/php/AbraFlexiBricks/"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/EaseFluentPDO/"
     }
   ]
 }

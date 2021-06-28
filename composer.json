@@ -11,7 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "vitexsoftware/flexibee-bricks": "abraflexi-dev",
+        "ext-posix": "*",
+        "vitexsoftware/abraflexi-bricks": "abraflexi-dev",
         "vitexsoftware/ease-fluentpdo": "dev-main"
     },
     "require-dev": {

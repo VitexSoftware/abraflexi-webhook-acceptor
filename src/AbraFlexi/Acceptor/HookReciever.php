@@ -21,6 +21,11 @@ class HookReciever extends \AbraFlexi\Changes {
      * @var array 
      */
     public $handlerCache = [];
+
+    /**
+     * 
+     * @var type
+     */
     public $globalVersion = null;
 
     /**
@@ -36,18 +41,36 @@ class HookReciever extends \AbraFlexi\Changes {
     public $saver = [];
 
     /**
+     * 
+     * @var Api
+     */
+    private $sqlEngine;
+
+    /**
      * Prijmac WebHooku
      */
-    public function __construct($properties  = []) {
+    public function __construct($properties = []) {
         parent::__construct(null, $properties);
+        $this->sqlEngine = new ChangesApi();
 
         foreach (explode('|', \Ease\Functions::cfg('WHA_SAVER')) as $saverClass) {
-            $saverClass = '\\AbraFlexi\\Acceptor\\Saver\\' . $saverClass;
-            /** @var string $saverClass */
-            $this->saver[$saverClass] = new $saverClass();
+            if ($saverClass) {
+                $saverClass = '\\AbraFlexi\\Acceptor\\Saver\\' . $saverClass;
+                if (class_exists($saverClass)) {
+                    /** @var string $saverClass */
+                    $this->saver[$saverClass] = new $saverClass();
+                } else {
+                    $this->addStatusMessage('Saver Class ' . $saverClass . ' not found. Please check the configuration of WHA_SAVER', 'error');
+                }
+            } else {
+                $this->addStatusMessage('Saver Class not specified. Please check the configuration of WHA_SAVER', 'error');
+            }
         }
-
-        $this->lastProcessedVersion = $this->getLastSavedVersion();
+        if (count($this->saver)) {
+            $this->lastProcessedVersion = $this->getLastSavedVersion();
+        } else {
+            $this->addStatusMessage('No Saver Class loaded. Please check the configuration of WHA_SAVER', 'error');
+        }
     }
 
     /**
@@ -177,15 +200,12 @@ class HookReciever extends \AbraFlexi\Changes {
     public function saveLastProcessedVersion($version) {
         $this->lastProcessedVersion = $version;
         $this->myCreateColumn = null;
-        $this->deleteFromSQL(['serverurl' => constant('ABRAFLEXI_URL')]);
-        if (is_null($this->insertToSQL(['serverurl' => constant('ABRAFLEXI_URL'),
-                            'changeid' => $version]))) {
-            $this->addStatusMessage(_("Last Processed Change ID Saving Failed"),
-                    'error');
+        $this->sqlEngine->deleteFromSQL(['serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL')]);
+        if (is_null($this->sqlEngine->insertToSQL(['serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL'), 'changeid' => $version]))) {
+            $this->sqlEngine->addStatusMessage(_("Last Processed Change ID Saving Failed"), 'error');
         } else {
             if ($this->debug === true) {
-                $this->addStatusMessage(sprintf(_('Last Processed Change ID #%s Saved'),
-                                $version));
+                $this->addStatusMessage(sprintf(_('Last Processed Change ID #%s Saved'), $version));
             }
         }
     }

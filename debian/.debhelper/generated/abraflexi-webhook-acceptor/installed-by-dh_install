@@ -11,6 +11,7 @@
 ./abraflexi-webhook-acceptor.svg
 ./src/installer.php
 ./src/webhook.php
+./src/AbraFlexi/Acceptor/ChangesApi.php
 ./src/AbraFlexi/Acceptor/Hooker.php
 ./src/AbraFlexi/Acceptor/HookReciever.php
 ./src/AbraFlexi/Acceptor/Saver/AcceptorSaver.php
