@@ -4,22 +4,7 @@ set -e
 
 . /usr/share/debconf/confmodule
 
-db_get composer/WEB_USER
-
-if [ -z "${RET}" ];
-then
-    WEBUSER=www-data
-else
-    WEBUSER=$RET
-fi
-
-echo $WEBUSER
-
-mkdir -p /var/lib/abraflexi-webhook-acceptor /var/lib/composer
-chown $WEBUSER /var/lib/abraflexi-webhook-acceptor /var/lib/composer -R
-echo '{}' > /usr/lib/abraflexi-webhook-acceptor/composer.lock
-chown $WEBUSER /usr/lib/abraflexi-webhook-acceptor/composer.lock
-su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer -o install -d /usr/lib/abraflexi-webhook-acceptor/'
+composer-debian abraflexi-webhook-acceptor
 
 if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
     . /usr/share/dbconfig-common/dpkg/postinst
