@@ -14,3 +14,4 @@
 /debian/abraflexi-webhook-acceptor.postrm.debhelper
 /debian/abraflexi-webhook-acceptor.substvars
 /.vagrant/
+/debian/abraflexi-webhook-acceptor.debhelper.log

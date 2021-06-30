@@ -26,7 +26,8 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
             chown root:www-data /var/lib/abraflexi-webhook-acceptor/webhookacceptor
             chmod ug+rw /var/lib/abraflexi-webhook-acceptor/webhookacceptor
         fi
-    
+
+    cat /etc/abraflexi-webhook-acceptor/.env
 
 fi
 
