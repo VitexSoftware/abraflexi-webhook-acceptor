@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
     php-devconf
     phpenmod xdebug
     
-    echo '<a href="abraflexi-webhook-acceptor?login=demo&password=demo">Multi AbraFlexi Setup</a><?php phpinfo();' > /var/www/html/index.php
+    echo '<a href="abraflexi-webhook-acceptor?login=demo&password=demo">Multi Flexi</a><?php phpinfo();' > /var/www/html/index.php
     rm -rf /var/www/html/index.html
 
     apache2ctl restart
