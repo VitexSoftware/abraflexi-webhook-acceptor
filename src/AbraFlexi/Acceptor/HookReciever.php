@@ -47,7 +47,7 @@ class HookReciever extends \AbraFlexi\Changes {
     private $sqlEngine;
 
     /**
-     * Prijmac WebHooku
+     * WebHook Acceptor
      */
     public function __construct($properties = []) {
         parent::__construct(null, $properties);
@@ -220,7 +220,7 @@ class HookReciever extends \AbraFlexi\Changes {
         foreach ($this->saver as $saver) {
             $lastProcessedVersion = $saver->lastProcessedVersion;
         }
-        if (empty($lastProcessedVersion)) {
+        if (is_null($lastProcessedVersion)) {
             $this->addStatusMessage(_("Last Processed Change ID Loading Failed"),
                     'warning');
             $lastProcessedVersion = 0;
