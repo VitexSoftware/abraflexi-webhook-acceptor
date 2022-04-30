@@ -21,10 +21,10 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
 
 #    echo "Pre-DependsDbconfig Common configuration: /etc/dbconfig-common/abraflexi-webhook-acceptor.conf"
 #    cat /etc/dbconfig-common/abraflexi-webhook-acceptor.conf
-    echo "Configuration Used: /etc/abraflexi-webhook-acceptor/.env"
-    cat /etc/abraflexi-webhook-acceptor/.env
-    echo "Phinx Adapter: /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php"
-    cat /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
+#    echo "Configuration Used: /etc/abraflexi-webhook-acceptor/.env"
+#    cat /etc/abraflexi-webhook-acceptor/.env
+#    echo "Phinx Adapter: /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php"
+#    cat /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 
 
     phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
