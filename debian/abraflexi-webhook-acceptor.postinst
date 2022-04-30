@@ -19,8 +19,11 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
 
     dbc_go abraflexi-webhook-acceptor "$@"
 
-    echo "Configuration Used:"
+    echo "Dbconfig Common configuration: /etc/dbconfig-common/abraflexi-webhook-acceptor.conf"
+    cat /etc/dbconfig-common/abraflexi-webhook-acceptor.conf
+    echo "Configuration Used: /etc/abraflexi-webhook-acceptor/.env"
     cat /etc/abraflexi-webhook-acceptor/.env
+
 
     phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 
