@@ -48,7 +48,7 @@ $cfg = [
             'adapter' => \Ease\Functions::cfg('DB_TYPE'),
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
-        ],
+        ]
     ]
 ];
 

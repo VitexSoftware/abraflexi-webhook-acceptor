@@ -1,5 +1,5 @@
-abraflexi-webhook-acceptor-mysql_0.5_all.deb office optional
-abraflexi-webhook-acceptor-pgsql_0.5_all.deb office optional
-abraflexi-webhook-acceptor-sqlite_0.5_all.deb office optional
-abraflexi-webhook-acceptor_0.5_all.deb office optional
-abraflexi-webhook-acceptor_0.5_amd64.buildinfo office optional
+abraflexi-webhook-acceptor-mysql_0.6_all.deb office optional
+abraflexi-webhook-acceptor-pgsql_0.6_all.deb office optional
+abraflexi-webhook-acceptor-sqlite_0.6_all.deb office optional
+abraflexi-webhook-acceptor_0.6_all.deb office optional
+abraflexi-webhook-acceptor_0.6_amd64.buildinfo office optional
