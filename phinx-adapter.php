@@ -17,11 +17,7 @@ $cfg = __DIR__ . '/.env';
 
 if(file_exists($cfg)){
     \Ease\Shared::singleton()->loadConfig($cfg, true);
-} else {
-  echo "Warning: $cfg not exist ";
 }
-
-
 
 $prefix = file_exists('./db/') ? './db/' : '../db/';
 
