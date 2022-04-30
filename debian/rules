@@ -51,7 +51,7 @@ export DH_VERBOSE = 1
 
 override_dh_install:
 	dh_install
-	jq '.version = "$(shell dpkg-parsechangelog --show-field Version)"' debian/conf/composer.json | sponge debian/conf/composer.json
+	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/conf/composer.json
 	sed -i '/__DIR__/c\require_once "/var/lib/abraflexi-webhook-acceptor/autoload.php";' debian/abraflexi-webhook-acceptor/usr/share/abraflexi-webhook-acceptor/*.php
 	sed -i -e 's/..\/vendor/\/var\/lib\/composer\/abraflexi-webhook-acceptor/g'   debian/abraflexi-webhook-acceptor/usr/share/abraflexi-webhook-acceptor/*.php
 	sed -i 's/..\/.env/\/etc\/abraflexi-webhook-acceptor\/.env/'        debian/abraflexi-webhook-acceptor/usr/share/abraflexi-webhook-acceptor/*.php
