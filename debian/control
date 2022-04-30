@@ -11,7 +11,7 @@ Multi-Arch: foreign
 Depends: ${misc:Depends}, php-spojenet-abraflexi, php-cli, locales-all, php-vitexsoftware-ease-fluentpdo, abraflexi-webhook-acceptor-sqlite|abraflexi-webhook-acceptor-mysql|abraflexi-webhook-acceptor-pgsql, libjs-jquery-datatables, php-vitexsoftware-abraflexi-bricks
 Suggests: abraflexi-server,abraflexi-client-config, abraflexi-digest, abraflexi-matcher, abraflexi-reminder, abraflexi-contract-invoices, abraflexi-mailer, abraflexi-email-importer
 Recommends: sensible-utils
-Pre-Depends: php-robmorgan-phinx|php-cakephp-phinx|phinx
+Pre-Depends: php-robmorgan-phinx|php-cakephp-phinx|phinx, dbconfig-common
 Replaces: multi-flexibee-setup
 Architecture: all
 Description: Listen for AbraFlexi changes
@@ -19,7 +19,8 @@ Description: Listen for AbraFlexi changes
 
 Package: abraflexi-webhook-acceptor-sqlite
 Multi-Arch: foreign
-Depends: ${misc:Depends},abraflexi-webhook-acceptor, dbconfig-sqlite3, php-sqlite3, sqlite3
+Pre-Depends: dbconfig-sqlite3, php-sqlite3, sqlite3
+Depends: ${misc:Depends},abraflexi-webhook-acceptor
 Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-pgsql
 Replaces: multi-flexibee-setup-sqlite
 Architecture: all
@@ -28,7 +29,8 @@ Description: sqlite support for multiabraflexi setup
 
 Package: abraflexi-webhook-acceptor-mysql
 Multi-Arch: foreign
-Depends: ${misc:Depends},abraflexi-webhook-acceptor, dbconfig-mysql, php-mysql, php-robmorgan-phinx
+Pre-Depends: dbconfig-mysql, php-mysql, php-robmorgan-phinx
+Depends: ${misc:Depends},abraflexi-webhook-acceptor
 Conflicts: abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-pgsql
 Replaces: multi-flexibee-setup-mysql
 Suggests: mariadb-server
@@ -38,7 +40,8 @@ Description: mariadb support for multiabraflexi setup
 
 Package: abraflexi-webhook-acceptor-pgsql
 Multi-Arch: foreign
-Depends: ${misc:Depends},abraflexi-webhook-acceptor, dbconfig-pgsql, php-pgsql, php-robmorgan-phinx
+Pre-Depends: dbconfig-pgsql, php-pgsql, php-robmorgan-phinx
+Depends: ${misc:Depends},abraflexi-webhook-acceptor, 
 Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-sqlite
 Suggests: postgresql
 Replaces: multi-flexibee-setup-pqsql
