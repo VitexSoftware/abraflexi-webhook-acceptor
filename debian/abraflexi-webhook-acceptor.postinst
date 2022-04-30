@@ -18,6 +18,7 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
     dbc_dbname=webhookacceptor
 
     dbc_go abraflexi-webhook-acceptor "$@"
+    cat /etc/abraflexi-webhook-acceptor/.env
     phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 
 	if [ -f /var/lib/abraflexi-webhook-acceptor/webhookacceptor ] ; then
