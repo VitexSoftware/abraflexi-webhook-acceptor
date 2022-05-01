@@ -119,7 +119,7 @@ class HookReciever extends \AbraFlexi\Changes {
      * 
      * @return array list IDS processed
      */
-    function processFlexiBeeChanges(array $changes) {
+    function processAbraFlexiChanges(array $changes) {
         $changepos = 0;
         $doneIDd = [];
         foreach ($changes as $change) {
@@ -175,6 +175,7 @@ class HookReciever extends \AbraFlexi\Changes {
      * 
      * @link https://www.abraflexi.eu/api/dokumentace/ref/changes-api/ Changes API
      * @param array $changes pole změn
+     * 
      * @return int Globální verze poslední změny
      */
     public function takeChanges($changes) {
@@ -198,10 +199,11 @@ class HookReciever extends \AbraFlexi\Changes {
      * @param int $version
      */
     public function saveLastProcessedVersion($version) {
+        $source = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'.\Ease\Functions::cfg('ABRAFLEXI_COMPANY');
         $this->lastProcessedVersion = $version;
         $this->myCreateColumn = null;
-        $this->sqlEngine->deleteFromSQL(['serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL')]);
-        if (is_null($this->sqlEngine->insertToSQL(['serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL'), 'changeid' => $version]))) {
+        $this->sqlEngine->deleteFromSQL(['serverurl' => $source]);
+        if (is_null($this->sqlEngine->insertToSQL(['serverurl' => $source, 'changeid' => $version]))) {
             $this->sqlEngine->addStatusMessage(_("Last Processed Change ID Saving Failed"), 'error');
         } else {
             if ($this->debug === true) {
@@ -218,7 +220,7 @@ class HookReciever extends \AbraFlexi\Changes {
     public function getLastSavedVersion() {
         $lastProcessedVersion = null;
         foreach ($this->saver as $saver) {
-            $lastProcessedVersion = $saver->lastProcessedVersion;
+            $lastProcessedVersion = $saver->getLastProcessedVersion();
         }
         if (is_null($lastProcessedVersion)) {
             $this->addStatusMessage(_("Last Processed Change ID Loading Failed"),

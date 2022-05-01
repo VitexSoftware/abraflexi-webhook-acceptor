@@ -57,7 +57,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
         if ($version) {
             $this->setmyTable('changesapi');
             $this->setKeyColumn('serverurl');
-            $apich = ['changeid' => $version, 'serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL')];
+            $apich = ['changeid' => $version, 'serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'.\Ease\Functions::cfg('ABRAFLEXI_COMPANY')];
             if ($this->lastProcessedVersion ? $this->updateToSQL($apich) : $this->insertToSQL($apich)) {
                 $this->lastProcessedVersion = $version;
             } else {

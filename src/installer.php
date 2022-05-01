@@ -6,7 +6,7 @@ namespace AbraFlexi\Acceptor;
  * System.Spoje.Net - WebHook Acceptor & Saver to SQL Cache.
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2017-2020 Spoje.Net
+ * @copyright  2017-2020 Spoje.Net, 2021-2022 VitexSoftware
  */
 define('APP_NAME', 'WebHookInstaller');
 define('EASE_LOGGER', 'syslog');
@@ -25,17 +25,21 @@ if ($hooker->debug) {
 
 $endpoint = Hooker::webHookUrl(strval(time()));
 
-try {
-    $hooker->register($endpoint);
-    $hooker->addStatusMessage(sprintf(_('Registering %s in AbraFlexi'), $endpoint), 'success');
-} catch (\AbraFlexi\Exception $ex) {
-    $hooker->addStatusMessage(sprintf(_('Registering %s in AbraFlexi') . ' ' . _('Failed'), $endpoint), 'error');
-}
+if (empty($endpoint)) {
+    $hooker->addStatusMessage(_('No endpoint ? - check your webserver configuration'), 'warning');
+} else {
+    try {
+        
+        $hooker->addStatusMessage(sprintf(_('Registering %s in AbraFlexi'), $endpoint), $hooker->register($endpoint) ? 'success' : 'error');
+        echo $hooker->getDataValue('url') . ' -> ' . $hooker->getApiURL();
 
-try {
-    $reciever = new HookReciever(['throwException' => false]);
-    $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
-} catch (Exception $exc) {
-    echo $exc->getTraceAsString();
+        try {
+            $reciever = new HookReciever(['throwException' => false]);
+            $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    } catch (\AbraFlexi\Exception $ex) {
+        $hooker->addStatusMessage(sprintf(_('Registering %s in AbraFlexi') . ' ' . _('Failed'), $endpoint), 'error');
+    }
 }
-

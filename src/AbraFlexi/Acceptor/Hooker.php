@@ -27,9 +27,10 @@ class Hooker extends \AbraFlexi\Hooks {
         $baseUrl = \Ease\Document::phpSelf();
         $urlInfo = parse_url($baseUrl);
         $curFile = basename($urlInfo['path']);
+        
         $webHookUrl = str_replace($curFile,
                 'webhook.php?instanceid=' . $instanceId, $baseUrl);
-        return $webHookUrl;
+        return \Ease\Functions::addUrlParams($webHookUrl,['company' => \Ease\Functions::cfg('ABRAFLEXI_COMPANY')]);
     }
 
 }
