@@ -23,8 +23,9 @@ class HookReciever extends \AbraFlexi\Changes {
     public $handlerCache = [];
 
     /**
-     * 
-     * @var type
+     * Current processed version
+     *  
+     * @var int
      */
     public $globalVersion = null;
 
@@ -90,9 +91,14 @@ class HookReciever extends \AbraFlexi\Changes {
                 $this->addStatusMessage(json_last_error_msg(), 'warning');
             }
         }
-        if (isset($_SERVER['REMOTE_HOST']) && $this->debug) {
-            $this->addStatusMessage(sprintf(_('Recieved Webhook from %s %s'),
+        if (isset($_SERVER['REMOTE_HOST'])) {
+            if (array_key_exists('company', $_REQUEST)) {
+                $this->setCompany('ABRAFLEXI_COMPANY', $_REQUEST['company']);
+            }   
+            if($this->debug) {
+                $this->addStatusMessage(sprintf(_('Recieved Webhook from %s %s'),
                             $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_HOST']), 'debug');
+            }
         }
         return $input;
     }
@@ -107,6 +113,7 @@ class HookReciever extends \AbraFlexi\Changes {
     public function saveWebhookData(array $changes) {
         $results = [];
         foreach ($this->saver as $saver) {
+                         $saver->setCompany($this->company);
             $results[] = $saver->saveWebhookData($changes);
         }
         return count(array_filter($results)) == count($this->saver);
@@ -199,7 +206,7 @@ class HookReciever extends \AbraFlexi\Changes {
      * @param int $version
      */
     public function saveLastProcessedVersion($version) {
-        $source = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'.\Ease\Functions::cfg('ABRAFLEXI_COMPANY');
+        $source = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'.$this->company;
         $this->lastProcessedVersion = $version;
         $this->myCreateColumn = null;
         $this->sqlEngine->deleteFromSQL(['serverurl' => $source]);

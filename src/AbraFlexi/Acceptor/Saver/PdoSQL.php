@@ -18,6 +18,8 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     public $myTable = 'changes_cache';
     public $myKeyColumn = 'inversion';
     public $lastProcessedVersion = 0;
+    public $company = '';
+    private $serverUrl = '';
 
     /**
      * Prijmac WebHooku
@@ -28,15 +30,24 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     }
 
     /**
+     * Keep current company code
+     * 
+     * @param string $companyCode
+     */
+    public function setCompany(string $companyCode){
+        $this->company = $companyCode;
+    }
+    
+    /**
      * Nacte posledni zpracovanou verzi
      *
      * @return int $version
      */
     public function getLastProcessedVersion() {
+        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'. $this->company;
         $lastProcessedVersion = null;
         $this->setmyTable('changesapi');
-        $chRaw = $this->getColumnsFromSQL(['changeid'],
-                ['serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL')]);
+        $chRaw = $this->getColumnsFromSQL(['changeid'],['serverurl' => $this->serverUrl]);
         if (isset($chRaw[0]['changeid'])) {
             $lastProcessedVersion = intval($chRaw[0]['changeid']);
         } else {
@@ -54,10 +65,11 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * @return int Last loa
      */
     public function saveLastProcessedVersion(int $version) {
+        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'. $this->company;
         if ($version) {
             $this->setmyTable('changesapi');
             $this->setKeyColumn('serverurl');
-            $apich = ['changeid' => $version, 'serverurl' => \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'.\Ease\Functions::cfg('ABRAFLEXI_COMPANY')];
+            $apich = ['changeid' => $version, 'serverurl' => $this->serverUrl];
             if ($this->lastProcessedVersion ? $this->updateToSQL($apich) : $this->insertToSQL($apich)) {
                 $this->lastProcessedVersion = $version;
             } else {
@@ -112,7 +124,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     public function saveWebhookData($changes) {
         $urihelper = new \AbraFlexi\RO(null, ['offline' => true]);
         foreach ($changes as $apiData) {
-            $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $urihelper->url, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
+            $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $urihelper->url.'/c/'.$this->company, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
         }
 
         return isset($apiData) ? $this->saveLastProcessedVersion(intval($apiData['@in-version'])) : 0;

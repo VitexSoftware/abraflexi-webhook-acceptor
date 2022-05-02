@@ -12,10 +12,6 @@ define('APP_NAME', 'WebHookAcceptor');
 define('EASE_LOGGER', 'syslog');
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (array_key_exists('company', $_REQUEST)) {
-    define('ABRAFLEXI_COMPANY', $_REQUEST['company']);
-}
-
 $cfg = '../.env';
 if (file_exists($cfg)) {
     \Ease\Shared::singleton()->loadConfig($cfg, true);

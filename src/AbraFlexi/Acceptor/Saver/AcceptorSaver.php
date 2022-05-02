@@ -13,5 +13,8 @@ namespace AbraFlexi\Acceptor\Saver;
  * @author vitex
  */
 interface AcceptorSaver {
-    //put your code here
+    /**
+     * Keep Current company
+     */
+    public function setCompany(string $companyCode);
 }
