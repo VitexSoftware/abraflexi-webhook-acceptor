@@ -16,6 +16,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $hooker = new HookReciever(['throwException' => false, 'debug' => true]);
 $hooker->logBanner();
+$hooker->saveLastProcessedVersion(1);
 
 //$hooker->debug = true;
 

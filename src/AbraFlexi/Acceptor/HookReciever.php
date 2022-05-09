@@ -227,6 +227,7 @@ class HookReciever extends \AbraFlexi\Changes {
     public function getLastSavedVersion() {
         $lastProcessedVersion = null;
         foreach ($this->saver as $saver) {
+            $saver->setCompany($this->company);
             $lastProcessedVersion = $saver->getLastProcessedVersion();
         }
         if (is_null($lastProcessedVersion)) {

@@ -26,7 +26,6 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      */
     public function __construct() {
         parent::__construct();
-        $this->lastProcessedVersion = $this->getLastProcessedVersion();
     }
 
     /**
@@ -34,20 +33,20 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * 
      * @param string $companyCode
      */
-    public function setCompany(string $companyCode){
+    public function setCompany(string $companyCode) {
         $this->company = $companyCode;
     }
-    
+
     /**
      * Nacte posledni zpracovanou verzi
      *
      * @return int $version
      */
     public function getLastProcessedVersion() {
-        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'. $this->company;
+        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL') . '/c/' . $this->company;
         $lastProcessedVersion = null;
         $this->setmyTable('changesapi');
-        $chRaw = $this->getColumnsFromSQL(['changeid'],['serverurl' => $this->serverUrl]);
+        $chRaw = $this->getColumnsFromSQL(['changeid'], ['serverurl' => $this->serverUrl]);
         if (isset($chRaw[0]['changeid'])) {
             $lastProcessedVersion = intval($chRaw[0]['changeid']);
         } else {
@@ -65,8 +64,9 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * @return int Last loa
      */
     public function saveLastProcessedVersion(int $version) {
-        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'. $this->company;
+        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL') . '/c/' . $this->company;
         if ($version) {
+            $this->lastProcessedVersion = $this->getLastProcessedVersion();
             $this->setmyTable('changesapi');
             $this->setKeyColumn('serverurl');
             $apich = ['changeid' => $version, 'serverurl' => $this->serverUrl];
@@ -123,10 +123,10 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      */
     public function saveWebhookData($changes) {
         $urihelper = new \AbraFlexi\RO(null, ['offline' => true]);
+        $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '" . $urihelper->url . '/c/' . $this->company . "')");
         foreach ($changes as $apiData) {
-            $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $urihelper->url.'/c/'.$this->company, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
+            $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
         }
-
         return isset($apiData) ? $this->saveLastProcessedVersion(intval($apiData['@in-version'])) : 0;
     }
 

@@ -15,7 +15,7 @@ class ChangesCache extends AbstractMigration {
                 ->addColumn('operation', $this->getAdapter()->getOption('adapter') == 'sqlite' ? 'string' : 'enum', ['values' => ['create', 'update', 'delete']])
                 ->addColumn('externalids', 'string', ['limit' => 300])
                 ->addColumn('created', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
-                ->addColumn('source', 'string', ['comment' => 'Source System ID', 'limit' => 255])
+                ->addColumn('source', 'integer', ['comment' => 'Source System ID', 'signed'=>false, 'limit' => 255])
                 ->addColumn('target', 'string', ['comment' => 'Source System ID', 'limit' => 30])
                 ->create();
     }
