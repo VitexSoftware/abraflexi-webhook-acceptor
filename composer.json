@@ -12,11 +12,12 @@
     "minimum-stability": "dev",
     "require": {
         "ext-posix": "*",
-        "vitexsoftware/abraflexi-bricks": "abraflexi-dev",
-        "vitexsoftware/ease-fluentpdo": "dev-main"
+        "vitexsoftware/ease-fluentpdo": "dev-main",
+        "vitexsoftware/ease-bootstrap4-widgets-abraflexi": "dev-main",
+        "vitexsoftware/ease-twbootstrap4-widgets": "dev-master"
     },
     "require-dev": {
-        "robmorgan/phinx": "dev-master"
+        "robmorgan/phinx": "*"
     },
     "autoload": {
         "psr-4": {
@@ -25,5 +26,4 @@
             "AbraFlexi\\Acceptor\\Ui\\": "src/AbraFlexi/Acceptor/Ui/"
         }
     }
-
 }

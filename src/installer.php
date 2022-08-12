@@ -17,29 +17,54 @@ if (file_exists($cfg)) {
     \Ease\Shared::singleton()->loadConfig($cfg, true);
 }
 
-$hooker = new Hooker(null, ['debug' => boolval(\Ease\Functions::cfg('APP_DEBUG'))]);
-$hooker->logBanner();
-if ($hooker->debug) {
-    $hooker->setDataValue('skipUrlTest', 'true');
-}
+$hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
+$oPage = new \Ease\TWB4\WebPage(_('WebHook acceptor installer'));
 
-$endpoint = Hooker::webHookUrl(strval(time()));
+if (empty(\Ease\Functions::cfg('ABRAFLEXI_COMPANY'))) {
 
-if (empty($endpoint)) {
-    $hooker->addStatusMessage(_('No endpoint ? - check your webserver configuration'), 'warning');
-} else {
-    try {
-        
-        $hooker->addStatusMessage(sprintf(_('Registering %s in AbraFlexi'), $endpoint), $hooker->register($endpoint) ? 'success' : 'error');
-        echo $hooker->getDataValue('url') . ' -> ' . $hooker->getApiURL();
+    $baseUrl = dirname(\Ease\WebPage::phpSelf());
+
+    $loginForm = new \AbraFlexi\ui\TWB4\ConnectionForm(['action' => 'install.php']);
+
+//$loginForm->addInput( new \Ease\Html\InputUrlTag('myurl'), _('My Url'), dirname(\Ease\Page::phpSelf()), sprintf( _('Same url as you can see in browser without %s'), basename( __FILE__ ) ) );
+
+    $loginForm->fillUp($_REQUEST);
+
+    $loginForm->addItem(new \Ease\TWB4\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
+
+    if ($oPage->isPosted()) {
 
         try {
-            $reciever = new HookReciever(['throwException' => false]);
-            $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            $format = 'json';
+            $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
+            $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, ['company'=>$hooker->getCompany()]));
+            if ($hookResult) {
+                $hooker->addStatusMessage(sprintf(_('Hook %s was registered'),
+                                $hookurl), 'success');
+                $hookurl = '';
+                try {
+                    $reciever = new HookReciever(['throwException' => false]);
+                    $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
+                } catch (Exception $exc) {
+                    echo $exc->getTraceAsString();
+                }
+            } else {
+                $hooker->addStatusMessage(sprintf(_('Hook %s not registered'),
+                                $hookurl), 'warning');
+            }
+        } catch (\Exception $exc) {
+            $oPage->addStatusMessage($exc->getMessage(), 'warning');
         }
-    } catch (\AbraFlexi\Exception $ex) {
-        $hooker->addStatusMessage(sprintf(_('Registering %s in AbraFlexi') . ' ' . _('Failed'), $endpoint), 'error');
+
+    } else {
+        $oPage->addStatusMessage(_('My App URL') . ': ' . $baseUrl);
     }
+
+    $setupRow = new \Ease\TWB4\Row();
+    $setupRow->addColumn(6, $loginForm);
+    $setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
+
+    $oPage->addItem(new \Ease\TWB4\Container($setupRow));
+
 }
+echo $oPage;

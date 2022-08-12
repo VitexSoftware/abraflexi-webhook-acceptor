@@ -29,6 +29,7 @@ if (strstr(\Ease\Functions::cfg('DB_CONNECTION'), 'sqlite')) {
         file_put_contents($sqlOptions['database'], '');
     }
 }
+
 $engine = new \Ease\SQL\Engine(null, $sqlOptions);
 $cfg = [
     'paths' => [

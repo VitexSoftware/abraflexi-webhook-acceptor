@@ -4,7 +4,7 @@
  * AbraFlexi - WebHook reciever
  *
  * @author     Vítězslav Dvořák <info@vitexsofware.cz>
- * @copyright  (G) 2017 Vitex Software
+ * @copyright  (G) 2017-2022 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor;
