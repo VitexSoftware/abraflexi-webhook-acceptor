@@ -18,3 +18,6 @@
 ./src/AbraFlexi/Acceptor/Saver/Api.php
 ./src/AbraFlexi/Acceptor/Saver/Kafka.php
 ./src/AbraFlexi/Acceptor/Saver/PdoSQL.php
+./src/AbraFlexi/Acceptor/Ui/AppLogo.php
+./src/AbraFlexi/Acceptor/Ui/ConnectionPage.php
+./src/AbraFlexi/Acceptor/Ui/WebHookCacheView.php

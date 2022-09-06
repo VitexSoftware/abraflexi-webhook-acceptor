@@ -1,13 +1,15 @@
 {
   "name": "vitexsoftware/abraflexi-webhook-acceptor",
   "description": "Tool used to setup AbraFlexi multiinstance",
-  "version": "0.6",
+  "version": "0.7",
   "type": "project",
   "require": {
     "deb/abraflexi": "*",
     "deb/ease-bricks": "*",
     "deb/abraflexi-bricks": "*",
-    "deb/ease-fluentpdo": "*"
+    "deb/ease-fluentpdo": "*",
+    "deb/ease-bootstrap4-widgets-abraflexi": "*",
+    "deb/ease-bootstrap4-widgets": "*"
   },
   "license": "MIT",
   "authors": [
