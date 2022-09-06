@@ -42,6 +42,10 @@
     },
     {
       "type": "path",
+      "url": "/usr/share/php/EaseTWB4/"
+    },
+    {
+      "type": "path",
       "url": "/usr/share/php/AbraFlexi/"
     },
     {
@@ -51,6 +55,14 @@
     {
       "type": "path",
       "url": "/usr/share/php/EaseFluentPDO/"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/EaseTWB4Widgets/"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/EaseTWB4WidgetsAbraFlexi/"
     }
   ]
 }
