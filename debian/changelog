@@ -1,5 +1,9 @@
-abraflexi-webhook-acceptor (0.6) UNRELEASED; urgency=low
+abraflexi-webhook-acceptor (0.7) UNRELEASED; urgency=low
 
+  [ CyberVitexus ]
   * Initial release.
 
- -- CyberVitexus <vitex@exiv.jinonice.czf>  Mon, 24 May 2021 17:09:33 +0200
+  [ vitex ]
+  * installer page ready
+
+ -- vitex <info@vitexsoftware.cz>  Tue, 06 Sep 2022 23:27:16 +0200
