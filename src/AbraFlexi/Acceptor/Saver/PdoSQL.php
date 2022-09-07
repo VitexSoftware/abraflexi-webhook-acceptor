@@ -24,8 +24,9 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     /**
      * Prijmac WebHooku
      */
-    public function __construct() {
-        parent::__construct();
+    public function __construct($options) {
+        parent::__construct($options);
+        $this->setupProperty($options, 'company','ABRAFLEXI_COMPANY');
     }
 
     /**

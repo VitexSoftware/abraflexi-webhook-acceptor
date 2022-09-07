@@ -59,7 +59,7 @@ class HookReciever extends \AbraFlexi\Changes {
                 $saverClass = '\\AbraFlexi\\Acceptor\\Saver\\' . $saverClass;
                 if (class_exists($saverClass)) {
                     /** @var string $saverClass */
-                    $this->saver[$saverClass] = new $saverClass();
+                    $this->saver[$saverClass] = new $saverClass($properties);
                 } else {
                     $this->addStatusMessage('Saver Class ' . $saverClass . ' not found. Please check the configuration of WHA_SAVER', 'error');
                 }
