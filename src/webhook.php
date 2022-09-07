@@ -18,13 +18,15 @@ if (file_exists($cfg)) {
 }
 if (\Ease\WebPage::isPosted()) {
     try {
+        $config = [];
         if (isset($_SERVER['REMOTE_HOST'])) {
             if (array_key_exists('company', $_REQUEST)) {
                 define('ABRAFLEXI_COMPANY', $_REQUEST['company']);
+                $config['company'] = $_REQUEST['company'];
             }   
         }
         
-        $hooker = new HookReciever();
+        $hooker = new HookReciever($config);
         $hooker->debug = true;
         $apiResponseRaw = $hooker->listen();
         if (!empty($apiResponseRaw) && $hooker->takeChanges($apiResponseRaw)) {
