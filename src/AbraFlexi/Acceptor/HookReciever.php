@@ -51,6 +51,11 @@ class HookReciever extends \AbraFlexi\Changes {
      * WebHook Acceptor
      */
     public function __construct($properties = []) {
+        if (isset($_SERVER['REMOTE_HOST'])) {
+            if (array_key_exists('company', $_REQUEST)) {
+                $this->setCompany('ABRAFLEXI_COMPANY', $_REQUEST['company']);
+            }   
+        }
         parent::__construct(null, $properties);
         $this->sqlEngine = new ChangesApi();
 
@@ -92,9 +97,6 @@ class HookReciever extends \AbraFlexi\Changes {
             }
         }
         if (isset($_SERVER['REMOTE_HOST'])) {
-            if (array_key_exists('company', $_REQUEST)) {
-                $this->setCompany('ABRAFLEXI_COMPANY', $_REQUEST['company']);
-            }   
             if($this->debug) {
                 $this->addStatusMessage(sprintf(_('Recieved Webhook from %s %s'),
                             $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_HOST']), 'debug');
