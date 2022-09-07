@@ -37,13 +37,15 @@ if (empty(\Ease\Functions::cfg('ABRAFLEXI_COMPANY'))) {
         try {
             $format = 'json';
             $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
-            $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, ['company'=>$hooker->getCompany()]));
+            $params = ['company'=>$hooker->getCompany()];
+            $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, $params));
             if ($hookResult) {
                 $hooker->addStatusMessage(sprintf(_('Hook %s was registered'),
                                 $hookurl), 'success');
                 $hookurl = '';
                 try {
-                    $reciever = new HookReciever(['throwException' => false]);
+                    $params['throwException'] = false;
+                    $reciever = new HookReciever($params );
                     $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
                 } catch (Exception $exc) {
                     echo $exc->getTraceAsString();
