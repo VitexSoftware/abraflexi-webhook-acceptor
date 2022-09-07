@@ -206,7 +206,7 @@ class HookReciever extends \AbraFlexi\Changes {
      * @param int $version
      */
     public function saveLastProcessedVersion($version) {
-        $source = \Ease\Functions::cfg('ABRAFLEXI_URL').'/c/'.$this->company;
+        $source = $this->url.'/c/'.$this->company;
         $this->lastProcessedVersion = $version;
         $this->myCreateColumn = null;
         $this->sqlEngine->deleteFromSQL(['serverurl' => $source]);
