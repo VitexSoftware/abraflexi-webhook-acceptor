@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Multi Flexi  - Shared page bottom class
+ * AbraFlexi WebHook Acceptor  - Shared page bottom class
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2015-2020 Vitex Software
+ * @copyright  2021-2022 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor\Ui;

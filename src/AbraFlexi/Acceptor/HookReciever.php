@@ -111,6 +111,7 @@ class HookReciever extends \AbraFlexi\Changes {
         $results = [];
         foreach ($this->saver as $saver) {
                          $saver->setCompany($this->company);
+                         $saver->setUrl($this->url);
             $results[] = $saver->saveWebhookData($changes);
         }
         return count(array_filter($results)) == count($this->saver);

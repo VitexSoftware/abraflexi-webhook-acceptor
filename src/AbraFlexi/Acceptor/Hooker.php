@@ -1,10 +1,10 @@
 <?php
 
 /**
- * System.Spoje.Net - WebHook Acceptor & Saver to SQL Cache.
+ * AbraFlexi WebHook Acceptor  - Endpoint Handler
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2017-2022 Spoje.Net
+ * @copyright  2021-2022 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor;

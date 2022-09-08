@@ -1,9 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * AbraFlexi WebHook Acceptor  - Save changes into database
+ *
+ * @author     Vítězslav Dvořák <vitex@arachne.cz>
+ * @copyright  2021-2022 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor\Saver;
@@ -19,6 +20,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     public $myKeyColumn = 'inversion';
     public $lastProcessedVersion = 0;
     public $company = '';
+    public $url = '';
     private $serverUrl = '';
 
     /**
@@ -26,7 +28,8 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      */
     public function __construct($options) {
         parent::__construct($options);
-        $this->setupProperty($options, 'company','ABRAFLEXI_COMPANY');
+        $this->setupProperty($options, 'company', 'ABRAFLEXI_COMPANY');
+        $this->setupProperty($options, 'url', 'ABRAFLEXI_URL');
     }
 
     /**
@@ -36,6 +39,15 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      */
     public function setCompany(string $companyCode) {
         $this->company = $companyCode;
+    }
+
+    /**
+     * Keep current server url
+     * 
+     * @param string $url
+     */
+    public function setUrl(string $url) {
+        $this->url = $url;
     }
 
     /**
@@ -65,7 +77,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * @return int Last loa
      */
     public function saveLastProcessedVersion(int $version) {
-        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL') . '/c/' . $this->company;
+        $this->serverUrl = $this->url . '/c/' . $this->company;
         if ($version) {
             $this->lastProcessedVersion = $this->getLastProcessedVersion();
             $this->setmyTable('changesapi');
@@ -101,7 +113,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     /**
      * conver $jsonData column names to $sqlData column names
      * 
-     * @param array $sqlData
+     * @param array $apiData
      * 
      * @return array
      */

@@ -1,8 +1,9 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * AbraFlexi WebHook Acceptor  - WebHook cache view widget
+ *
+ * @author     Vítězslav Dvořák <vitex@arachne.cz>
+ * @copyright  2021-2022 Vitex Software
  */
 namespace AbraFlexi\Acceptor\Ui;
 /**

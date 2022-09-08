@@ -1,9 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * AbraFlexi WebHook Acceptor  - AcceptorSaver interface
+ *
+ * @author     Vítězslav Dvořák <vitex@arachne.cz>
+ * @copyright  2021-2022 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor\Saver;
@@ -17,4 +18,8 @@ interface AcceptorSaver {
      * Keep Current company
      */
     public function setCompany(string $companyCode);
+    /**
+     * Keep Current server url
+     */
+    public function setUrl(string $url);
 }
