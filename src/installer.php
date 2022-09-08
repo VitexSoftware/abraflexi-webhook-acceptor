@@ -21,57 +21,56 @@ $success = false;
 $hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
 $oPage = new \Ease\TWB4\WebPage(_('WebHook acceptor installer'));
 
-if (empty(\Ease\Functions::cfg('ABRAFLEXI_COMPANY'))) {
+$baseUrl = dirname(\Ease\WebPage::phpSelf());
 
-    $baseUrl = dirname(\Ease\WebPage::phpSelf());
-
-    $loginForm = new \AbraFlexi\ui\TWB4\ConnectionForm(['action' => 'install.php']);
+$loginForm = new \AbraFlexi\ui\TWB4\ConnectionForm(['action' => 'install.php']);
 
 //$loginForm->addInput( new \Ease\Html\InputUrlTag('myurl'), _('My Url'), dirname(\Ease\Page::phpSelf()), sprintf( _('Same url as you can see in browser without %s'), basename( __FILE__ ) ) );
 
-    $loginForm->fillUp($_REQUEST);
+$loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration );
 
-    $loginForm->addItem(new \Ease\TWB4\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
+$loginForm->addItem(new \Ease\TWB4\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
 
-    if ($oPage->isPosted()) {
+if ($oPage->isPosted()) {
 
-        try {
-            $format = 'json';
-            $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
-            $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, ['company' => $hooker->getCompany()]));
-            if ($hookResult) {
-                $hooker->addStatusMessage(sprintf(_('Hook %s was registered'),
-                                $hookurl), 'success');
-                $hookurl = '';
-                try {
-                    $params = $hooker->getConnectionOptions();
-                    $params['throwException'] = false;
-                    $reciever = new HookReciever($params);
-                    $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
-                    $success = true;
-                } catch (Exception $exc) {
-                    echo $exc->getTraceAsString();
-                }
-            } else {
-                $hooker->addStatusMessage(sprintf(_('Hook %s not registered'),
-                                $hookurl), 'warning');
+    try {
+        $format = 'json';
+        $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
+        $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, ['company' => $hooker->getCompany()]));
+        if ($hookResult) {
+            $hooker->addStatusMessage(sprintf(_('Hook %s was registered'),
+                            $hookurl), 'success');
+            $hookurl = '';
+            try {
+                $params = $hooker->getConnectionOptions();
+                $params['throwException'] = false;
+                $reciever = new HookReciever($params);
+                $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
+                $success = true;
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
             }
-        } catch (\Exception $exc) {
-            $oPage->addStatusMessage($exc->getMessage(), 'warning');
+        } else {
+            $hooker->addStatusMessage(sprintf(_('Hook %s not registered'),
+                            $hookurl), 'warning');
         }
-    } else {
-        $oPage->addStatusMessage(_('My App URL') . ': ' . $baseUrl);
+    } catch (\Exception $exc) {
+        $oPage->addStatusMessage($exc->getMessage(), 'warning');
     }
-
-    $setupRow = new \Ease\TWB4\Row();
-    if ($success) {
-        $setupRow->addColumn(6, new \Ease\Html\H2Tag(_('Done')));
-    } else {
-        $setupRow->addColumn(6, $loginForm);
-    }
-    $setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
-    
-    $oPage->addItem(new \Ease\TWB4\Container($setupRow));
-        
+} else {
+    $oPage->addStatusMessage(_('My App URL') . ': ' . $baseUrl);
 }
+
+$setupRow = new \Ease\TWB4\Row();
+if ($success) {
+    $setupRow->addColumn(6, new \Ease\Html\H2Tag(_('Done')));
+} else {
+    $setupRow->addColumn(6, $loginForm);
+}
+$setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
+
+$oPage->addItem(new \Ease\TWB4\Container($setupRow));
+
+$oPage->addItem(new Ui\PageBottom());
+
 echo $oPage;

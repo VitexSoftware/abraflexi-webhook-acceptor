@@ -56,6 +56,7 @@ override_dh_install:
 	sed -i -e 's/..\/vendor/\/var\/lib\/composer\/abraflexi-webhook-acceptor/g'   debian/abraflexi-webhook-acceptor/usr/share/abraflexi-webhook-acceptor/*.php
 	sed -i -e 's/.\/vendor/\/var\/lib\/composer\/abraflexi-webhook-acceptor/g'    debian/abraflexi-webhook-acceptor/usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 	sed -i '/\.env/c\$$cfg="/etc\/abraflexi-webhook-acceptor\/.env";'  debian/abraflexi-webhook-acceptor/usr/*/abraflexi-webhook-acceptor/*.php
+	sed -i -e 's/composer\.json/\/usr\/lib\/abraflexi-webhook-acceptor\/composer\.json/g' debian/multiflexi/usr/lib/abraflexi-webhook-acceptor/AbraFlexi/Ui/PageBottom.php
 	sed -i '/prefix =/c\ $$prefix = "\/usr\/lib\/abraflexi-webhook-acceptor\/db\/";' debian/abraflexi-webhook-acceptor/usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 	sed -i '/DB_DATABASE/c\ $$sqlOptions["database"] = "\/var\/lib\/dbconfig-common\/sqlite3\/abraflexi-webhook-acceptor\/".basename(\\Ease\\Functions::cfg("DB_DATABASE"));' debian/abraflexi-webhook-acceptor/usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 	sed -i -e 's/..\/i18n/\/usr\/share\/locale/g'            	     debian/abraflexi-webhook-acceptor/usr/share/abraflexi-webhook-acceptor/*.php
