@@ -16,23 +16,22 @@ $cfg = '../.env';
 if (file_exists($cfg)) {
     \Ease\Shared::singleton()->loadConfig($cfg, true);
 }
-if (\Ease\WebPage::isPosted()) {
+if ($_SERVER['REQUEST_METHOD'] != 'GET') {
     try {
         $config = [];
-        if (isset($_SERVER['REMOTE_HOST'])) {
-            if (array_key_exists('company', $_REQUEST)) {
-                define('ABRAFLEXI_COMPANY', $_REQUEST['company']);
-                $config['company'] = $_REQUEST['company'];
-            }   
+
+        if (array_key_exists('company', $_REQUEST)) {
+            define('ABRAFLEXI_COMPANY', $_REQUEST['company']);
+            $config['company'] = $_REQUEST['company'];
         }
-        
+
         $hooker = new HookReciever($config);
         $hooker->debug = true;
         $apiResponseRaw = $hooker->listen();
         if (!empty($apiResponseRaw) && $hooker->takeChanges($apiResponseRaw)) {
             $hooker->saveWebhookData($hooker->onlyFreshHooks($hooker->changes));
         } else {
-            echo 'No changes';
+            $hooker->addStatusMessage(_('Webhook with empty body'), 'warning');
         }
     } catch (\AbraFlexi\Exception $exc) {
         echo $exc->getMessage();

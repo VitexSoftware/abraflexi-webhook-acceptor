@@ -70,7 +70,8 @@ if (empty(\Ease\Functions::cfg('ABRAFLEXI_COMPANY'))) {
         $setupRow->addColumn(6, $loginForm);
     }
     $setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
-
+    
     $oPage->addItem(new \Ease\TWB4\Container($setupRow));
+        
 }
 echo $oPage;
