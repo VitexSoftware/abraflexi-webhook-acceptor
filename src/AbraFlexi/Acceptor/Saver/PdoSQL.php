@@ -135,10 +135,14 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * @return int lastChangeID
      */
     public function saveWebhookData($changes) {
-        $urihelper = new \AbraFlexi\RO(null, ['offline' => true]);
+        $urihelper = new \AbraFlexi\RO(null, ['offline' => true,'url'=> $this->url]);
         $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '" . $urihelper->url . '/c/' . $this->company . "')");
         foreach ($changes as $apiData) {
-            $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
+            try {
+                $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
+            } catch (Exception $exc) {
+                $this->addStatusMessage( $exc->getMessage(). ' Unknown server ?: '.$urihelper->url, 'warning');
+            }
         }
         return isset($apiData) ? $this->saveLastProcessedVersion(intval($apiData['@in-version'])) : 0;
     }
