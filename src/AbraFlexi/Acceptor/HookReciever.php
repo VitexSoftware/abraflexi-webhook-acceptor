@@ -97,6 +97,9 @@ class HookReciever extends \AbraFlexi\Changes {
                             $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_HOST']), 'debug');
             }
         }
+        
+        $this->url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['REMOTE_HOST'].':5434';
+        
         return $input;
     }
 
