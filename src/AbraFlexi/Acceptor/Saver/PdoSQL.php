@@ -56,7 +56,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * @return int $version
      */
     public function getLastProcessedVersion() {
-        $this->serverUrl = \Ease\Functions::cfg('ABRAFLEXI_URL') . '/c/' . $this->company;
+        $this->serverUrl = $this->url . '/c/' . $this->company;
         $lastProcessedVersion = null;
         $this->setmyTable('changesapi');
         $chRaw = $this->getColumnsFromSQL(['changeid'], ['serverurl' => $this->serverUrl]);

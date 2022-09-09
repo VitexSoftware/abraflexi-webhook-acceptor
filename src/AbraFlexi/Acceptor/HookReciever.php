@@ -98,7 +98,7 @@ class HookReciever extends \AbraFlexi\Changes {
             }
         }
         
-        $this->url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['REMOTE_HOST'].':5434';
+        $this->url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['REMOTE_HOST'].':5434'; //TODO: Handle port somehow
         
         return $input;
     }
@@ -229,6 +229,7 @@ class HookReciever extends \AbraFlexi\Changes {
         $lastProcessedVersion = null;
         foreach ($this->saver as $saver) {
             $saver->setCompany($this->company);
+            $saver->setUrl($this->url);
             $lastProcessedVersion = $saver->getLastProcessedVersion();
         }
         if (is_null($lastProcessedVersion)) {
