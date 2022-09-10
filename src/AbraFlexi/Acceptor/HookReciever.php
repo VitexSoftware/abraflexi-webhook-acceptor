@@ -42,10 +42,22 @@ class HookReciever extends \AbraFlexi\Changes {
     public $saver = [];
 
     /**
-     * 
-     * @var Api
+     * ChangesAPI handler
+     * @var ChangesApi
      */
     private $sqlEngine;
+
+    /**
+     * Path to LockFile
+     * @var string
+     */
+    private $lockfile;
+    
+    /**
+     * Changes live here
+     * @var array
+     */
+    private $changes;
 
     /**
      * WebHook Acceptor
@@ -67,9 +79,7 @@ class HookReciever extends \AbraFlexi\Changes {
                 $this->addStatusMessage('Saver Class not specified. Please check the configuration of WHA_SAVER', 'error');
             }
         }
-        if (count($this->saver)) {
-            $this->lastProcessedVersion = $this->getLastSavedVersion();
-        } else {
+        if (empty($this->saver)) {
             $this->addStatusMessage('No Saver Class loaded. Please check the configuration of WHA_SAVER', 'error');
         }
     }
@@ -83,6 +93,15 @@ class HookReciever extends \AbraFlexi\Changes {
      */
     public function listen($source = 'php://input') {
         $input = null;
+        if (isset($_SERVER['REMOTE_HOST'])) {
+            if ($this->debug) {
+                $this->addStatusMessage(sprintf(_('Recieved Webhook from %s %s'),
+                                $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_HOST']), 'debug');
+            }
+            $this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['REMOTE_HOST'] . ':5434'; //TODO: Handle port somehow
+        } else {
+            $this->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'error');
+        }
         $inputJSON = file_get_contents($source);
         if (strlen($inputJSON)) {
             $input = json_decode($inputJSON, TRUE); //convert JSON into array
@@ -91,15 +110,6 @@ class HookReciever extends \AbraFlexi\Changes {
                 $this->addStatusMessage(json_last_error_msg(), 'warning');
             }
         }
-        if (isset($_SERVER['REMOTE_HOST'])) {
-            if($this->debug) {
-                $this->addStatusMessage(sprintf(_('Recieved Webhook from %s %s'),
-                            $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_HOST']), 'debug');
-            }
-        }
-        
-        $this->url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['REMOTE_HOST'].':5434'; //TODO: Handle port somehow
-        
         return $input;
     }
 
@@ -113,8 +123,8 @@ class HookReciever extends \AbraFlexi\Changes {
     public function saveWebhookData(array $changes) {
         $results = [];
         foreach ($this->saver as $saver) {
-                         $saver->setCompany($this->company);
-                         $saver->setUrl($this->url);
+            $saver->setCompany($this->company);
+            $saver->setUrl($this->url);
             $results[] = $saver->saveWebhookData($changes);
         }
         return count(array_filter($results)) == count($this->saver);
@@ -160,12 +170,12 @@ class HookReciever extends \AbraFlexi\Changes {
                     case 'create':
                     case 'delete':
                         if ($saver->process($operation) && ($this->debug === true)) {
-                            $this->addToLog($changepos . '/' . count($this->changes),
+                            $this->addStatusMessage($changepos . '/' . count($this->changes),
                                     'success');
                         }
                         break;
                     default:
-                        $this->addToLog('Unknown operation', 'warning');
+                        $this->addStatusMessage(sprintf(_('Unknown operation %s'), $operation), 'error');
                         break;
                 }
             } else {
@@ -207,7 +217,7 @@ class HookReciever extends \AbraFlexi\Changes {
      * @param int $version
      */
     public function saveLastProcessedVersion($version) {
-        $source = $this->url.'/c/'.$this->company;
+        $source = $this->url . '/c/' . $this->company;
         $this->lastProcessedVersion = $version;
         $this->myCreateColumn = null;
         $this->sqlEngine->deleteFromSQL(['serverurl' => $source]);
@@ -227,6 +237,7 @@ class HookReciever extends \AbraFlexi\Changes {
      */
     public function getLastSavedVersion() {
         $lastProcessedVersion = null;
+
         foreach ($this->saver as $saver) {
             $saver->setCompany($this->company);
             $saver->setUrl($this->url);
@@ -310,6 +321,7 @@ class HookReciever extends \AbraFlexi\Changes {
         foreach ($webhooksRawData as $recId => $webhookRawData) {
             if ($webhookRawData['@in-version'] <= $lastProcessed) {
                 unset($webhooksRawData[$recId]);
+                $this->addStatusMessage(sprintf(_('Already proccessed change %d - skipping till %s'), $webhookRawData['@in-version'], $lastProcessed + 1), 'warning');
             }
         }
         return $webhooksRawData;

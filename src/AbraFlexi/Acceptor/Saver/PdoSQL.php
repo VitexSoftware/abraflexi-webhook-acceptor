@@ -63,8 +63,12 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
         if (isset($chRaw[0]['changeid'])) {
             $lastProcessedVersion = intval($chRaw[0]['changeid']);
         } else {
-            $this->addStatusMessage(_("Last Processed Change ID Loading Failed"),
-                    'warning');
+            try {
+                $this->addStatusMessage( sprintf( _('%s: API Initialized with changeID 0'), $this->serverUrl), $this->saveLastProcessedVersion(0) ? 'success' : 'warning' );
+                $lastProcessedVersion = 0;
+            } catch (Exception $exc) {
+                $this->addStatusMessage(sprintf( _("%s: Last Processed Change ID Loading Failed"), $this->serverUrl ) , 'warning');
+            }
         }
         $this->setmyTable('changes_cache');
         return $lastProcessedVersion;
@@ -78,19 +82,22 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      */
     public function saveLastProcessedVersion(int $version) {
         $this->serverUrl = $this->url . '/c/' . $this->company;
-        if ($version) {
-            $this->lastProcessedVersion = $this->getLastProcessedVersion();
-            $this->setmyTable('changesapi');
-            $this->setKeyColumn('serverurl');
-            $apich = ['changeid' => $version, 'serverurl' => $this->serverUrl];
-            if ($this->lastProcessedVersion ? $this->updateToSQL($apich) : $this->insertToSQL($apich)) {
+//        if ($version) {
+//            $this->lastProcessedVersion = $this->getLastProcessedVersion();
+//        }
+        $this->setmyTable('changesapi');
+        $this->setKeyColumn('serverurl');
+        $apich = ['changeid' => $version, 'serverurl' => $this->serverUrl];
+        try {
+            if ($version ? $this->updateToSQL($apich) : $this->insertToSQL($apich)) {
                 $this->lastProcessedVersion = $version;
-            } else {
-                $this->addStatusMessage(_("Last Processed Change ID Saving Failed"), 'error');
             }
-            $this->setmyTable('changes_cache');
-            $this->setKeyColumn('inversion');
+        } catch (Exception $exc) {
+            $this->addStatusMessage(_("Last Processed Change ID Saving Failed"), 'error');
         }
+
+        $this->setmyTable('changes_cache');
+        $this->setKeyColumn('inversion');
         return $version;
     }
 
@@ -135,13 +142,13 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      * @return int lastChangeID
      */
     public function saveWebhookData($changes) {
-        $urihelper = new \AbraFlexi\RO(null, ['offline' => true,'url'=> $this->url]);
+        $urihelper = new \AbraFlexi\RO(null, ['offline' => true, 'url' => $this->url]);
         $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '" . $urihelper->url . '/c/' . $this->company . "')");
         foreach ($changes as $apiData) {
             try {
                 $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
             } catch (Exception $exc) {
-                $this->addStatusMessage( $exc->getMessage(). ' Unknown server ?: '.$urihelper->url, 'warning');
+                $this->addStatusMessage($exc->getMessage() . ' Unknown server ?: ' . $urihelper->url, 'warning');
             }
         }
         return isset($apiData) ? $this->saveLastProcessedVersion(intval($apiData['@in-version'])) : 0;

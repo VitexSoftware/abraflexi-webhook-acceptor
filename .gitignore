@@ -15,3 +15,4 @@
 /debian/abraflexi-webhook-acceptor.substvars
 /.vagrant/
 /debian/abraflexi-webhook-acceptor.debhelper.log
+/tests/.phpunit.result.cache

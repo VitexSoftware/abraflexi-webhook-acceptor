@@ -16,7 +16,7 @@ $cfg = '../.env';
 if (file_exists($cfg)) {
     \Ease\Shared::singleton()->loadConfig($cfg, true);
 }
-if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+if ($_SERVER['REQUEST_METHOD'] != 'xGET') {
     try {
         $config = [];
 

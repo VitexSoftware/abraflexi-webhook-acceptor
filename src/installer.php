@@ -41,15 +41,6 @@ if ($oPage->isPosted()) {
             $hooker->addStatusMessage(sprintf(_('Hook %s was registered'),
                             $hookurl), 'success');
             $hookurl = '';
-            try {
-                $params = $hooker->getConnectionOptions();
-                $params['throwException'] = false;
-                $reciever = new HookReciever($params);
-                $reciever->addStatusMessage(_('Last Processed version set to 0'), $reciever->saveLastProcessedVersion(0) ? 'success' : 'warning' );
-                $success = true;
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-            }
         } else {
             $hooker->addStatusMessage(sprintf(_('Hook %s not registered'),
                             $hookurl), 'warning');
