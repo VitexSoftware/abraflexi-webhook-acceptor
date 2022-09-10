@@ -52,12 +52,12 @@ class HookReciever extends \AbraFlexi\Changes {
      * @var string
      */
     private $lockfile;
-    
+
     /**
      * Changes live here
      * @var array
      */
-    private $changes;
+    public $changes = [];
 
     /**
      * WebHook Acceptor
