@@ -1,7 +1,7 @@
 {
   "name": "vitexsoftware/abraflexi-webhook-acceptor",
   "description": "Tool used to setup AbraFlexi multiinstance",
-  "version": "0.7",
+  "version": "1.0",
   "type": "project",
   "require": {
     "deb/abraflexi": "*",

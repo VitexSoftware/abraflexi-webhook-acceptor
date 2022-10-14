@@ -16,3 +16,4 @@
 /.vagrant/
 /debian/abraflexi-webhook-acceptor.debhelper.log
 /tests/.phpunit.result.cache
+/debian/.debhelper/
