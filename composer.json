@@ -17,7 +17,8 @@
         "vitexsoftware/ease-twbootstrap4-widgets": "dev-master"
     },
     "require-dev": {
-        "robmorgan/phinx": "*"
+        "robmorgan/phinx": "*",
+        "phpunit/phpunit": "~9.5.2"
     },
     "autoload": {
         "psr-4": {

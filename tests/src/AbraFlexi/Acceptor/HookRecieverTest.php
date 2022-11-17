@@ -19,7 +19,7 @@ class HookRecieverTest extends \PHPUnit\Framework\TestCase {
      * This method is called before a test is executed.
      */
     protected function setUp(): void {
-        $this->object = new HookReciever();
+        $this->object = new HookReciever(\Ease\Shared::instanced()->configuration);
     }
 
     /**
@@ -32,22 +32,16 @@ class HookRecieverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers AbraFlexi\Acceptor\HookReciever::listen
-     * @todo   Implement testlisten().
      */
     public function testlisten() {
-        $this->assertEquals('', $this->object->listen());
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->assertIsArray($this->object->listen(__DIR__ . '/../../../hooks/webhook-1615591760.json'));
     }
 
     /**
      * @covers AbraFlexi\Acceptor\HookReciever::saveWebhookData
-     * @todo   Implement testsaveWebhookData().
      */
     public function testsaveWebhookData() {
-        $this->assertEquals('', $this->object->saveWebhookData());
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->assertTrue($this->object->saveWebhookData(json_decode(file_get_contents(__DIR__ . '/../../../hooks/webhook-1615591760.json'), TRUE)), 'webhook data not saved');
     }
 
     /**

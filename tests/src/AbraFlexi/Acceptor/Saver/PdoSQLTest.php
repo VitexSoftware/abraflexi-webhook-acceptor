@@ -19,7 +19,7 @@ class PdoSQLTest extends \PHPUnit\Framework\TestCase {
      * This method is called before a test is executed.
      */
     protected function setUp(): void {
-        $this->object = new PdoSQL();
+        $this->object = new PdoSQL([]);
     }
 
     /**
@@ -32,12 +32,10 @@ class PdoSQLTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers AbraFlexi\Acceptor\Saver\PdoSQL::setCompany
-     * @todo   Implement testsetCompany().
      */
     public function testsetCompany() {
-        $this->assertEquals('', $this->object->setCompany());
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->object->setCompany('test');
+        $this->assertEquals('test', $this->object->company);
     }
 
     /**

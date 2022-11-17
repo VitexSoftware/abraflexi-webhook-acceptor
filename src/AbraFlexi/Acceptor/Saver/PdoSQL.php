@@ -146,7 +146,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
         $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '" . $urihelper->url . '/c/' . $this->company . "')");
         foreach ($changes as $apiData) {
             try {
-                $this->fluent->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
+                $this->getFluentPDO()->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
             } catch (Exception $exc) {
                 $this->addStatusMessage($exc->getMessage() . ' Unknown server ?: ' . $urihelper->url, 'warning');
             }
