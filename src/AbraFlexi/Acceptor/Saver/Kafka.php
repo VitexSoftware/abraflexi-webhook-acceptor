@@ -12,11 +12,14 @@ namespace AbraFlexi\Acceptor\Saver;
 /**
  * Description of Kafka
  *
+ * TODO
+ *
  * @author vitex
  */
-class Kafka implements AcceptorSaver {
-
-    public function save($param) {
+class Kafka implements saver
+{
+    public function save($param)
+    {
         $conf = new RdKafka\Conf();
         $conf->set('log_level', (string) LOG_DEBUG);
         $conf->set('debug', 'all');
@@ -24,9 +27,17 @@ class Kafka implements AcceptorSaver {
         $rk->addBrokers("10.0.0.1:9092,10.0.0.2:9092");
     }
 
-    
-    public function __destruct() {
-        
+    public function __destruct()
+    {
     }
-    
+
+    public function setUrl(string $url)
+    {
+        ;
+    }
+
+    public function setCompany(string $companyCode)
+    {
+        ;
+    }
 }

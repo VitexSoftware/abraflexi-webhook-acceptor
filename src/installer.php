@@ -8,6 +8,7 @@ namespace AbraFlexi\Acceptor;
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
  * @copyright  2017-2020 Spoje.Net, 2021-2022 VitexSoftware
  */
+
 define('APP_NAME', 'WebHookInstaller');
 define('EASE_LOGGER', 'syslog');
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -27,23 +28,26 @@ $loginForm = new \AbraFlexi\ui\TWB4\ConnectionForm(['action' => 'install.php']);
 
 //$loginForm->addInput( new \Ease\Html\InputUrlTag('myurl'), _('My Url'), dirname(\Ease\Page::phpSelf()), sprintf( _('Same url as you can see in browser without %s'), basename( __FILE__ ) ) );
 
-$loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration );
+$loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration);
 
 $loginForm->addItem(new \Ease\TWB4\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
 
 if ($oPage->isPosted()) {
-
     try {
         $format = 'json';
         $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
         $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, ['company' => $hooker->getCompany()]));
         if ($hookResult) {
-            $hooker->addStatusMessage(sprintf(_('Hook %s was registered'),
-                            $hookurl), 'success');
+            $hooker->addStatusMessage(sprintf(
+                _('Hook %s was registered'),
+                $hookurl
+            ), 'success');
             $hookurl = '';
         } else {
-            $hooker->addStatusMessage(sprintf(_('Hook %s not registered'),
-                            $hookurl), 'warning');
+            $hooker->addStatusMessage(sprintf(
+                _('Hook %s not registered'),
+                $hookurl
+            ), 'warning');
         }
     } catch (\Exception $exc) {
         $oPage->addStatusMessage($exc->getMessage(), 'warning');

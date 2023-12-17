@@ -14,8 +14,8 @@ namespace AbraFlexi\Acceptor\Saver;
  *
  * @author vitex
  */
-class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
-
+class PdoSQL extends \Ease\SQL\Engine implements saver
+{
     public $myTable = 'changes_cache';
     public $myKeyColumn = 'inversion';
     public $lastProcessedVersion = 0;
@@ -26,7 +26,8 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     /**
      * Prijmac WebHooku
      */
-    public function __construct($options) {
+    public function __construct($options)
+    {
         parent::__construct($options);
         $this->setupProperty($options, 'company', 'ABRAFLEXI_COMPANY');
         $this->setupProperty($options, 'url', 'ABRAFLEXI_URL');
@@ -34,19 +35,21 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
 
     /**
      * Keep current company code
-     * 
+     *
      * @param string $companyCode
      */
-    public function setCompany(string $companyCode) {
+    public function setCompany(string $companyCode)
+    {
         $this->company = $companyCode;
     }
 
     /**
      * Keep current server url
-     * 
+     *
      * @param string $url
      */
-    public function setUrl(string $url) {
+    public function setUrl(string $url)
+    {
         $this->url = $url;
     }
 
@@ -55,7 +58,8 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
      *
      * @return int $version
      */
-    public function getLastProcessedVersion() {
+    public function getLastProcessedVersion()
+    {
         $this->serverUrl = $this->url . '/c/' . $this->company;
         $lastProcessedVersion = null;
         $this->setmyTable('changesapi');
@@ -64,10 +68,10 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
             $lastProcessedVersion = intval($chRaw[0]['changeid']);
         } else {
             try {
-                $this->addStatusMessage( sprintf( _('%s: API Initialized with changeID 0'), $this->serverUrl), $this->saveLastProcessedVersion(0) ? 'success' : 'warning' );
+                $this->addStatusMessage(sprintf(_('%s: API Initialized with changeID 0'), $this->serverUrl), $this->saveLastProcessedVersion(0) ? 'success' : 'warning');
                 $lastProcessedVersion = 0;
-            } catch (Exception $exc) {
-                $this->addStatusMessage(sprintf( _("%s: Last Processed Change ID Loading Failed"), $this->serverUrl ) , 'warning');
+            } catch (\Exception $exc) {
+                $this->addStatusMessage(sprintf(_("%s: Last Processed Change ID Loading Failed"), $this->serverUrl), 'warning');
             }
         }
         $this->setmyTable('changes_cache');
@@ -75,12 +79,13 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
     }
 
     /**
-     * 
+     *
      * @param int $version
-     * 
+     *
      * @return int Last loa
      */
-    public function saveLastProcessedVersion(int $version) {
+    public function saveLastProcessedVersion(int $version)
+    {
         $this->serverUrl = $this->url . '/c/' . $this->company;
 //        if ($version) {
 //            $this->lastProcessedVersion = $this->getLastProcessedVersion();
@@ -92,7 +97,7 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
             if ($version ? $this->updateToSQL($apich) : $this->insertToSQL($apich)) {
                 $this->lastProcessedVersion = $version;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->addStatusMessage(_("Last Processed Change ID Saving Failed"), 'error');
         }
 
@@ -103,12 +108,13 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
 
     /**
      * conver $sqlData column names to $jsonData column names
-     * 
+     *
      * @param array $sqlData
-     * 
+     *
      * @return array
      */
-    public static function sqlColsToJsonCols($sqlData) {
+    public static function sqlColsToJsonCols($sqlData)
+    {
         $jsonData['@in-version'] = $sqlData['inversion'];
         $jsonData['id'] = $sqlData['recordid'];
         $jsonData['@evidence'] = $sqlData['evidence'];
@@ -119,29 +125,33 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
 
     /**
      * conver $jsonData column names to $sqlData column names
-     * 
+     *
      * @param array $apiData
-     * 
+     *
      * @return array
      */
-    public static function jsonColsToSQLCols($apiData) {
+    public static function jsonColsToSQLCols($apiData)
+    {
         $sqlData['inversion'] = $apiData['@in-version'];
         $sqlData['recordid'] = $apiData['id'];
         $sqlData['evidence'] = $apiData['@evidence'];
         $sqlData['operation'] = $apiData['@operation'];
-        $sqlData['externalids'] = addslashes(serialize(array_key_exists('external-ids',
-                                $apiData) ? $apiData['external-ids'] : []));
+        $sqlData['externalids'] = addslashes(serialize(array_key_exists(
+            'external-ids',
+            $apiData
+        ) ? $apiData['external-ids'] : []));
         return $sqlData;
     }
 
     /**
      * Save Json Data to SQL cache
-     * 
+     *
      * @param array $changes
-     * 
+     *
      * @return int lastChangeID
      */
-    public function saveWebhookData($changes) {
+    public function saveWebhookData($changes)
+    {
         $urihelper = new \AbraFlexi\RO(null, ['offline' => true, 'url' => $this->url]);
         $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '" . $urihelper->url . '/c/' . $this->company . "')");
         foreach ($changes as $apiData) {
@@ -156,18 +166,25 @@ class PdoSQL extends \Ease\SQL\Engine implements AcceptorSaver {
 
     /**
      * Empty given change version from cache
-     * 
+     *
      * @param int $inVersion
-     * 
+     *
      * @return type
      */
-    public function wipeCacheRecord($inVersion) {
-        return $this->fluent->deleteFrom('changes_cache')->where('inversion',
-                        $inVersion)->execute();
+    public function wipeCacheRecord($inVersion)
+    {
+        return $this->fluent->deleteFrom('changes_cache')->where(
+            'inversion',
+            $inVersion
+        )->execute();
     }
 
-    public function locked() {
+    /**
+     *
+     * @return bool
+     */
+    public function locked()
+    {
         return false;
     }
-
 }

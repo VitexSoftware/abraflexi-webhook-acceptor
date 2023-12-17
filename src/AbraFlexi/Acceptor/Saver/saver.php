@@ -13,7 +13,8 @@ namespace AbraFlexi\Acceptor\Saver;
  *
  * @author vitex
  */
-interface AcceptorSaver {
+interface saver
+{
     /**
      * Keep Current company
      */

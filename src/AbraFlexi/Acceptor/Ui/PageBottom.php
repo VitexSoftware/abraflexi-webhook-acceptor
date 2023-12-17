@@ -15,12 +15,13 @@ namespace AbraFlexi\Acceptor\Ui;
  * @package    VitexSoftware
  * @author     Vitex <vitex@hippy.cz>
  */
-class PageBottom extends \Ease\Html\FooterTag {
-
+class PageBottom extends \Ease\Html\FooterTag
+{
     /**
      * Zobrazí přehled právě přihlášených a spodek stránky
      */
-    public function finalize() {
+    public function finalize()
+    {
         $composer = 'composer.json';
         if (!file_exists($composer)) {
             $composer = '../debian/conf/' . $composer;
@@ -44,5 +45,4 @@ class PageBottom extends \Ease\Html\FooterTag {
 
         $this->addItem(new \Ease\TWB4\Container($footrow));
     }
-
 }
