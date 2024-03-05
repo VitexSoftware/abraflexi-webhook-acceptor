@@ -17,3 +17,5 @@
 /debian/abraflexi-webhook-acceptor.debhelper.log
 /tests/.phpunit.result.cache
 /debian/.debhelper/
+/db/abraflexi-webhook-acceptor.sqlite
+/debian/files

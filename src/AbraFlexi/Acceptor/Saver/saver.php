@@ -19,6 +19,7 @@ interface saver
      * Keep Current company
      */
     public function setCompany(string $companyCode);
+
     /**
      * Keep Current server url
      */
