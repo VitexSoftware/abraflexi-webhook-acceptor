@@ -157,7 +157,7 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
         foreach ($changes as $apiData) {
             try {
                 $this->getFluentPDO()->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
-            } catch (Exception $exc) {
+            } catch (\Exception $exc) {
                 $this->addStatusMessage($exc->getMessage() . ' Unknown server ?: ' . $urihelper->url, 'warning');
             }
         }
@@ -169,7 +169,7 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
      *
      * @param int $inVersion
      *
-     * @return type
+     * @return boolean
      */
     public function wipeCacheRecord($inVersion)
     {

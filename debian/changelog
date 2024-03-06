@@ -1,4 +1,4 @@
-abraflexi-webhook-acceptor (1.0.0) UNRELEASED; urgency=low
+abraflexi-webhook-acceptor (1.1.0) UNRELEASED; urgency=low
 
   [ CyberVitexus ]
   * Initial release.
@@ -8,5 +8,6 @@ abraflexi-webhook-acceptor (1.0.0) UNRELEASED; urgency=low
   * Try to save data
   * v1.0 release
   * phpstan used
+  * Code Cleanup/Update
 
- -- vitex <info@vitexsoftware.cz>  Sun, 17 Dec 2023 18:40:44 +0100
+ -- vitex <info@vitexsoftware.cz>  Wed, 06 Mar 2024 23:56:46 +0100

@@ -20,7 +20,7 @@ class WebHookCacheView extends \Ease\TWB4\Panel
 
     public function __construct()
     {
-        $this->takemyTable('changes_cache');
+        $this->setMyTable('changes_cache');
         $changeTable = new \Ease\Html\TableTag(null, ['class' => 'table']);
         $changes     = $this->getAllFromSQL();
         if (!empty($changes)) {

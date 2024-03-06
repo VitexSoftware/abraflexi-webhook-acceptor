@@ -4,7 +4,7 @@
  * AbraFlexi - WebHook reciever
  *
  * @author     Vítězslav Dvořák <info@vitexsofware.cz>
- * @copyright  (G) 2017-2022 Vitex Software
+ * @copyright  (G) 2017-2024 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor;
@@ -67,7 +67,7 @@ class HookReciever extends \AbraFlexi\Changes
         parent::__construct(null, $properties);
         $this->sqlEngine = new ChangesApi();
 
-        foreach (explode('|', \Ease\Functions::cfg('WHA_SAVER')) as $saverClass) {
+        foreach (explode('|', \Ease\Shared::cfg('WHA_SAVER')) as $saverClass) {
             if ($saverClass) {
                 $saverClass = '\\AbraFlexi\\Acceptor\\Saver\\' . $saverClass;
                 if (class_exists($saverClass)) {
@@ -105,7 +105,8 @@ class HookReciever extends \AbraFlexi\Changes
             }
             $this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['REMOTE_HOST'] . ':5434'; //TODO: Handle port somehow
         } else {
-            $this->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'error');
+            $this->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
+            $this->url = '';
         }
         $inputJSON = file_get_contents($source);
         if (strlen($inputJSON)) {

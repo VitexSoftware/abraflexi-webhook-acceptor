@@ -4,7 +4,7 @@
  * Abra Flexi Webhook Acceptor - Phinx database adapter.
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
- * @copyright  2021-2022 Vitex Software
+ * @copyright  2021-2024 Vitex Software
  */
 if (file_exists('./vendor/autoload.php')) {
     include_once './vendor/autoload.php';
@@ -13,44 +13,37 @@ if (file_exists('./vendor/autoload.php')) {
 }
 
 
-$cfg = __DIR__ . '/.env';
-
-if(file_exists($cfg)){
-    \Ease\Shared::singleton()->loadConfig($cfg, true);
-}
+\Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], '../.env', true);
 
 $prefix = file_exists('./db/') ? './db/' : '../db/';
 
 $sqlOptions = [];
 
-if (strstr(\Ease\Functions::cfg('DB_CONNECTION'), 'sqlite')) {
-    $sqlOptions['database'] = __DIR__ . '/' . basename(\Ease\Functions::cfg('DB_DATABASE'));
+if (strstr(\Ease\Shared::cfg('DB_CONNECTION'), 'sqlite')) {
+    $sqlOptions['database'] = \Ease\Shared::cfg('DB_DATABASE');
     if (!file_exists($sqlOptions['database'])) {
         file_put_contents($sqlOptions['database'], '');
     }
 }
 
 $engine = new \Ease\SQL\Engine(null, $sqlOptions);
-$cfg = [
+return [
     'paths' => [
         'migrations' => [$prefix . 'migrations'],
         'seeds' => [$prefix . 'seeds/']
     ],
     'environments' =>
     [
-        'default_database' => 'development',
+        'default_environment' => 'development',
         'development' => [
-            'adapter' => \Ease\Functions::cfg('DB_TYPE'),
+            'adapter' => \Ease\Shared::cfg('DB_TYPE'),
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
         ],
-        'default_database' => 'production',
         'production' => [
-            'adapter' => \Ease\Functions::cfg('DB_TYPE'),
+            'adapter' => \Ease\Shared::cfg('DB_TYPE'),
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
         ]
     ]
 ];
-
-return $cfg;

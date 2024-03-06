@@ -34,6 +34,6 @@ class Hooker extends \AbraFlexi\Hooks
             'webhook.php?instanceid=' . $instanceId,
             $baseUrl
         );
-        return \Ease\Functions::addUrlParams($webHookUrl, ['company' => \Ease\Functions::cfg('ABRAFLEXI_COMPANY')]);
+        return \Ease\Functions::addUrlParams($webHookUrl, ['company' => \Ease\Shared::cfg('ABRAFLEXI_COMPANY')]);
     }
 }

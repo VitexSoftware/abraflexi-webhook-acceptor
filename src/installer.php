@@ -13,7 +13,7 @@ define('APP_NAME', 'WebHookInstaller');
 define('EASE_LOGGER', 'syslog');
 require_once __DIR__ . '/../vendor/autoload.php';
 
-\Ease\Shared::init(['DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD'], '../.env');
+\Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], '../.env');
 
 $success = false;
 $hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
@@ -45,6 +45,10 @@ if ($oPage->isPosted()) {
     }
 } else {
     $oPage->addStatusMessage(_('WebHook Acceptor URL') . ': ' . $baseUrl);
+}
+
+if (array_key_exists('REMOTE_HOST', $_SERVER) === false) {
+    $oPage->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
 }
 
 $setupRow = new \Ease\TWB4\Row();

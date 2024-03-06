@@ -4,7 +4,7 @@
  * AbraFlexi WebHook Acceptor  - AcceptorSaver interface
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2021-2022 Vitex Software
+ * @copyright  2021-2024 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor\Saver;

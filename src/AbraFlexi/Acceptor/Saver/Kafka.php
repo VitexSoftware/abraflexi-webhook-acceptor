@@ -18,6 +18,10 @@ namespace AbraFlexi\Acceptor\Saver;
  */
 class Kafka implements saver
 {
+    /**
+     *
+     * @param type $param
+     */
     public function save($param)
     {
         $conf = new \RdKafka\Conf();
