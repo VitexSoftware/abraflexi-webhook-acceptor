@@ -14,12 +14,14 @@ if (file_exists('./vendor/autoload.php')) {
 
 
 \Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], '../.env', true);
+$dbtype = \Ease\Shared::cfg('DB_CONNECTION');
+
 
 $prefix = file_exists('./db/') ? './db/' : '../db/';
 
 $sqlOptions = [];
 
-if (strstr(\Ease\Shared::cfg('DB_CONNECTION'), 'sqlite')) {
+if (strstr($dbtype, 'sqlite')) {
     $sqlOptions['database'] = \Ease\Shared::cfg('DB_DATABASE');
     if (!file_exists($sqlOptions['database'])) {
         file_put_contents($sqlOptions['database'], '');
@@ -27,7 +29,7 @@ if (strstr(\Ease\Shared::cfg('DB_CONNECTION'), 'sqlite')) {
 }
 
 $engine = new \Ease\SQL\Engine(null, $sqlOptions);
-return [
+$cfg = [
     'paths' => [
         'migrations' => [$prefix . 'migrations'],
         'seeds' => [$prefix . 'seeds/']
@@ -36,14 +38,18 @@ return [
         [
         'default_environment' => 'development',
         'development' => [
-            'adapter' => \Ease\Shared::cfg('DB_CONNECTION'),
+            'adapter' => $dbtype,
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
             ],
         'production' => [
-            'adapter' => \Ease\Shared::cfg('DB_CONNECTION'),
+            'adapter' => $dbtype,
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
             ]
         ]
 ];
+
+print_r($cfg);
+
+return $cfg;
