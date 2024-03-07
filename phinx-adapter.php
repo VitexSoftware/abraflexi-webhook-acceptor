@@ -16,7 +16,6 @@ $cfg = '../.env';
 
 \Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], $cfg , true);
 $dbtype = \Ease\Shared::cfg('DB_CONNECTION');
-
 $prefix = file_exists('./db/') ? './db/' : '../db/';
 
 $sqlOptions = [];
