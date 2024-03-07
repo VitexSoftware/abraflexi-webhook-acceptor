@@ -12,10 +12,10 @@ if (file_exists('./vendor/autoload.php')) {
     include_once '../vendor/autoload.php';
 }
 
+$cfg = '../.env';
 
-\Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], '../.env', true);
+\Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], $cfg , true);
 $dbtype = \Ease\Shared::cfg('DB_CONNECTION');
-
 
 $prefix = file_exists('./db/') ? './db/' : '../db/';
 
@@ -29,7 +29,7 @@ if (strstr($dbtype, 'sqlite')) {
 }
 
 $engine = new \Ease\SQL\Engine(null, $sqlOptions);
-$cfg = [
+return [
     'paths' => [
         'migrations' => [$prefix . 'migrations'],
         'seeds' => [$prefix . 'seeds/']
@@ -50,6 +50,3 @@ $cfg = [
         ]
 ];
 
-print_r($cfg);
-
-return $cfg;
