@@ -33,17 +33,17 @@ return [
         'seeds' => [$prefix . 'seeds/']
     ],
     'environments' =>
-    [
+        [
         'default_environment' => 'development',
         'development' => [
-            'adapter' => \Ease\Shared::cfg('DB_TYPE'),
+            'adapter' => \Ease\Shared::cfg('DB_CONNECTION'),
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
-        ],
+            ],
         'production' => [
-            'adapter' => \Ease\Shared::cfg('DB_TYPE'),
+            'adapter' => \Ease\Shared::cfg('DB_CONNECTION'),
             'name' => $engine->database,
             'connection' => $engine->getPdo($sqlOptions)
+            ]
         ]
-    ]
 ];
