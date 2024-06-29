@@ -20,6 +20,8 @@ $hooker->saveLastProcessedVersion(1);
 
 //$hooker->debug = true;
 
+$_SERVER['REMOTE_HOST'] = 'localhost'; //TODO
+
 foreach (scandir(__DIR__ . '/hooks') as $hookfile) {
     if ($hookfile[0] != '.') {
         $apiResponseRaw = $hooker->listen(__DIR__ . '/hooks/' . $hookfile);

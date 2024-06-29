@@ -9,10 +9,9 @@ Listen for AbraFlexi changes
 Savers
 ------
 
+ * PdoSQL - store data in postgresql, mysql, mssql etc. 
  * Api    - push to some api (act as proxy) - not yet finished
  * Kafka  - store data in nosql database  - not yet finished
- * PdoSQL - store data in postgresql, mysql, mssql etc. 
-
 
 Installation
 ------------
@@ -25,8 +24,17 @@ sudo apt update
 sudo apt install multiflexi-DATABASE 
 ```
 
-Please choose your database adapter: **multiflexi-mysql**, **multiflexi-pgsql** a **multiflexi-sqlite**
+Please choose one of database type: **multiflexi-mysql**, **multiflexi-pgsql** a **multiflexi-sqlite** to install.
 
+Target Web root to /usr/share/abraflexi-webhook-acceptor
+
+(Apache can be configured by `a2enconf abraflexi-webhook-acceptor` command)
+
+Then open this location in browser as URI reachable by AbraFlexi server:
+
+![Done](installer-done.png?raw=true)
+
+>> Note: You can safely ignore the "⚠ REMOTE_HOST is not set. Is HostnameLookups On ?" message.
 
 Database configuration
 ----------------------

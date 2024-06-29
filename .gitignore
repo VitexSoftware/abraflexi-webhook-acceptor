@@ -23,3 +23,6 @@
 /debian/abraflexi-webhook-acceptor-mysql.debhelper.log
 /debian/abraflexi-webhook-acceptor-pgsql.debhelper.log
 /debian/abraflexi-webhook-acceptor-sqlite.debhelper.log
+/db/abraflexiwebhookacceptor
+/db/abraflexiwebhookacceptor-shm
+/db/abraflexiwebhookacceptor-wal

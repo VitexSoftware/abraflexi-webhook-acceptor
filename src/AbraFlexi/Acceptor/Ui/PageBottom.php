@@ -4,7 +4,7 @@
  * AbraFlexi WebHook Acceptor  - Shared page bottom class
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2021-2022 Vitex Software
+ * @copyright  2021-2024 Vitex Software
  */
 
 namespace AbraFlexi\Acceptor\Ui;
@@ -27,10 +27,6 @@ class PageBottom extends \Ease\Html\FooterTag
             $composer = '../debian/conf/' . $composer;
         }
 
-        $this->includeCSS('https://use.fontawesome.com/releases/v5.3.1/css/all.css');
-
-        $appInfo = json_decode(file_get_contents($composer));
-
         $container = $this->setTagID('footer');
 
 //        if (\Ease\Shared::user()->getUserID()) {
@@ -39,7 +35,7 @@ class PageBottom extends \Ease\Html\FooterTag
         $this->addItem('<hr>');
         $footrow = new \Ease\TWB4\Row();
 
-        $author = 'AbraFlexi Webhook Acceptor v.: ' . $appInfo->version . '&nbsp;&nbsp; &copy; 2020-2022 <a href="https://vitexsoftware.com/">Vitex Software</a>';
+        $author = '<a href="https://github.com/VitexSoftware/abraflexi-webhook-acceptor">AbraFlexi Webhook Acceptor</a> v.: ' . \Ease\Shared::appVersion() . '&nbsp;&nbsp; &copy; 2020-2022 <a href="https://vitexsoftware.com/">Vitex Software</a>';
 
         $footrow->addColumn(6, [$author]);
 
