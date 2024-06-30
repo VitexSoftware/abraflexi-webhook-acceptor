@@ -48,7 +48,18 @@ if ($oPage->isPosted()) {
 }
 
 if (array_key_exists('REMOTE_HOST', $_SERVER) === false) {
-    $oPage->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
+    $_SERVER['REMOTE_HOST'] = $_SERVER['REMOTE_ADDR'];
+    switch ($_SERVER['SERVER_SOFTWARE']) {
+        case 'Apache':
+            $oPage->addStatusMessage(_('Add HostnameLookups On to your Apache configuration'), 'warning');
+            break;
+        case 'nginx':
+            $_SERVER['REMOTE_HOST'] = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            break;
+        default:
+            $oPage->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
+    }
+
 }
 
 $setupRow = new \Ease\TWB4\Row();
@@ -63,4 +74,4 @@ $oPage->addItem(new \Ease\TWB4\Container($setupRow));
 
 $oPage->addItem(new Ui\PageBottom());
 
-echo $oPage;
+echo $oPage->draw();

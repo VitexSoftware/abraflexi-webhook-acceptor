@@ -14,8 +14,8 @@ namespace AbraFlexi\Acceptor;
  *
  * @author vitex
  */
-class HookReciever extends \AbraFlexi\Changes
-{
+class HookReciever extends \AbraFlexi\Changes {
+
     /**
      *
      * @var array
@@ -62,8 +62,7 @@ class HookReciever extends \AbraFlexi\Changes
     /**
      * WebHook Acceptor
      */
-    public function __construct($properties = [])
-    {
+    public function __construct($properties = []) {
         parent::__construct(null, $properties);
         $this->sqlEngine = new ChangesApi();
 
@@ -92,21 +91,11 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return string zaslaná data
      */
-    public function listen($source = 'php://input')
-    {
+    public function listen($source = 'php://input') {
         $input = null;
-        if (isset($_SERVER['REMOTE_HOST'])) {
-            if ($this->debug) {
-                $this->addStatusMessage(sprintf(
-                    _('Recieved Webhook from %s %s'),
-                    $_SERVER['REMOTE_ADDR'],
-                    $_SERVER['REMOTE_HOST']
-                ), 'debug');
-            }
-            $this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['REMOTE_HOST'] . ':5434'; //TODO: Handle port somehow
-        } else {
-            $this->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
-            $this->url = '';
+        $this->url = $_SERVER['REQUEST_SCHEME'] . '://' . $this->remoteHost() . ':5434'; //TODO: Handle port somehow
+        if ($this->debug) {
+            $this->addStatusMessage(sprintf(_('Recieved Webhook from %s'), $this->url), 'debug');
         }
         $inputJSON = file_get_contents($source);
         if (strlen($inputJSON)) {
@@ -120,14 +109,39 @@ class HookReciever extends \AbraFlexi\Changes
     }
 
     /**
+     * With Apache use HostnameLookus otherwise gethostbyaddr()
+     * 
+     * @return string
+     */
+    public function remoteHost() {
+        if (array_key_exists('REMOTE_HOST', $_SERVER) === false) {
+            $_SERVER['REMOTE_HOST'] = $_SERVER['REMOTE_ADDR'];
+            switch ($_SERVER['SERVER_SOFTWARE']) {
+                case 'Apache':
+                    if ($this->debug) {
+                        $this->addStatusMessage(_('Add HostnameLookups On to your Apache configuration'), 'warning');
+                    }
+                    break;
+                case 'nginx':
+                    $_SERVER['REMOTE_HOST'] = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+                    break;
+                default:
+                    if ($this->debug) {
+                        $this->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
+                    }
+            }
+        }
+        return $_SERVER['REMOTE_HOST'];
+    }
+
+    /**
      * Save changes into database or connector
      *
      * @param array $changes
      *
      * @return boolean All Savers successed
      */
-    public function saveWebhookData(array $changes)
-    {
+    public function saveWebhookData(array $changes) {
         $results = [];
         foreach ($this->saver as $saver) {
             $saver->setCompany($this->company);
@@ -144,8 +158,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return array list IDS processed
      */
-    function processAbraFlexiChanges(array $changes)
-    {
+    function processAbraFlexiChanges(array $changes) {
         $changepos = 0;
         $doneIDd = [];
         foreach ($changes as $change) {
@@ -158,9 +171,9 @@ class HookReciever extends \AbraFlexi\Changes
 
             if ($inVersion <= $this->lastProcessedVersion) {
                 $this->addStatusMessage(sprintf(
-                    _('Change version %s already processed'),
-                    $inVersion
-                ), 'warning');
+                                _('Change version %s already processed'),
+                                $inVersion
+                        ), 'warning');
                 continue;
             }
             $handlerClassName = \AbraFlexi\RO::evidenceToClassName($evidence);
@@ -172,8 +185,8 @@ class HookReciever extends \AbraFlexi\Changes
             $handlerClass = '\\SpojeNet\\System\\whplugins\\' . $handlerClassName;
             if (class_exists($handlerClass)) {
                 $saver = new $handlerClass(
-                    $id,
-                    ['evidence' => $evidence, 'operation' => $operation, 'external-ids' => $externalIDs,
+                        $id,
+                        ['evidence' => $evidence, 'operation' => $operation, 'external-ids' => $externalIDs,
                     'changeid' => $inVersion]
                 );
                 $saver->saveHistory();
@@ -183,8 +196,8 @@ class HookReciever extends \AbraFlexi\Changes
                     case 'delete':
                         if ($saver->process($operation) && ($this->debug === true)) {
                             $this->addStatusMessage(
-                                $changepos . '/' . count($this->changes),
-                                'success'
+                                    $changepos . '/' . count($this->changes),
+                                    'success'
                             );
                         }
                         break;
@@ -195,9 +208,9 @@ class HookReciever extends \AbraFlexi\Changes
             } else {
                 if ($this->debug === true) {
                     $this->addStatusMessage(sprintf(
-                        _('Handler Class %s does not exist'),
-                        addslashes($handlerClass)
-                    ), 'warning');
+                                    _('Handler Class %s does not exist'),
+                                    addslashes($handlerClass)
+                            ), 'warning');
                 }
             }
             $this->saveLastProcessedVersion($inVersion);
@@ -212,13 +225,12 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return int Globální verze poslední změny
      */
-    public function takeChanges($changes)
-    {
+    public function takeChanges($changes) {
         $result = null;
         if (!is_array($changes)) {
             \Ease\Shared::logger()->addToLog(
-                _('Empty WebHook request'),
-                'Warning'
+                    _('Empty WebHook request'),
+                    'Warning'
             );
         } else {
             if (array_key_exists('winstrom', $changes)) {
@@ -235,8 +247,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @param int $version
      */
-    public function saveLastProcessedVersion($version)
-    {
+    public function saveLastProcessedVersion($version) {
         $source = $this->url . '/c/' . $this->company;
         $this->lastProcessedVersion = $version;
         $this->myCreateColumn = null;
@@ -255,8 +266,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return int $version
      */
-    public function getLastSavedVersion()
-    {
+    public function getLastSavedVersion() {
         $lastProcessedVersion = null;
 
         foreach ($this->saver as $saver) {
@@ -266,8 +276,8 @@ class HookReciever extends \AbraFlexi\Changes
         }
         if (is_null($lastProcessedVersion)) {
             $this->addStatusMessage(
-                _("Last Processed Change ID Loading Failed"),
-                'warning'
+                    _("Last Processed Change ID Loading Failed"),
+                    'warning'
             );
             $lastProcessedVersion = 0;
         }
@@ -279,8 +289,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return int size of saved lockfile in bytes
      */
-    public function lock()
-    {
+    public function lock() {
         return file_put_contents($this->lockfile, getmypid());
     }
 
@@ -289,8 +298,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @returm locked by PID
      */
-    public function locked()
-    {
+    public function locked() {
         return $this->isLocked() ? intval(file_get_contents($this->lockfile)) : 0;
     }
 
@@ -298,8 +306,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return boolean
      */
-    public function isProcessRunning()
-    {
+    public function isProcessRunning() {
         if (!file_exists($this->lockfile) || !is_file($this->lockfile)) {
             return false;
         }
@@ -311,8 +318,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return boolean
      */
-    public function isLocked()
-    {
+    public function isLocked() {
         $locked = false;
         $lockfilePresent = file_exists($this->lockfile);
         if ($lockfilePresent) {
@@ -322,10 +328,10 @@ class HookReciever extends \AbraFlexi\Changes
                 $currentProcessPID = file_get_contents($this->lockfile);
                 $locFileAge = time() - filemtime($this->lockfile);
                 $this->addStatusMessage(sprintf(
-                    'Ophraned lockfile found. pid: %d age: %s s.',
-                    $currentProcessPID,
-                    $locFileAge
-                ), 'error');
+                                'Ophraned lockfile found. pid: %d age: %s s.',
+                                $currentProcessPID,
+                                $locFileAge
+                        ), 'error');
                 $this->unlock();
             }
         }
@@ -335,8 +341,7 @@ class HookReciever extends \AbraFlexi\Changes
     /**
      * Remove lockfile
      */
-    public function unlock()
-    {
+    public function unlock() {
         return file_exists($this->lockfile) ? unlink($this->lockfile) : true;
     }
 
@@ -347,8 +352,7 @@ class HookReciever extends \AbraFlexi\Changes
      *
      * @return array
      */
-    public function onlyFreshHooks($webhooksRawData)
-    {
+    public function onlyFreshHooks($webhooksRawData) {
         $lastProcessed = $this->getLastSavedVersion();
         foreach ($webhooksRawData as $recId => $webhookRawData) {
             if ($webhookRawData['@in-version'] <= $lastProcessed) {
