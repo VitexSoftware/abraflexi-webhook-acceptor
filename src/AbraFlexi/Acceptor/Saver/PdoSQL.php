@@ -1,16 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * AbraFlexi WebHook Acceptor  - Save changes into database
+ * This file is part of the MultiFlexi package
  *
- * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2021-2022 Vitex Software
+ * https://github.com/VitexSoftware/abraflexi-webhook-acceptor
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace AbraFlexi\Acceptor\Saver;
 
 /**
- * Description of PdoSQL
+ * Description of PdoSQL.
  *
  * @author vitex
  */
@@ -24,7 +30,9 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
     private $serverUrl = '';
 
     /**
-     * Prijmac WebHooku
+     * Prijmac WebHooku.
+     *
+     * @param mixed $options
      */
     public function __construct($options)
     {
@@ -34,80 +42,78 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
     }
 
     /**
-     * Keep current company code
-     *
-     * @param string $companyCode
+     * Keep current company code.
      */
-    public function setCompany(string $companyCode)
+    public function setCompany(string $companyCode): void
     {
         $this->company = $companyCode;
     }
 
     /**
-     * Keep current server url
-     *
-     * @param string $url
+     * Keep current server url.
      */
-    public function setUrl(string $url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
 
     /**
-     * Nacte posledni zpracovanou verzi
+     * Nacte posledni zpracovanou verzi.
      *
      * @return int $version
      */
     public function getLastProcessedVersion()
     {
-        $this->serverUrl = $this->url . '/c/' . $this->company;
+        $this->serverUrl = $this->url.'/c/'.$this->company;
         $lastProcessedVersion = null;
         $this->setmyTable('changesapi');
         $chRaw = $this->getColumnsFromSQL(['changeid'], ['serverurl' => $this->serverUrl]);
+
         if (isset($chRaw[0]['changeid'])) {
-            $lastProcessedVersion = intval($chRaw[0]['changeid']);
+            $lastProcessedVersion = (int) $chRaw[0]['changeid'];
         } else {
             try {
                 $this->addStatusMessage(sprintf(_('%s: API Initialized with changeID 0'), $this->serverUrl), $this->saveLastProcessedVersion(0) ? 'success' : 'warning');
                 $lastProcessedVersion = 0;
             } catch (\Exception $exc) {
-                $this->addStatusMessage(sprintf(_("%s: Last Processed Change ID Loading Failed"), $this->serverUrl), 'warning');
+                $this->addStatusMessage(sprintf(_('%s: Last Processed Change ID Loading Failed'), $this->serverUrl), 'warning');
             }
         }
+
         $this->setmyTable('changes_cache');
+
         return $lastProcessedVersion;
     }
 
     /**
-     *
-     * @param int $version
-     *
      * @return int Last loa
      */
     public function saveLastProcessedVersion(int $version)
     {
-        $this->serverUrl = $this->url . '/c/' . $this->company;
-//        if ($version) {
-//            $this->lastProcessedVersion = $this->getLastProcessedVersion();
-//        }
+        $this->serverUrl = $this->url.'/c/'.$this->company;
+        //        if ($version) {
+        //            $this->lastProcessedVersion = $this->getLastProcessedVersion();
+        //        }
         $this->setmyTable('changesapi');
         $this->setKeyColumn('serverurl');
         $apich = ['changeid' => $version, 'serverurl' => $this->serverUrl];
+
         try {
             if ($version ? $this->updateToSQL($apich) : $this->insertToSQL($apich)) {
                 $this->lastProcessedVersion = $version;
             }
         } catch (\Exception $exc) {
-            $this->addStatusMessage(_("Last Processed Change ID Saving Failed"), 'error');
+            $this->addStatusMessage(_('Last Processed Change ID Saving Failed'), 'error');
         }
 
         $this->setmyTable('changes_cache');
         $this->setKeyColumn('inversion');
+
         return $version;
     }
 
     /**
-     * conver $sqlData column names to $jsonData column names
+     * conver $sqlData column names to $jsonData column names.
      *
      * @param array $sqlData
      *
@@ -120,11 +126,12 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
         $jsonData['@evidence'] = $sqlData['evidence'];
         $jsonData['@operation'] = $sqlData['operation'];
         $jsonData['external-ids'] = unserialize(stripslashes($sqlData['externalids']));
+
         return $jsonData;
     }
 
     /**
-     * conver $jsonData column names to $sqlData column names
+     * conver $jsonData column names to $sqlData column names.
      *
      * @param array $apiData
      *
@@ -136,15 +143,16 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
         $sqlData['recordid'] = $apiData['id'];
         $sqlData['evidence'] = $apiData['@evidence'];
         $sqlData['operation'] = $apiData['@operation'];
-        $sqlData['externalids'] = addslashes(serialize(array_key_exists(
+        $sqlData['externalids'] = addslashes(serialize(\array_key_exists(
             'external-ids',
-            $apiData
+            $apiData,
         ) ? $apiData['external-ids'] : []));
+
         return $sqlData;
     }
 
     /**
-     * Save Json Data to SQL cache
+     * Save Json Data to SQL cache.
      *
      * @param array $changes
      *
@@ -153,34 +161,35 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
     public function saveWebhookData($changes)
     {
         $urihelper = new \AbraFlexi\RO(null, ['offline' => true, 'url' => $this->url]);
-        $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '" . $urihelper->url . '/c/' . $this->company . "')");
+        $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '".$urihelper->url.'/c/'.$this->company."')");
+
         foreach ($changes as $apiData) {
             try {
                 $this->getFluentPDO()->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
             } catch (\Exception $exc) {
-                $this->addStatusMessage($exc->getMessage() . ' Unknown server ?: ' . $urihelper->url, 'warning');
+                $this->addStatusMessage($exc->getMessage().' Unknown server ?: '.$urihelper->url, 'warning');
             }
         }
-        return isset($apiData) ? $this->saveLastProcessedVersion(intval($apiData['@in-version'])) : 0;
+
+        return isset($apiData) ? $this->saveLastProcessedVersion((int) $apiData['@in-version']) : 0;
     }
 
     /**
-     * Empty given change version from cache
+     * Empty given change version from cache.
      *
      * @param int $inVersion
      *
-     * @return boolean
+     * @return bool
      */
     public function wipeCacheRecord($inVersion)
     {
         return $this->fluent->deleteFrom('changes_cache')->where(
             'inversion',
-            $inVersion
+            $inVersion,
         )->execute();
     }
 
     /**
-     *
      * @return bool
      */
     public function locked()

@@ -17,14 +17,23 @@
         "vitexsoftware/ease-twbootstrap4-widgets": "dev-master"
     },
     "require-dev": {
-        "robmorgan/phinx": "*",
-        "phpunit/phpunit": "~9.5.2"
+        "phpunit/phpunit": "*",
+        "phpstan/phpstan": "*",
+        "friendsofphp/php-cs-fixer": "^3.61",
+        "ergebnis/composer-normalize": "^2.43",
+        "ergebnis/php-cs-fixer-config": "^6.34",
+        "phpstan/phpstan-phpunit": "2.0.x-dev"
     },
     "autoload": {
         "psr-4": {
             "AbraFlexi\\Acceptor\\": "src/AbraFlexi/Acceptor/",
             "AbraFlexi\\Acceptor\\Saver\\": "src/AbraFlexi/Acceptor/Saver/",
             "AbraFlexi\\Acceptor\\Ui\\": "src/AbraFlexi/Acceptor/Ui/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
         }
     }
 }

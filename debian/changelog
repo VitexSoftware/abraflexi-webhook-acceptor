@@ -1,8 +1,15 @@
+abraflexi-webhook-acceptor (1.2.0) UNRELEASED; urgency=medium
+
+  * minimal supported version of php is 8.1
+
+ -- Vitex <vitezslav.dvorak@spojenet.cz>  Mon, 07 Apr 2025 10:50:36 +0200
+
 abraflexi-webhook-acceptor (1.1.1) jammy; urgency=medium
 
+  [ Vítězslav Dvořák ]
   * Debian package fix
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Sat, 29 Jun 2024 15:01:13 +0200
+ -- Vitex <vitezslav.dvorak@spojenet.cz>  Mon, 07 Apr 2025 10:50:13 +0200
 
 abraflexi-webhook-acceptor (1.1.0) jammy; urgency=low
 

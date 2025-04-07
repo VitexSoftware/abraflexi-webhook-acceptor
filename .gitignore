@@ -26,3 +26,4 @@
 /db/abraflexiwebhookacceptor
 /db/abraflexiwebhookacceptor-shm
 /db/abraflexiwebhookacceptor-wal
+/.build/

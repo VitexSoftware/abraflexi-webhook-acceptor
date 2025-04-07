@@ -1,27 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * AbraFlexi WebHook Acceptor  - AcceptorSaver interface
+ * This file is part of the MultiFlexi package
  *
- * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2021-2024 Vitex Software
+ * https://github.com/VitexSoftware/abraflexi-webhook-acceptor
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace AbraFlexi\Acceptor\Saver;
 
 /**
- *
  * @author vitex
  */
 interface saver
 {
     /**
-     * Keep Current company
+     * Keep Current company.
      */
     public function setCompany(string $companyCode);
 
     /**
-     * Keep Current server url
+     * Keep Current server url.
      */
     public function setUrl(string $url);
 }

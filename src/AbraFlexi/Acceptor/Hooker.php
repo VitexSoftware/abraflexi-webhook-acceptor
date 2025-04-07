@@ -1,23 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * AbraFlexi WebHook Acceptor  - Endpoint Handler
+ * This file is part of the MultiFlexi package
  *
- * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright  2021-2022 Vitex Software
+ * https://github.com/VitexSoftware/abraflexi-webhook-acceptor
+ *
+ * (c) Vítězslav Dvořák <http://vitexsoftware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace AbraFlexi\Acceptor;
 
 /**
- * Description of Hooker
+ * Description of Hooker.
  *
  * @author vitex
  */
 class Hooker extends \AbraFlexi\Hooks
 {
     /**
-     * WebHook url for Given ID of AbraFlexi instance
+     * WebHook url for Given ID of AbraFlexi instance.
      *
      * @param int $instanceId
      *
@@ -31,9 +37,10 @@ class Hooker extends \AbraFlexi\Hooks
 
         $webHookUrl = str_replace(
             $curFile,
-            'webhook.php?instanceid=' . $instanceId,
-            $baseUrl
+            'webhook.php?instanceid='.$instanceId,
+            $baseUrl,
         );
+
         return \Ease\Functions::addUrlParams($webHookUrl, ['company' => \Ease\Shared::cfg('ABRAFLEXI_COMPANY')]);
     }
 }
