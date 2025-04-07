@@ -66,7 +66,7 @@ distributions.each {
                     sh 'echo "INSTALATION"'
                     artifacts.each { deb_file ->
                         if (deb_file.endsWith('.deb')) {
-                            if (!deb_file.contains('abraflexi-webhook-acceptor-mysql')) {
+                            if (!deb_file.contains('abraflexi-webhook-acceptor-mysql') && !deb_file.contains('abraflexi-webhook-acceptor-pgsql')) {
                                 sh 'echo -e "${GREEN} installing ' + deb_file + ' on `lsb_release -sc` ${ENDCOLOR} "'
                                 sh 'sudo DEBIAN_FRONTEND=noninteractive DEBCONF_DEBUG=' + debconf_debug + ' apt-get -y install $WORKSPACE/dist/debian/' + deb_file
                             } else {
