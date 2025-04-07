@@ -5,7 +5,6 @@
   "type": "project",
   "require": {
     "deb/abraflexi": "*",
-    "deb/ease-bricks": "*",
     "deb/abraflexi-bricks": "*",
     "deb/ease-fluentpdo": "*",
     "deb/ease-bootstrap4-widgets-abraflexi": "*",
