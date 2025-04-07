@@ -40,10 +40,6 @@
     },
     {
       "type": "path",
-      "url": "/usr/share/php/EaseBricks/"
-    },
-    {
-      "type": "path",
       "url": "/usr/share/php/EaseTWB4/"
     },
     {

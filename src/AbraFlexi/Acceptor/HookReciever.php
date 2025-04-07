@@ -27,7 +27,7 @@ class HookReciever extends \AbraFlexi\Changes
     /**
      * Current processed version.
      */
-    public int $globalVersion = null;
+    public ?int $globalVersion = null;
 
     /**
      * Posledni zpracovana verze.
