@@ -12,16 +12,16 @@
     "minimum-stability": "dev",
     "require": {
         "ext-posix": "*",
-        "vitexsoftware/ease-fluentpdo": "dev-main",
-        "vitexsoftware/ease-bootstrap4-widgets-abraflexi": "dev-main",
-        "vitexsoftware/ease-twbootstrap4-widgets": "dev-master"
+        "vitexsoftware/ease-fluentpdo": "^1.4",
+        "vitexsoftware/ease-bootstrap5-widgets-abraflexi": "dev-main",
+        "vitexsoftware/ease-bootstrap5-widgets": "^1.4"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
         "phpstan/phpstan": "*",
-        "friendsofphp/php-cs-fixer": "^3.61",
-        "ergebnis/composer-normalize": "^2.43",
-        "ergebnis/php-cs-fixer-config": "^6.34",
+        "friendsofphp/php-cs-fixer": "^3.71",
+        "ergebnis/composer-normalize": "^2.45",
+        "ergebnis/php-cs-fixer-config": "^6.45",
         "phpstan/phpstan-phpunit": "2.0.x-dev"
     },
     "autoload": {

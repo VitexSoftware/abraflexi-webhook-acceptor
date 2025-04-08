@@ -903,7 +903,7 @@ License:   __UNKNOWN__
  Provides: php-abraflexi
  Conflicts: flexipeehp
  Recommends: abraflexi-client-config
- Suggests: abraflexi-client,abraflexi-contract-invoices,abraflexi-dark-gui,abraflexi-digest,abraflexi-matcher,abraflexi-reminder,abraflexi-server,abraflexi-server-backup,abraflexi-tools,multiflexi,abraflexi-mailer,php-vitexsoftware-ease-bootstrap4-widgets-abraflexi,php-vitexsoftware-abraflexi-bricks
+ Suggests: abraflexi-client,abraflexi-contract-invoices,abraflexi-dark-gui,abraflexi-digest,abraflexi-matcher,abraflexi-reminder,abraflexi-server,abraflexi-server-backup,abraflexi-tools,multiflexi,abraflexi-mailer,php-vitexsoftware-ease-bootstrap5-widgets-abraflexi,php-vitexsoftware-abraflexi-bricks
  Architecture: all
  Section: web
  Priority: optional
@@ -996,7 +996,7 @@ License:   __UNKNOWN__
  Depends: ${misc:Depends}, php-mail, php-mail-mime, composer-global-update
  Conflicts: ease-framework
  Architecture: all
- Suggests: php-vitexsoftware-ease-html, php-vitexsoftware-ease-bootstrap, php-vitexsoftware-ease-bootstrap4
+ Suggests: php-vitexsoftware-ease-html, php-vitexsoftware-ease-bootstrap, php-vitexsoftware-ease-bootstrap5
  Section: web
  Priority: optional
  Description: EasePHP Framework Core
@@ -1005,7 +1005,7 @@ License:   __UNKNOWN__
  Package: php-vitexsoftware-ease-core-dev
  Depends: ${misc:Depends}, php-mail, php-mail-mime, php-vitexsoftware-ease-core, default-mta
  Architecture: all
- Suggests: php-vitexsoftware-ease-html, php-vitexsoftware-ease-bootstrap, php-vitexsoftware-ease-bootstrap4
+ Suggests: php-vitexsoftware-ease-html, php-vitexsoftware-ease-bootstrap, php-vitexsoftware-ease-bootstrap5
  Section: web
  Priority: optional
  Description: EasePHP Framework Unit Tests

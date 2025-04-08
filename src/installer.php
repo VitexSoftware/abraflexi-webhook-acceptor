@@ -30,19 +30,19 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 $success = false;
 $hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
-$oPage = new \Ease\TWB4\WebPage(_('WebHook acceptor installer'));
+$oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
 
-$baseUrl = \dirname(\Ease\WebPage::phpSelf());
+ $baseUrl = \dirname(\Ease\WebPage::phpSelf());
 
-$loginForm = new \AbraFlexi\ui\TWB4\ConnectionForm(['action' => 'install.php']);
-
+ $loginForm = new \AbraFlexi\ui\TWB5\ConnectionForm(['action' => 'install.php']);
+ 
 // $loginForm->addInput( new \Ease\Html\InputUrlTag('myurl'), _('My Url'), dirname(\Ease\Page::phpSelf()), sprintf( _('Same url as you can see in browser without %s'), basename( __FILE__ ) ) );
 
-$loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration);
+ $loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration);
 
-$loginForm->addItem(new \Ease\TWB4\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
+ $loginForm->addItem(new \Ease\TWB5\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
 
-if ($oPage->isPosted()) {
+ if ($oPage->isPosted()) {
     try {
         $format = 'json';
         $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
@@ -57,11 +57,11 @@ if ($oPage->isPosted()) {
     } catch (\Exception $exc) {
         $oPage->addStatusMessage($exc->getMessage(), 'warning');
     }
-} else {
+ } else {
     $oPage->addStatusMessage(_('WebHook Acceptor URL').': '.$baseUrl);
-}
+ }
 
-if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
+ if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
     $_SERVER['REMOTE_HOST'] = $_SERVER['REMOTE_ADDR'];
 
     switch ($_SERVER['SERVER_SOFTWARE']) {
@@ -77,19 +77,19 @@ if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
         default:
             $oPage->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
     }
-}
+ }
 
-$setupRow = new \Ease\TWB4\Row();
+ $setupRow = new \Ease\TWB5\Row();
 
-if ($success) {
+ if ($success) {
     $setupRow->addColumn(6, new \Ease\Html\H2Tag(_('Done')));
-} else {
+ } else {
     $setupRow->addColumn(6, $loginForm);
-}
+ }
 
-$setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
+ $setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
 
-$oPage->addItem(new \Ease\TWB4\Container($setupRow));
+ $oPage->addItem(new \Ease\TWB5\Container($setupRow));
 
 $oPage->addItem(new Ui\PageBottom());
 

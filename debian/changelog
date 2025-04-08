@@ -1,8 +1,15 @@
-abraflexi-webhook-acceptor (1.2.0) UNRELEASED; urgency=medium
+abraflexi-webhook-acceptor (1.2.1) UNRELEASED; urgency=medium
 
+  * bootstrap5 used
+
+ -- vitex <info@vitexsoftware.cz>  Tue, 08 Apr 2025 17:59:02 +0200
+
+abraflexi-webhook-acceptor (1.2.0) jammy; urgency=medium
+
+  [ Vitex ]
   * minimal supported version of php is 8.1
 
- -- Vitex <vitezslav.dvorak@spojenet.cz>  Mon, 07 Apr 2025 10:50:36 +0200
+ -- vitex <info@vitexsoftware.cz>  Tue, 08 Apr 2025 17:58:48 +0200
 
 abraflexi-webhook-acceptor (1.1.1) jammy; urgency=medium
 

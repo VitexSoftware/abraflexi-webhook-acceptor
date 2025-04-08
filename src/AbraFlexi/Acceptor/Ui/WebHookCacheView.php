@@ -20,7 +20,7 @@ namespace AbraFlexi\Acceptor\Ui;
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
  */
-class WebHookCacheView extends \Ease\TWB4\Panel
+class WebHookCacheView extends \Ease\TWB5\Panel
 {
     use \Ease\SQL\Orm;
 

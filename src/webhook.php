@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         exit(500);
     }
 } else {
-    $oPage = new \Ease\TWB4\WebPage(\Ease\Shared::appName());
+    $oPage = new \Ease\TWB5\WebPage(\Ease\Shared::appName());
     $oPage->redirect('installer.php');
     $oPage->addItem(new \Ease\Html\ATag('installer.php', _('Run the installer')));
     echo $oPage;

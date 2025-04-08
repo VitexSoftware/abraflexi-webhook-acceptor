@@ -32,11 +32,11 @@ $oPage = new \Ease\WebPage();
 
 $hookList = new \Ease\Html\UlTag();
 
-$hook = \Ease\TWB4\WebPage::getGetValue('hook');
+$hook = \Ease\TWB5\WebPage::getGetValue('hook');
 
 $hookForm = new \Ease\Html\Form(['method' => 'POST', 'action' => '../src/webhook.php?company=test', 'enctype' => 'text/plain']);
 $hookForm->addItem(new \Ease\Html\TextareaTag('', !empty($hook) && file_exists(__DIR__.'/hooks/'.$hook) ? file_get_contents(__DIR__.'/hooks/'.$hook) : '', ['cols' => 80, 'rows' => 20]));
-$hookForm->addItem(new \Ease\TWB4\SubmitButton('📦 Hook'));
+$hookForm->addItem(new \Ease\TWB5\SubmitButton('📦 Hook'));
 $oPage->addItem($hookForm);
 
 foreach (scandir(__DIR__.'/hooks') as $hookfile) {

@@ -27,24 +27,19 @@ class PageBottom extends \Ease\Html\FooterTag
      */
     public function finalize(): void
     {
-        $composer = 'composer.json';
+        if ($this->isFinalized() === false) {
+            $container = $this->setTagID('footer');
 
-        if (!file_exists($composer)) {
-            $composer = '../debian/conf/'.$composer;
+            $this->addItem('<hr>');
+            $footrow = new \Ease\TWB5\Row();
+
+            $author = '<a href="https://github.com/VitexSoftware/abraflexi-webhook-acceptor">AbraFlexi Webhook Acceptor</a> v.: '.\Ease\Shared::appVersion().'&nbsp;&nbsp; &copy; 2020-2025 <a href="https://vitexsoftware.com/">Vitex Software</a>';
+
+            $footrow->addColumn(6, [$author]);
+
+            $this->addItem(new \Ease\TWB5\Container($footrow));
+
+            parent::finalize();
         }
-
-        $container = $this->setTagID('footer');
-
-        //        if (\Ease\Shared::user()->getUserID()) {
-        //        $this->addItem(new \Ease\ui\BrowsingHistory());
-        //        }
-        $this->addItem('<hr>');
-        $footrow = new \Ease\TWB4\Row();
-
-        $author = '<a href="https://github.com/VitexSoftware/abraflexi-webhook-acceptor">AbraFlexi Webhook Acceptor</a> v.: '.\Ease\Shared::appVersion().'&nbsp;&nbsp; &copy; 2020-2022 <a href="https://vitexsoftware.com/">Vitex Software</a>';
-
-        $footrow->addColumn(6, [$author]);
-
-        $this->addItem(new \Ease\TWB4\Container($footrow));
     }
 }
