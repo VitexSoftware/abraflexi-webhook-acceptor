@@ -1,6 +1,6 @@
 #!groovy
 
-String[] distributions = ['debian:bookworm', 'debian:trixie', 'ubuntu:jammy', 'ubuntu:noble']
+String[] distributions = ['debian:bullseye', 'debian:bookworm', 'debian:trixie', 'debian:forky', 'ubuntu:focal', 'ubuntu:jammy', 'ubuntu:noble']
 
 String vendor = 'vitexsoftware'
 String distribution = ''
@@ -66,12 +66,8 @@ distributions.each {
                     sh 'echo "INSTALATION"'
                     artifacts.each { deb_file ->
                         if (deb_file.endsWith('.deb')) {
-                            if (!deb_file.contains('abraflexi-webhook-acceptor-mysql') && !deb_file.contains('abraflexi-webhook-acceptor-pgsql')) {
-                                sh 'echo -e "${GREEN} installing ' + deb_file + ' on `lsb_release -sc` ${ENDCOLOR} "'
-                                sh 'sudo DEBIAN_FRONTEND=noninteractive DEBCONF_DEBUG=' + debconf_debug + ' apt-get -y install $WORKSPACE/dist/debian/' + deb_file
-                            } else {
-                                println "Skipping test for: " + deb_file
-                            }
+                            sh 'echo -e "${GREEN} installing ' + deb_file + ' on `lsb_release -sc` ${ENDCOLOR} "'
+                            sh 'sudo DEBIAN_FRONTEND=noninteractive DEBCONF_DEBUG=' + debconf_debug + ' apt-get -y install $WORKSPACE/dist/debian/' + deb_file
                         }
                     }
                 }
@@ -81,8 +77,8 @@ distributions.each {
                     artifacts.each { deb_file ->
                         println "Copying artifact: " + deb_file
                         archiveArtifacts artifacts: 'dist/debian/' + deb_file
+                        sh 'cp $WORKSPACE/dist/debian/' + deb_file + ' $WORKSPACE'
                     }
-                    sh 'mv $WORKSPACE/dist/debian/*.deb $WORKSPACE'
                 }
             }
         }
