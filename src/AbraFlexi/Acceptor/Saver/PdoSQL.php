@@ -22,7 +22,7 @@ namespace AbraFlexi\Acceptor\Saver;
  */
 class PdoSQL extends \Ease\SQL\Engine implements saver
 {
-    public $myTable = 'changes_cache';
+    public string $myTable = 'changes_cache';
     public $myKeyColumn = 'inversion';
     public $lastProcessedVersion = 0;
     public $company = '';

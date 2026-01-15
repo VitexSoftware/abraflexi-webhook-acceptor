@@ -21,10 +21,10 @@ sudo apt install lsb-release wget
 echo "deb http://repo.vitexsoftware.com $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
 sudo wget -O /etc/apt/trusted.gpg.d/vitexsoftware.gpg http://repo.vitexsoftware.cz/keyring.gpg
 sudo apt update
-sudo apt install multiflexi-DATABASE 
+sudo apt install abraflexi-webhook-acceptor-DATABASE 
 ```
 
-Please choose one of database type: **multiflexi-mysql**, **multiflexi-pgsql** a **multiflexi-sqlite** to install.
+Please choose one of database type: **abraflexi-webhook-acceptor-mysql**, **abraflexi-webhook-acceptor-pgsql** a **abraflexi-webhook-acceptor-sqlite** to install.
 
 Target Web root to /usr/share/abraflexi-webhook-acceptor
 
@@ -36,10 +36,13 @@ Then open this location in browser as URI reachable by AbraFlexi server:
 
 >> Note: You can safely ignore the "⚠ REMOTE_HOST is not set. Is HostnameLookups On ?" message.
 
-Database configuration
+Configuration
 ----------------------
 
- *   DB_TYPE     - pgsql|mysql|sqlsrv|sqlite
+ *   APP_DEBUG   - true|false - show debug messages
+ *   EASE_LOGGER - syslog|console|file|mail|...
+ *   WHA_SAVER   - PdoSQL|Kafka|Api - storage backend
+ *   DB_CONNECTION - pgsql|mysql|sqlsrv|sqlite
  *   DB_HOST     - localhost is default
  *   DB_PORT     - database port
  *   DB_DATABASE - database schema name

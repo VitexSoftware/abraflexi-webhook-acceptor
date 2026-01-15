@@ -19,7 +19,7 @@ namespace AbraFlexi\Acceptor;
  * System.Spoje.Net - WebHook Acceptor & Saver to SQL Cache.
  *
  * @author     Vítězslav Dvořák <vitex@vitexsoftware.com>
- * @copyright  2017-2020 Spoje.Net, 2021-2024 VitexSoftware
+ * @copyright  2017-2020 Spoje.Net, 2021-2026 VitexSoftware
  */
 \define('APP_NAME', 'WebHookAcceptor');
 \define('EASE_LOGGER', 'syslog');
@@ -47,9 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
             $hooker->addStatusMessage(_('Webhook with empty body'), 'warning');
         }
     } catch (\AbraFlexi\Exception $exc) {
-        echo $exc->getMessage();
-
-        exit(500);
+        throw $exc; // TODO:
     }
 } else {
     $oPage = new \Ease\TWB5\WebPage(\Ease\Shared::appName());

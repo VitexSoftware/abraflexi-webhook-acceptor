@@ -19,7 +19,7 @@ namespace AbraFlexi\Acceptor;
  * System.Spoje.Net - WebHook Acceptor & Saver to SQL Cache.
  *
  * @author     Vítězslav Dvořák <vitex@vitexsoftware.com>
- * @copyright  2017-2020 Spoje.Net, 2021-2024 VitexSoftware
+ * @copyright  2017-2020 Spoje.Net, 2021-2026 VitexSoftware
  */
 \define('APP_NAME', 'WebHookInstaller');
 \define('EASE_LOGGER', 'syslog');
@@ -32,17 +32,17 @@ $success = false;
 $hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
 $oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
 
- $baseUrl = \dirname(\Ease\WebPage::phpSelf());
+$baseUrl = \dirname(\Ease\WebPage::phpSelf());
 
- $loginForm = new \AbraFlexi\ui\TWB5\ConnectionForm(['action' => 'install.php']);
- 
+$loginForm = new \AbraFlexi\ui\TWB5\ConnectionForm(['action' => 'install.php']);
+
 // $loginForm->addInput( new \Ease\Html\InputUrlTag('myurl'), _('My Url'), dirname(\Ease\Page::phpSelf()), sprintf( _('Same url as you can see in browser without %s'), basename( __FILE__ ) ) );
 
- $loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration);
+$loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration);
 
- $loginForm->addItem(new \Ease\TWB5\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
+$loginForm->addItem(new \Ease\TWB5\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
 
- if ($oPage->isPosted()) {
+if ($oPage->isPosted()) {
     try {
         $format = 'json';
         $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
@@ -57,16 +57,16 @@ $oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
     } catch (\Exception $exc) {
         $oPage->addStatusMessage($exc->getMessage(), 'warning');
     }
- } else {
+} else {
     $oPage->addStatusMessage(_('WebHook Acceptor URL').': '.$baseUrl);
- }
+}
 
- if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
+if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
     $_SERVER['REMOTE_HOST'] = $_SERVER['REMOTE_ADDR'];
 
     switch ($_SERVER['SERVER_SOFTWARE']) {
         case 'Apache':
-            $oPage->addStatusMessage(_('Add HostnameLookups On to your Apache configuration'), 'warning');
+            $oPage->addStatusMessage(_('Add "HostnameLookups On" to your Apache configuration'), 'warning');
 
             break;
         case 'nginx':
@@ -77,19 +77,19 @@ $oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
         default:
             $oPage->addStatusMessage(_('REMOTE_HOST is not set. Is HostnameLookups On ?'), 'warning');
     }
- }
+}
 
- $setupRow = new \Ease\TWB5\Row();
+$setupRow = new \Ease\TWB5\Row();
 
- if ($success) {
+if ($success) {
     $setupRow->addColumn(6, new \Ease\Html\H2Tag(_('Done')));
- } else {
+} else {
     $setupRow->addColumn(6, $loginForm);
- }
+}
 
- $setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
+$setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
 
- $oPage->addItem(new \Ease\TWB5\Container($setupRow));
+$oPage->addItem(new \Ease\TWB5\Container($setupRow));
 
 $oPage->addItem(new Ui\PageBottom());
 

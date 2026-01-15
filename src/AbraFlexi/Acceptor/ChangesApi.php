@@ -19,8 +19,9 @@ namespace AbraFlexi\Acceptor;
  * Description of Api.
  *
  * @author vitex
+ * @copyright  2017-2024 Spoje.Net, 2025-2026 VitexSoftware
  */
 class ChangesApi extends \Ease\SQL\Engine
 {
-    public $myTable = 'changesapi';
+    public string $myTable = 'changesapi';
 }

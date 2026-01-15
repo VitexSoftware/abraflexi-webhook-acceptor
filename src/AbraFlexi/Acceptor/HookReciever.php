@@ -19,6 +19,7 @@ namespace AbraFlexi\Acceptor;
  * Description of HookReciever.
  *
  * @author vitex
+ * @copyright  2017-2024 Spoje.Net, 2025-2026
  */
 class HookReciever extends \AbraFlexi\Changes
 {
@@ -32,7 +33,7 @@ class HookReciever extends \AbraFlexi\Changes
     /**
      * Posledni zpracovana verze.
      */
-    public int $lastProcessedVersion = null;
+    public int $lastProcessedVersion = 0;
 
     /**
      * Savers.
@@ -307,7 +308,7 @@ class HookReciever extends \AbraFlexi\Changes
             $lastProcessedVersion = $saver->getLastProcessedVersion();
         }
 
-        if (null === $lastProcessedVersion) {
+        if (empty($lastProcessedVersion)) {
             $this->addStatusMessage(
                 _('Last Processed Change ID Loading Failed'),
                 'warning',
