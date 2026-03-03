@@ -19,7 +19,7 @@ namespace AbraFlexi\Acceptor;
  * System.Spoje.Net - WebHook Acceptor & Saver to SQL Cache.
  *
  * @author     Vítězslav Dvořák <vitex@vitexsoftware.com>
- * @copyright  2017-2020 Spoje.Net, 2021-2026 VitexSoftware
+ * @copyright  2017-2026 Spoje.Net, 2021-2026 VitexSoftware
  */
 \define('APP_NAME', 'WebHookInstaller');
 \define('EASE_LOGGER', 'syslog');
