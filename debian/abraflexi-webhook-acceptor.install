@@ -1,7 +1,6 @@
 src/favicon.ico                           usr/share/abraflexi-webhook-acceptor
 db/migrations/*				  usr/lib/abraflexi-webhook-acceptor/db/migrations
 db/seeds/*				  usr/lib/abraflexi-webhook-acceptor/db/seeds
-debian/conf/composer.json                 usr/lib/abraflexi-webhook-acceptor
 phinx-adapter.php			  usr/lib/abraflexi-webhook-acceptor
 debian/conf/abraflexi-webhook-acceptor.conf    etc/apache2/conf-available
 debian/conf/abraflexi-webhook-acceptor.service etc/avahi/services
