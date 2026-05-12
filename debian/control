@@ -2,7 +2,7 @@ Source: abraflexi-webhook-acceptor
 Section: office
 Priority: optional
 Maintainer: CyberVitexus <info@vitexsoftware.cz>
-Build-Depends: debhelper (>=11~), jq, moreutils
+Build-Depends: debhelper (>=11~), jq, moreutils, pkg-php-tools
 Standards-Version: 4.1.4
 Homepage: https://github.com/VitexSoftware/abraflexi-webhook-acceptor
 
