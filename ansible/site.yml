@@ -1,0 +1,13 @@
+---
+# Master playbook to install all test infrastructure
+# Usage:
+#   ansible-playbook ansible/site.yml -i ansible/inventory/hosts.yml
+#   ansible-playbook ansible/site.yml -i ansible/inventory/hosts.yml --tags redis
+#   ansible-playbook ansible/site.yml -i ansible/inventory/hosts.yml --tags kafka,redis
+
+- name: Install test infrastructure for AbraFlexi WebHook Acceptor
+  ansible.builtin.import_playbook: kafka.yml
+- name: Install Redis test infrastructure
+  ansible.builtin.import_playbook: redis.yml
+- name: Install MongoDB test infrastructure
+  ansible.builtin.import_playbook: mongodb.yml

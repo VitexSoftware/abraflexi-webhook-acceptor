@@ -22,13 +22,32 @@ namespace AbraFlexi\Acceptor\Saver;
  */
 class Api implements saver
 {
-    // put your code here
+    private string $company = '';
+    private string $url = '';
 
     public function setCompany(string $companyCode): void
     {
+        $this->company = $companyCode;
     }
 
     public function setUrl(string $url): void
     {
+        $this->url = $url;
+    }
+
+    public function saveWebhookData(array $changes): int
+    {
+        // TODO: Implement API push
+        return 0;
+    }
+
+    public function getLastProcessedVersion(): ?int
+    {
+        return null;
+    }
+
+    public function saveLastProcessedVersion(int $version): int
+    {
+        return $version;
     }
 }

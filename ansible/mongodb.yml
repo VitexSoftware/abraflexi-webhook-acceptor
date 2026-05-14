@@ -1,0 +1,104 @@
+---
+# Ansible playbook to install and configure MongoDB for testing
+# Target: Debian/Ubuntu systems
+# Usage: ansible-playbook ansible/mongodb.yml -i ansible/inventory/hosts.yml --tags mongodb
+
+- name: Install and configure MongoDB
+  hosts: all
+  become: true
+  tags: [mongodb]
+
+  vars:
+    mongodb_version: "8.0"
+    mongodb_bind_ip: "127.0.0.1"
+    mongodb_port: 27017
+
+  tasks:
+    - name: Install prerequisite packages
+      ansible.builtin.apt:
+        name:
+          - gnupg
+          - curl
+          - apt-transport-https
+        state: present
+        update_cache: true
+
+    - name: Import MongoDB GPG key
+      ansible.builtin.get_url:
+        url: "https://pgp.mongodb.com/server-{{ mongodb_version }}.asc"
+        dest: "/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg"
+        mode: "0644"
+
+    - name: Get OS codename
+      ansible.builtin.command:
+        cmd: lsb_release -cs
+      register: os_codename
+      changed_when: false
+
+    - name: Set MongoDB repo codename (use bookworm for unsupported releases)
+      ansible.builtin.set_fact:
+        mongodb_codename: "{{ 'bookworm' if os_codename.stdout in ['trixie', 'sid', 'forky'] else os_codename.stdout }}"
+
+    - name: Add MongoDB apt repository (Ubuntu)
+      ansible.builtin.apt_repository:
+        repo: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu {{ mongodb_codename }}/mongodb-org/{{ mongodb_version }} multiverse"
+        state: present
+        filename: mongodb-org
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Add MongoDB apt repository (Debian)
+      ansible.builtin.apt_repository:
+        repo: "deb [ signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] http://repo.mongodb.org/apt/debian {{ mongodb_codename }}/mongodb-org/{{ mongodb_version }} main"
+        state: present
+        filename: mongodb-org
+      when: ansible_distribution == "Debian"
+
+    - name: Install MongoDB and PHP extension
+      ansible.builtin.apt:
+        name:
+          - mongodb-org
+          - php-mongodb
+        state: present
+        update_cache: true
+
+    - name: Configure MongoDB - bind IP
+      ansible.builtin.lineinfile:
+        path: /etc/mongod.conf
+        regexp: '^\s*bindIp:'
+        line: "  bindIp: {{ mongodb_bind_ip }}"
+      notify: Restart MongoDB
+
+    - name: Configure MongoDB - port
+      ansible.builtin.lineinfile:
+        path: /etc/mongod.conf
+        regexp: '^\s*port:'
+        line: "  port: {{ mongodb_port }}"
+      notify: Restart MongoDB
+
+    - name: Start and enable MongoDB service
+      ansible.builtin.systemd:
+        name: mongod
+        state: started
+        enabled: true
+
+    - name: Wait for MongoDB to be ready
+      ansible.builtin.wait_for:
+        port: "{{ mongodb_port }}"
+        timeout: 30
+
+    - name: Verify MongoDB is running
+      ansible.builtin.command:
+        cmd: mongosh --quiet --eval "db.runCommand({ping:1})"
+      register: mongo_ping
+      changed_when: false
+      failed_when: "'ok' not in mongo_ping.stdout"
+
+    - name: Display MongoDB verification result
+      ansible.builtin.debug:
+        msg: "MongoDB responded: {{ mongo_ping.stdout }}"
+
+  handlers:
+    - name: Restart MongoDB
+      ansible.builtin.systemd:
+        name: mongod
+        state: restarted

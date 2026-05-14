@@ -1,0 +1,223 @@
+---
+# Ansible playbook to install and configure Apache Kafka for testing
+# Target: Debian/Ubuntu systems
+# Usage: ansible-playbook ansible/kafka.yml -i ansible/inventory/hosts.yml --tags kafka
+#
+# Installs Kafka in KRaft mode (no Zookeeper required) for single-node testing.
+
+- name: Install and configure Apache Kafka
+  hosts: all
+  become: true
+  tags: [kafka]
+
+  vars:
+    kafka_version: "4.0.2"
+    kafka_scala_version: "2.13"
+    kafka_install_dir: /opt/kafka
+    kafka_data_dir: /var/lib/kafka
+    kafka_log_dir: /var/log/kafka
+    kafka_user: kafka
+    kafka_group: kafka
+    kafka_broker_port: 9092
+    kafka_controller_port: 9093
+    kafka_cluster_id: "MkU3OEVBNTcwNTJENDM2Qk"
+
+  tasks:
+    - name: Install Java JRE (Kafka dependency)
+      ansible.builtin.apt:
+        name:
+          - default-jre-headless
+        state: present
+        update_cache: true
+
+    - name: Install build dependencies for php-rdkafka
+      ansible.builtin.apt:
+        name:
+          - php-dev
+          - php-pear
+          - librdkafka-dev
+        state: present
+
+    - name: Create Kafka system group
+      ansible.builtin.group:
+        name: "{{ kafka_group }}"
+        system: true
+
+    - name: Create Kafka system user
+      ansible.builtin.user:
+        name: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+        system: true
+        shell: /usr/sbin/nologin
+        home: "{{ kafka_install_dir }}"
+        create_home: false
+
+    - name: Download Apache Kafka
+      ansible.builtin.get_url:
+        url: "https://downloads.apache.org/kafka/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+        dest: "/tmp/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+        mode: "0644"
+
+    - name: Create Kafka install directory
+      ansible.builtin.file:
+        path: "{{ kafka_install_dir }}"
+        state: directory
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+        mode: "0755"
+
+    - name: Extract Kafka archive
+      ansible.builtin.unarchive:
+        src: "/tmp/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+        dest: "{{ kafka_install_dir }}"
+        remote_src: true
+        extra_opts: ["--strip-components=1"]
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+
+    - name: Create Kafka data directory
+      ansible.builtin.file:
+        path: "{{ kafka_data_dir }}"
+        state: directory
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+        mode: "0755"
+
+    - name: Create Kafka log directory
+      ansible.builtin.file:
+        path: "{{ kafka_log_dir }}"
+        state: directory
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+        mode: "0755"
+
+    - name: Configure Kafka KRaft server properties
+      ansible.builtin.copy:
+        dest: "{{ kafka_install_dir }}/config/server.properties"
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+        mode: "0644"
+        content: |
+          # KRaft mode configuration for single-node testing
+          process.roles=broker,controller
+          node.id=1
+          controller.quorum.voters=1@localhost:{{ kafka_controller_port }}
+
+          listeners=PLAINTEXT://:{{ kafka_broker_port }},CONTROLLER://:{{ kafka_controller_port }}
+          inter.broker.listener.name=PLAINTEXT
+          advertised.listeners=PLAINTEXT://localhost:{{ kafka_broker_port }}
+          controller.listener.names=CONTROLLER
+          listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+
+          log.dirs={{ kafka_data_dir }}
+          num.partitions=1
+          num.recovery.threads.per.data.dir=1
+          offsets.topic.replication.factor=1
+          transaction.state.log.replication.factor=1
+          transaction.state.log.min.isr=1
+          log.retention.hours=168
+          log.segment.bytes=1073741824
+
+    - name: Format Kafka storage with KRaft
+      ansible.builtin.command:
+        cmd: >
+          {{ kafka_install_dir }}/bin/kafka-storage.sh format
+          -t {{ kafka_cluster_id }}
+          -c {{ kafka_install_dir }}/config/server.properties
+        creates: "{{ kafka_data_dir }}/meta.properties"
+
+    - name: Set ownership of Kafka data directory
+      ansible.builtin.file:
+        path: "{{ kafka_data_dir }}"
+        state: directory
+        owner: "{{ kafka_user }}"
+        group: "{{ kafka_group }}"
+        recurse: true
+
+    - name: Create Kafka systemd service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/kafka.service
+        mode: "0644"
+        content: |
+          [Unit]
+          Description=Apache Kafka Server (KRaft)
+          Documentation=https://kafka.apache.org/documentation/
+          After=network.target
+
+          [Service]
+          Type=simple
+          User={{ kafka_user }}
+          Group={{ kafka_group }}
+          ExecStart={{ kafka_install_dir }}/bin/kafka-server-start.sh {{ kafka_install_dir }}/config/server.properties
+          ExecStop={{ kafka_install_dir }}/bin/kafka-server-stop.sh
+          Restart=on-failure
+          RestartSec=10
+          StandardOutput=append:{{ kafka_log_dir }}/kafka.log
+          StandardError=append:{{ kafka_log_dir }}/kafka-error.log
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Start and enable Kafka service
+      ansible.builtin.systemd:
+        name: kafka
+        state: started
+        enabled: true
+
+    - name: Install php-rdkafka via PECL
+      ansible.builtin.command:
+        cmd: pecl install rdkafka
+      register: pecl_result
+      changed_when: "'install ok' in pecl_result.stdout"
+      failed_when: "pecl_result.rc != 0 and 'already installed' not in pecl_result.stdout"
+
+    - name: Detect PHP version
+      ansible.builtin.command:
+        cmd: php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;"
+      register: php_ver
+      changed_when: false
+
+    - name: Enable rdkafka PHP extension
+      ansible.builtin.copy:
+        dest: "/etc/php/{{ php_ver.stdout }}/mods-available/rdkafka.ini"
+        content: "extension=rdkafka.so\n"
+        mode: "0644"
+      notify: Enable rdkafka module
+
+    - name: Wait for Kafka to be ready
+      ansible.builtin.wait_for:
+        port: "{{ kafka_broker_port }}"
+        timeout: 30
+
+    - name: Create test topic
+      ansible.builtin.command:
+        cmd: >
+          {{ kafka_install_dir }}/bin/kafka-topics.sh --create
+          --topic abraflexi-test
+          --bootstrap-server localhost:{{ kafka_broker_port }}
+          --partitions 1
+          --replication-factor 1
+      register: topic_result
+      changed_when: "'Created topic' in topic_result.stdout"
+      failed_when: "topic_result.rc != 0 and 'already exists' not in topic_result.stdout"
+
+    - name: Verify Kafka is working (list topics)
+      ansible.builtin.command:
+        cmd: >
+          {{ kafka_install_dir }}/bin/kafka-topics.sh --list
+          --bootstrap-server localhost:{{ kafka_broker_port }}
+      register: kafka_verify
+      changed_when: false
+
+    - name: Display Kafka verification result
+      ansible.builtin.debug:
+        msg: "Kafka topics: {{ kafka_verify.stdout }}"
+
+  handlers:
+    - name: Enable rdkafka module
+      ansible.builtin.command:
+        cmd: phpenmod rdkafka

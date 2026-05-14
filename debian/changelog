@@ -1,8 +1,17 @@
-abraflexi-webhook-acceptor (1.2.2) UNRELEASED; urgency=medium
+abraflexi-webhook-acceptor (1.3.0) UNRELEASED; urgency=medium
 
+  * Add Kafka storage backend (per-evidence topics via php-rdkafka)
+  * Add Redis Streams storage backend (per-evidence streams via php-redis)
+  * Add MongoDB storage backend (per-evidence collections via php-mongodb)
+  * Expand saver interface with saveWebhookData, getLastProcessedVersion,
+    saveLastProcessedVersion methods
+  * Add debian packages: -kafka, -redis, -mongodb
+  * Add Ansible playbooks for test infrastructure provisioning
+  * Add integration test script (tests/test_all_backends.php)
+  * Upgrade mongodb/mongodb to ^2.0 for ext-mongodb 2.0 compatibility
   * php 8.4 update
 
- -- Vitex <vitezslav.dvorak@spojenet.cz>  Thu, 15 Jan 2026 21:53:16 +0100
+ -- Vitex <vitezslav.dvorak@spojenet.cz>  Wed, 14 May 2026 12:35:00 +0200
 
 abraflexi-webhook-acceptor (1.2.1) jammy; urgency=medium
 

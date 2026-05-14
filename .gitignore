@@ -27,3 +27,4 @@
 /db/abraflexiwebhookacceptor-shm
 /db/abraflexiwebhookacceptor-wal
 /.build/
+db/test_webhooks.sqlite

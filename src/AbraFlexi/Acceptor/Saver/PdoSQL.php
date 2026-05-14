@@ -60,9 +60,9 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
     /**
      * Nacte posledni zpracovanou verzi.
      *
-     * @return int $version
+     * @return int|null $version
      */
-    public function getLastProcessedVersion()
+    public function getLastProcessedVersion(): ?int
     {
         $this->serverUrl = $this->url.'/c/'.$this->company;
         $lastProcessedVersion = null;
@@ -86,9 +86,9 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
     }
 
     /**
-     * @return int Last loa
+     * @return int Last processed version
      */
-    public function saveLastProcessedVersion(int $version)
+    public function saveLastProcessedVersion(int $version): int
     {
         $this->serverUrl = $this->url.'/c/'.$this->company;
         //        if ($version) {
@@ -158,7 +158,7 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
      *
      * @return int lastChangeID
      */
-    public function saveWebhookData($changes)
+    public function saveWebhookData(array $changes): int
     {
         $urihelper = new \AbraFlexi\RO(null, ['offline' => true, 'url' => $this->url]);
         $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '".$urihelper->url.'/c/'.$this->company."')");

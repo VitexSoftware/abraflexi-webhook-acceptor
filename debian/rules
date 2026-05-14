@@ -36,3 +36,23 @@ override_dh_install:
 	mkdir -p                                                             debian/abraflexi-webhook-acceptor-pgsql/usr/lib/abraflexi-webhook-acceptor
 	cp debian/conf/.env.template                                         debian/abraflexi-webhook-acceptor-pgsql/usr/lib/abraflexi-webhook-acceptor
 	sed -i '/DB_DATABASE/c\DB_DATABASE=_DBC_DBNAME_'                     debian/abraflexi-webhook-acceptor-*sql/usr/lib/abraflexi-webhook-acceptor/.env.template
+	# Kafka backend .env.template
+	mkdir -p                                                             debian/abraflexi-webhook-acceptor-kafka/usr/lib/abraflexi-webhook-acceptor
+	cp debian/conf/.env.template                                         debian/abraflexi-webhook-acceptor-kafka/usr/lib/abraflexi-webhook-acceptor
+	sed -i '/WHA_SAVER/c\WHA_SAVER=Kafka'                               debian/abraflexi-webhook-acceptor-kafka/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'KAFKA_BROKERS=localhost:9092'                                 >> debian/abraflexi-webhook-acceptor-kafka/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'KAFKA_TOPIC_PREFIX=abraflexi'                                 >> debian/abraflexi-webhook-acceptor-kafka/usr/lib/abraflexi-webhook-acceptor/.env.template
+	# Redis backend .env.template
+	mkdir -p                                                             debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor
+	cp debian/conf/.env.template                                         debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor
+	sed -i '/WHA_SAVER/c\WHA_SAVER=Redis'                               debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'REDIS_HOST=localhost'                                         >> debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'REDIS_PORT=6379'                                              >> debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'REDIS_PASSWORD='                                              >> debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'REDIS_KEY_PREFIX=abraflexi'                                   >> debian/abraflexi-webhook-acceptor-redis/usr/lib/abraflexi-webhook-acceptor/.env.template
+	# MongoDB backend .env.template
+	mkdir -p                                                             debian/abraflexi-webhook-acceptor-mongodb/usr/lib/abraflexi-webhook-acceptor
+	cp debian/conf/.env.template                                         debian/abraflexi-webhook-acceptor-mongodb/usr/lib/abraflexi-webhook-acceptor
+	sed -i '/WHA_SAVER/c\WHA_SAVER=MongoDB'                             debian/abraflexi-webhook-acceptor-mongodb/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'MONGODB_URI=mongodb://localhost:27017'                        >> debian/abraflexi-webhook-acceptor-mongodb/usr/lib/abraflexi-webhook-acceptor/.env.template
+	echo 'MONGODB_DATABASE=abraflexi_webhook'                           >> debian/abraflexi-webhook-acceptor-mongodb/usr/lib/abraflexi-webhook-acceptor/.env.template

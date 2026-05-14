@@ -4,5 +4,11 @@
         "iLoveWorkSpaceRandom": false,
         "activityBar.activeBorder": "#7eaa45",
         "activityBar.border": "#695E93"
+    },
+    "chat.tools.terminal.autoApprove": {
+        "/^sudo rm -f /etc/apt/sources\\.list\\.d/mongodb-org\\.list /etc/apt/sources\\.list\\.d/mongodb-org\\.sources /usr/share/keyrings/mongodb-server-7\\.0\\.gpg 2>&1$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
     }
 }

@@ -1,0 +1,82 @@
+---
+# Ansible playbook to install and configure Redis for testing
+# Target: Debian/Ubuntu systems
+# Usage: ansible-playbook ansible/redis.yml -i ansible/inventory/hosts.yml --tags redis
+
+- name: Install and configure Redis
+  hosts: all
+  become: true
+  tags: [redis]
+
+  vars:
+    redis_bind_address: "127.0.0.1"
+    redis_port: 6379
+    redis_maxmemory: "256mb"
+    redis_maxmemory_policy: "allkeys-lru"
+
+  tasks:
+    - name: Install Redis server and PHP extension
+      ansible.builtin.apt:
+        name:
+          - redis-server
+          - php-redis
+        state: present
+        update_cache: true
+
+    - name: Configure Redis - bind address
+      ansible.builtin.lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^bind '
+        line: "bind {{ redis_bind_address }}"
+      notify: Restart Redis
+
+    - name: Configure Redis - port
+      ansible.builtin.lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^port '
+        line: "port {{ redis_port }}"
+      notify: Restart Redis
+
+    - name: Configure Redis - maxmemory
+      ansible.builtin.lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^# ?maxmemory '
+        line: "maxmemory {{ redis_maxmemory }}"
+      notify: Restart Redis
+
+    - name: Configure Redis - maxmemory-policy
+      ansible.builtin.lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^# ?maxmemory-policy '
+        line: "maxmemory-policy {{ redis_maxmemory_policy }}"
+      notify: Restart Redis
+
+    - name: Configure Redis - enable AOF persistence
+      ansible.builtin.lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^appendonly '
+        line: "appendonly yes"
+      notify: Restart Redis
+
+    - name: Start and enable Redis service
+      ansible.builtin.systemd:
+        name: redis-server
+        state: started
+        enabled: true
+
+    - name: Verify Redis is running
+      ansible.builtin.command:
+        cmd: redis-cli ping
+      register: redis_ping
+      changed_when: false
+      failed_when: "'PONG' not in redis_ping.stdout"
+
+    - name: Display Redis verification result
+      ansible.builtin.debug:
+        msg: "Redis responded: {{ redis_ping.stdout }}"
+
+  handlers:
+    - name: Restart Redis
+      ansible.builtin.systemd:
+        name: redis-server
+        state: restarted

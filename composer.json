@@ -12,6 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "ext-posix": "*",
+        "mongodb/mongodb": "^2.0",
         "vitexsoftware/ease-fluentpdo": "^1.4",
         "vitexsoftware/ease-bootstrap5-widgets-abraflexi": "dev-main",
         "vitexsoftware/ease-bootstrap5-widgets": "^1.4"
@@ -23,6 +24,11 @@
         "ergebnis/composer-normalize": "^2.51",
         "ergebnis/php-cs-fixer-config": "^6.61",
         "phpstan/phpstan-phpunit": "^2.0"
+    },
+    "suggest": {
+        "ext-rdkafka": "Required for Kafka storage backend",
+        "ext-redis": "Required for Redis storage backend",
+        "ext-mongodb": "Required for MongoDB storage backend"
     },
     "autoload": {
         "psr-4": {
