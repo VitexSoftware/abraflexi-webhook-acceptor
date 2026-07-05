@@ -1,16 +1,16 @@
 # AGENTS.md — abraflexi-webhook-acceptor
 
-## Co projekt dělá
+## What this project does
 
-Přijímá HTTP POST webhooky z AbraFlexi (Changes API formát `winstrom.changes[]`),
-ukládá je do konfigurovatelného backendu (SQL/MongoDB/Redis/Kafka) a volitelně
-spouští posthooks.
+Receives HTTP POST webhooks from AbraFlexi (Changes API `winstrom.changes[]`
+format), persists them to a configurable backend (SQL / MongoDB / Redis / Kafka)
+and optionally triggers post-hooks.
 
-Produkční vstupní bod: `src/webhook.php`  
-Hlavní třída: `AbraFlexi\Acceptor\HookReciever` (extends `AbraFlexi\Changes`)  
+Production entry point: `src/webhook.php`  
+Core class: `AbraFlexi\Acceptor\HookReciever` (extends `AbraFlexi\Changes`)  
 Savers: `src/AbraFlexi/Acceptor/Saver/{PdoSQL,MongoDB,Redis,Kafka,Api}.php`
 
-## Formát webhooků z AbraFlexi
+## AbraFlexi webhook payload format
 
 ```json
 {
@@ -29,83 +29,85 @@ Savers: `src/AbraFlexi/Acceptor/Saver/{PdoSQL,MongoDB,Redis,Kafka,Api}.php`
 }
 ```
 
-Vzorové payloady jsou v `tests/hooks/*.json`.  
-Evidence jsou: `adresar`, `faktura-vydana`, `banka`, `pohledavka` aj.  
-Operace jsou: `create`, `update`, `delete`.
+Sample payloads: `tests/hooks/*.json`  
+Common evidences: `adresar`, `faktura-vydana`, `banka`, `pohledavka`  
+Operations: `create`, `update`, `delete`
 
-## Kompatibilita s abraflexi-reminder
+## Compatibility with abraflexi-reminder
 
-Tento projekt sdílí ekosystém s **abraflexi-reminder** (`VitexSoftware/abraflexi-reminder`).
-Udržuj kompatibilitu v těchto bodech:
+This project shares an ecosystem with **abraflexi-reminder**
+(`VitexSoftware/abraflexi-reminder`). Maintain compatibility on the following
+points.
 
-### Štítky zákazníků (adresar.stitky)
-Abraflexi-reminder nastavuje/čte tyto štítky na záznamu `adresar`:
+### Customer labels (adresar.stitky)
 
-| Štítek | Nastavuje | Maže |
-|--------|-----------|------|
-| `UPOMINKA1` | abraflexi-reminder (RT53) | abraflexi-reminder-clean-labels (RT55) |
-| `UPOMINKA2` | abraflexi-reminder (RT53) | abraflexi-reminder-clean-labels (RT55) |
-| `UPOMINKA3` | abraflexi-reminder (RT53) | abraflexi-reminder-clean-labels (RT55) |
-| `NEPLATIC`  | abraflexi-reminder (RT53) | abraflexi-reminder-clean-labels (RT55) |
-| `ODPOJENO`  | ByServiceToggle notifier (RT57) | abraflexi-reminder-clean-labels (RT55) |
+abraflexi-reminder owns this label state machine. Do not overwrite or delete
+these labels — they are set and cleared by the reminder pipeline as part of its
+state management.
 
-Pokud webhook acceptor reaguje na změny `adresar`, nesmí sám mazat ani
-přepisovat tyto štítky — jsou součástí stavového stroje reminder pipeline.
+| Label | Set by | Cleared by |
+|-------|--------|------------|
+| `UPOMINKA1` | Reminder RT53 — 1st notice | Clear Labels RT55 (after payment) |
+| `UPOMINKA2` | Reminder RT53 — 2nd notice | Clear Labels RT55 (after payment) |
+| `UPOMINKA3` | Reminder RT53 — 3rd notice | Clear Labels RT55 (after payment) |
+| `NEPLATIC`  | Reminder RT53 — score ≥ 3 | Clear Labels RT55 (after payment) |
+| `ODPOJENO`  | ByServiceToggle notifier RT57 | Clear Labels RT55 (after payment) |
 
-### Evidence relevantní pro testování
-- `faktura-vydana` — vydané faktury (abraflexi-reminder je upomíná)
-- `banka` — bankovní pohyby (abraflexi-matcher je páruje s fakturami)
-- `adresar` — zákazníci (štítky pro reminder a odpojení)
-- `pohledavka` — pohledávky (mohou mít null `typDoklK` — nezlomit parsování)
+### Evidences relevant for testing
+- `faktura-vydana` — issued invoices (reminded by abraflexi-reminder)
+- `banka` — bank transactions (matched to invoices by abraflexi-matcher)
+- `adresar` — customers (labels for reminders and disconnection)
+- `pohledavka` — receivables (see warning below)
 
-### Pozor na pohledavka
-Záznamy evidence `pohledavka` mohou mít null `typDoklK`. `AbraFlexi\Relation`
-hodí `TypeError` pokud se pokusíš konstruovat Relation z null. Nevolej
-`getColumnsFromAbraFlexi` s `includes=/pohledavka/typDokl` nebo s
-`typDokl(typDoklK,kod)` v colsToGet.
+### pohledavka — typDoklK pitfall
+Records in the `pohledavka` evidence can have null `typDoklK`. `AbraFlexi\Relation`
+throws a `TypeError` if you try to construct a Relation from null. Do not call
+`getColumnsFromAbraFlexi` with `includes=/pohledavka/typDokl` or with
+`typDokl(typDoklK,kod)` in colsToGet for this evidence.
 
-## Env proměnné
+## Environment variables
 
-| Proměnná | Popis |
-|----------|-------|
-| `DB_CONNECTION` | Typ DB: `pdo_mysql`, `pdo_pgsql`, `pdo_sqlite` |
-| `DB_HOST` | Hostname databáze |
-| `DB_PORT` | Port databáze |
-| `DB_DATABASE` | Název databáze |
-| `DB_USERNAME` | Uživatel DB |
-| `DB_PASSWORD` | Heslo DB |
-| `WHA_SAVER` | Pipe-separated seznam Saver tříd, např. `PdoSQL\|MongoDB` |
-| `ABRAFLEXI_URL` | URL AbraFlexi serveru |
-| `ABRAFLEXI_LOGIN` | Login do AbraFlexi |
-| `ABRAFLEXI_PASSWORD` | Heslo do AbraFlexi |
-| `ABRAFLEXI_COMPANY` | Kód firmy v AbraFlexi |
+| Variable | Description |
+|----------|-------------|
+| `DB_CONNECTION` | DB type: `pdo_mysql`, `pdo_pgsql`, `pdo_sqlite` |
+| `DB_HOST` | Database hostname |
+| `DB_PORT` | Database port |
+| `DB_DATABASE` | Database name |
+| `DB_USERNAME` | Database user |
+| `DB_PASSWORD` | Database password |
+| `WHA_SAVER` | Pipe-separated list of Saver classes, e.g. `PdoSQL\|MongoDB` |
+| `ABRAFLEXI_URL` | AbraFlexi server URL |
+| `ABRAFLEXI_LOGIN` | AbraFlexi login |
+| `ABRAFLEXI_PASSWORD` | AbraFlexi password |
+| `ABRAFLEXI_COMPANY` | Company code in AbraFlexi |
 
-## Testovací workflow
+## Test workflow
 
 ```bash
-# Replay všech vzorových hooků přes všechny backendy
+# Replay all sample hooks through all configured backends
 php tests/test_all_backends.php
 
-# Replay hooků do SQL backendu (loadhooks.php)
+# Replay hooks into SQL backend
 php tests/loadhooks.php
 
-# Interaktivní replay přes browser
+# Interactive browser-based replay
 php -S localhost:8080 tests/posthooks.php
 ```
 
-Vzorové hooky: `tests/hooks/*.json` — přidávej sem nové payloady při každém
-novém testovacím scénáři, pojmenuj je `webhook-<unix-timestamp>.json`.
+Sample hooks: `tests/hooks/*.json` — add new payloads here for each new test
+scenario, name them `webhook-<unix-timestamp>.json`.
 
-## Architektura — jak přidat Saver
+## Adding a new Saver
 
-1. Vytvoř `src/AbraFlexi/Acceptor/Saver/MojeUloziste.php` implementující interface `AbraFlexi\Acceptor\saver`
-2. Interface vyžaduje: `save(array $changes): bool`
-3. Nastav `WHA_SAVER=MojeUloziste` v `.env`
+1. Create `src/AbraFlexi/Acceptor/Saver/MyStorage.php` implementing
+   `AbraFlexi\Acceptor\saver`
+2. Interface requires: `save(array $changes): bool`
+3. Set `WHA_SAVER=MyStorage` in `.env`
 
-## Konvence
+## Conventions
 
-- PHP 8.1+, `declare(strict_types=1)` ve všech souborech
+- PHP 8.1+, `declare(strict_types=1)` in all files
 - Namespace: `AbraFlexi\Acceptor`
-- Balíček se jmenuje `vitexsoftware/abraflexi-webhook-acceptor`
-- Debian packaging: `dpkg-buildpackage -b -uc`
-- CI blokuje pokud běží `RebulidDEBRepoByAnsible`
+- Package name: `vitexsoftware/abraflexi-webhook-acceptor`
+- Build: `dpkg-buildpackage -b -uc`
+- CI blocks when `RebulidDEBRepoByAnsible` is running
