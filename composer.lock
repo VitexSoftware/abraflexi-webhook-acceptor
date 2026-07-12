@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a490c4c227a91d43441f3ec42043a736",
+    "content-hash": "dc806d92a1d4f44f8e701dc9c9fa7917",
     "packages": [
         {
             "name": "fpdo/fluentpdo",

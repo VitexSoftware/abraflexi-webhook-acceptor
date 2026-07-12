@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
   <id>cz.vitexsoftware.abraflexi_webhook_acceptor</id>
-  
+
   <name>AbraFlexi WebHook Acceptor</name>
   <summary>Listen for AbraFlexi changes</summary>
-  
+
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
-  
+
   <description>
     <p>
-      
+      AbraFlexi WebHook Acceptor receives and stores webhook notifications from the AbraFlexi
+      accounting system. Incoming change events are persisted to a configured database backend.
+    </p>
+    <p>Supported storage backends:</p>
+    <ul>
+      <li>PdoSQL — PostgreSQL, MySQL, MSSQL, SQLite</li>
+      <li>Kafka — NoSQL event streaming (experimental)</li>
+      <li>Api — proxy to an external API endpoint (experimental)</li>
+    </ul>
+    <p>
+      The acceptor runs as a PHP web service under Apache and is discoverable on the local network
+      via Avahi/mDNS. After installation, point your AbraFlexi server at the URL exposed by the
+      service to start receiving change notifications.
     </p>
   </description>
-  
-  <launchable type="desktop-id">cz.vitexsoftware.abraflexi_webhook_acceptor_desktop</launchable>
-  <screenshots>
-  </screenshots>
-</component>
 
+  <icon type="stock">abraflexi-webhook-acceptor</icon>
+
+  <categories>
+    <category>Office</category>
+    <category>Finance</category>
+  </categories>
+
+  <url type="homepage">https://github.com/VitexSoftware/abraflexi-webhook-acceptor</url>
+
+  <launchable type="desktop-id">cz.vitexsoftware.abraflexi_webhook_acceptor</launchable>
+
+  <developer id="cz.vitexsoftware">
+    <name>VitexSoftware</name>
+  </developer>
+</component>

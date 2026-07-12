@@ -157,6 +157,7 @@ class HookReciever extends \AbraFlexi\Changes
     public function saveWebhookData(array $changes)
     {
         $results = [];
+        $changes = array_merge($changes, $this->resolveMetaStateChanges($changes));
 
         foreach ($this->saver as $saver) {
             $saver->setCompany($this->company);
@@ -165,6 +166,42 @@ class HookReciever extends \AbraFlexi\Changes
         }
 
         return \count($this->saver) && (\count(array_filter($results)) === \count($this->saver));
+    }
+
+    /**
+     * For invoice "update" changes, derive business metastates (settled,
+     * remind1/2/3, penalised, storno, inventory) and turn each detected
+     * metastate into an additional synthetic change record - sharing the
+     * originating `@in-version` - so downstream consumers (e.g.
+     * multiflexi-event-processor) can key an event_rule on `@operation`
+     * being the metastate name instead of a plain create/update/delete.
+     *
+     * @param array $changes Raw changes as received from AbraFlexi
+     *
+     * @return array Synthetic metastate changes to append
+     */
+    private function resolveMetaStateChanges(array $changes): array
+    {
+        $synthetic = [];
+        $resolver = new \AbraFlexi\Acceptor\MetaState\InvoiceMetaStateResolver();
+        $serverUrl = $this->url.'/c/'.$this->company;
+
+        foreach ($changes as $change) {
+            $evidence = $change['@evidence'] ?? '';
+            $operation = $change['@operation'] ?? '';
+
+            if (!$resolver->supports($evidence, $operation)) {
+                continue;
+            }
+
+            $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl);
+
+            if (null !== $metaState) {
+                $synthetic[] = array_merge($change, ['@operation' => $metaState]);
+            }
+        }
+
+        return $synthetic;
     }
 
     /**

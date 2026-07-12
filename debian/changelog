@@ -10,6 +10,17 @@ abraflexi-webhook-acceptor (1.3.0) UNRELEASED; urgency=medium
   * Add integration test script (tests/test_all_backends.php)
   * Upgrade mongodb/mongodb to ^2.0 for ext-mongodb 2.0 compatibility
   * php 8.4 update
+  * Add invoice metastate detection (settled, remind1/2/3, penalised, storno,
+    inventory) via InvoiceMetaStateResolver; metastates are appended to
+    changes_cache as synthetic rows sharing the originating @operation
+    field, so multiflexi-event-processor can match event_rule on them
+    without any changes to the event processor itself
+  * Widen changes_cache.operation beyond create/update/delete and add a
+    surrogate autoincrement key (changes_cache.id) so metastate rows can
+    share an `inversion` with the update that produced them
+  * Add invoice_state_cache table to track last known payment/reminder
+    field values per invoice for diffing
+  * Require vitexsoftware/abraflexi-php; add ABRAFLEXI_* to .env.template
 
  -- Vitex <vitezslav.dvorak@spojenet.cz>  Wed, 14 May 2026 12:35:00 +0200
 

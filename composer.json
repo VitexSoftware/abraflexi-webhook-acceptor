@@ -13,6 +13,7 @@
     "require": {
         "ext-posix": "*",
         "mongodb/mongodb": "^2.0",
+        "spojenet/flexibee": "^3.6",
         "vitexsoftware/ease-fluentpdo": "^1.4",
         "vitexsoftware/ease-bootstrap5-widgets-abraflexi": "dev-main",
         "vitexsoftware/ease-bootstrap5-widgets": "^1.4"
@@ -34,7 +35,8 @@
         "psr-4": {
             "AbraFlexi\\Acceptor\\": "src/AbraFlexi/Acceptor/",
             "AbraFlexi\\Acceptor\\Saver\\": "src/AbraFlexi/Acceptor/Saver/",
-            "AbraFlexi\\Acceptor\\Ui\\": "src/AbraFlexi/Acceptor/Ui/"
+            "AbraFlexi\\Acceptor\\Ui\\": "src/AbraFlexi/Acceptor/Ui/",
+            "AbraFlexi\\Acceptor\\MetaState\\": "src/AbraFlexi/Acceptor/MetaState/"
         }
     },
     "config": {

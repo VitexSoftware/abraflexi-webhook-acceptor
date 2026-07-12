@@ -6,7 +6,7 @@ Name=AbraFlexi WebHook acceptor
 Comment=Listen for AbraFlexi changes
 Categories=Office;Finance;
 
-Icon=multi-flexibee-setup
+Icon=abraflexi-webhook-acceptor
 Exec=sensible-browser http://localhost/abraflexi-webhook-acceptor/
 Terminal=false
 
