@@ -1,5 +1,6 @@
-abraflexi-webhook-acceptor (1.3.0) UNRELEASED; urgency=medium
+abraflexi-webhook-acceptor (1.3.0) trixie; urgency=medium
 
+  [ Vitex ]
   * Add Kafka storage backend (per-evidence topics via php-rdkafka)
   * Add Redis Streams storage backend (per-evidence streams via php-redis)
   * Add MongoDB storage backend (per-evidence collections via php-mongodb)
@@ -22,7 +23,7 @@ abraflexi-webhook-acceptor (1.3.0) UNRELEASED; urgency=medium
     field values per invoice for diffing
   * Require vitexsoftware/abraflexi-php; add ABRAFLEXI_* to .env.template
 
- -- Vitex <vitezslav.dvorak@spojenet.cz>  Wed, 14 May 2026 12:35:00 +0200
+ -- vitex <info@vitexsoftware.cz>  Tue, 21 Jul 2026 18:49:49 +0200
 
 abraflexi-webhook-acceptor (1.2.1) jammy; urgency=medium
 

@@ -194,7 +194,7 @@ class HookReciever extends \AbraFlexi\Changes
                 continue;
             }
 
-            $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl);
+            $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl, (int) $change['@in-version']);
 
             if (null !== $metaState) {
                 $synthetic[] = array_merge($change, ['@operation' => $metaState]);

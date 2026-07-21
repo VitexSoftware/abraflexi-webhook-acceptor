@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Test\AbraFlexi\Acceptor\MetaState;
 
 use AbraFlexi\Acceptor\MetaState\InvoiceMetaStateResolver;
+use AbraFlexi\Acceptor\MetaState\RecordCache;
 
 /**
  * Exercises the previous-vs-current diff logic in isolation (no AbraFlexi
@@ -28,7 +29,7 @@ class InvoiceMetaStateResolverTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->resolver = new InvoiceMetaStateResolver(
-            $this->createMock(\AbraFlexi\Acceptor\MetaState\InvoiceStateCache::class),
+            $this->createMock(RecordCache::class),
         );
     }
 
@@ -47,58 +48,67 @@ class InvoiceMetaStateResolverTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->resolver->supports('adresar', 'update'));
     }
 
-    public function testFullPaymentYieldsSettled(): void
+    public function testFullPaymentViaMatchingYieldsSettled(): void
     {
-        $previous = ['zbyvauhradit' => '1000', 'datuhrady' => null];
-        $current = ['zbyvauhradit' => '0', 'datuhrady' => '2026-07-05'];
+        // match_payment via banka does NOT set datUhrady; detect via zbyvaUhradit transition
+        $previous = ['zbyvaUhradit' => '1000', 'datUhrady' => null];
+        $current = ['zbyvaUhradit' => '0', 'datUhrady' => null];
 
         $this->assertSame('settled', $this->detect($previous, $current));
     }
 
-    public function testPartialPaymentWithoutDatUhradyYieldsNoMetaState(): void
+    public function testFullPaymentWithDatUhradyAlsoYieldsSettled(): void
     {
-        $previous = ['zbyvauhradit' => '1000', 'datuhrady' => null];
-        $current = ['zbyvauhradit' => '400', 'datuhrady' => null];
+        $previous = ['zbyvaUhradit' => '1000', 'datUhrady' => null];
+        $current = ['zbyvaUhradit' => '0', 'datUhrady' => '2026-07-05'];
+
+        $this->assertSame('settled', $this->detect($previous, $current));
+    }
+
+    public function testPartialPaymentYieldsNoMetaState(): void
+    {
+        $previous = ['zbyvaUhradit' => '1000', 'datUhrady' => null];
+        $current = ['zbyvaUhradit' => '400', 'datUhrady' => null];
 
         $this->assertNull($this->detect($previous, $current));
     }
 
     public function testStornoTakesPriorityOverSettled(): void
     {
-        $previous = ['storno' => null, 'zbyvauhradit' => '1000', 'datuhrady' => null];
-        $current = ['storno' => '1', 'zbyvauhradit' => '0', 'datuhrady' => '2026-07-05'];
+        $previous = ['storno' => null, 'zbyvaUhradit' => '1000', 'datUhrady' => null];
+        $current = ['storno' => '1', 'zbyvaUhradit' => '0', 'datUhrady' => null];
 
         $this->assertSame('storno', $this->detect($previous, $current));
     }
 
     public function testReminder1(): void
     {
-        $previous = ['datup1' => null];
-        $current = ['datup1' => '2026-07-05'];
+        $previous = ['datUp1' => null];
+        $current = ['datUp1' => '2026-07-05'];
 
         $this->assertSame('remind1', $this->detect($previous, $current));
     }
 
     public function testReminder2(): void
     {
-        $previous = ['datup1' => '2026-06-01', 'datup2' => null];
-        $current = ['datup1' => '2026-06-01', 'datup2' => '2026-07-05'];
+        $previous = ['datUp1' => '2026-06-01', 'datUp2' => null];
+        $current = ['datUp1' => '2026-06-01', 'datUp2' => '2026-07-05'];
 
         $this->assertSame('remind2', $this->detect($previous, $current));
     }
 
     public function testReminder3(): void
     {
-        $previous = ['datsmir' => null];
-        $current = ['datsmir' => '2026-07-05'];
+        $previous = ['datSmir' => null];
+        $current = ['datSmir' => '2026-07-05'];
 
         $this->assertSame('remind3', $this->detect($previous, $current));
     }
 
     public function testPenalised(): void
     {
-        $previous = ['datpenale' => null];
-        $current = ['datpenale' => '2026-07-05'];
+        $previous = ['datPenale' => null];
+        $current = ['datPenale' => '2026-07-05'];
 
         $this->assertSame('penalised', $this->detect($previous, $current));
     }
@@ -121,7 +131,7 @@ class InvoiceMetaStateResolverTest extends \PHPUnit\Framework\TestCase
 
     public function testNoRelevantChangeYieldsNull(): void
     {
-        $state = ['zbyvauhradit' => '1000', 'datuhrady' => null, 'storno' => null, 'poznam' => ''];
+        $state = ['zbyvaUhradit' => '1000', 'datUhrady' => null, 'storno' => null, 'poznam' => ''];
 
         $this->assertNull($this->detect($state, $state));
     }
