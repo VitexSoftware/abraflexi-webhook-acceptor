@@ -164,14 +164,73 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
         $source = new \Envms\FluentPDO\Literal("(SELECT id FROM changesapi WHERE serverurl LIKE '".$urihelper->url.'/c/'.$this->company."')");
 
         foreach ($changes as $apiData) {
+            $sqlCols = self::jsonColsToSQLCols($apiData);
+
+            $documentUri = $urihelper->url.'/c/'.$this->company.'/'.$sqlCols['evidence'].'/'.$sqlCols['recordid'];
+            $context = $this->buildContext((int) $sqlCols['inversion'], (int) $sqlCols['recordid'], $sqlCols['evidence'], $urihelper->url.'/c/'.$this->company);
+
             try {
-                $this->getFluentPDO()->insertInto('changes_cache')->values(array_merge(['source' => $source, 'target' => 'system'], self::jsonColsToSQLCols($apiData)))->execute();
+                $this->getFluentPDO()->insertInto('changes_cache')->values(array_merge(
+                    ['source' => $source, 'target' => 'system'],
+                    $sqlCols,
+                    ['document_uri' => $documentUri, 'context' => $context],
+                ))->execute();
             } catch (\Exception $exc) {
                 $this->addStatusMessage($exc->getMessage().' Unknown server ?: '.$urihelper->url, 'warning');
             }
         }
 
         return isset($apiData) ? $this->saveLastProcessedVersion((int) $apiData['@in-version']) : 0;
+    }
+
+    /**
+     * Build a JSON context blob from record_cache for the given change.
+     *
+     * Extracts adapter-specific fields (e.g. firma) from the most recent
+     * cached document snapshot and returns them as a JSON string so the
+     * generic eventor can expose them to env_mapping selectors without
+     * knowing anything about AbraFlexi.
+     *
+     * Returns null when no matching record_cache row exists.
+     */
+    private function buildContext(int $inversion, int $recordId, string $evidence, string $serverUrl): ?string
+    {
+        try {
+            $stmt = $this->getPdo()->prepare(
+                'SELECT json FROM record_cache'
+                .' WHERE inversion = :inv AND recordid = :rid AND evidence = :ev AND serverurl = :srv'
+                .' LIMIT 1',
+            );
+            $stmt->execute([':inv' => $inversion, ':rid' => $recordId, ':ev' => $evidence, ':srv' => $serverUrl]);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException) {
+            return null;
+        }
+
+        if (empty($row['json'])) {
+            return null;
+        }
+
+        $decoded = json_decode($row['json'], true);
+
+        if (!\is_array($decoded)) {
+            return null;
+        }
+
+        $context = [];
+
+        // Normalise the firma relation object → plain customer code string
+        $firma = $decoded['firma'] ?? null;
+        $context['firma'] = match (true) {
+            $firma === null => null,
+            \is_array($firma) => ($firma['value'] ?? null) ?: null,
+            default => (string) $firma ?: null,
+        };
+
+        // Filter out null values so env_mapping selectors get clean strings
+        $context = array_filter($context, static fn ($v): bool => $v !== null);
+
+        return $context ? json_encode($context, \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES) : null;
     }
 
     /**
