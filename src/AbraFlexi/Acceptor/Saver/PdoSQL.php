@@ -166,7 +166,12 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
         foreach ($changes as $apiData) {
             $sqlCols = self::jsonColsToSQLCols($apiData);
 
-            $documentUri = $urihelper->url.'/c/'.$this->company.'/'.$sqlCols['evidence'].'/'.$sqlCols['recordid'];
+            $documentUri = \Ease\DocumentUri::build(
+                'abraflexi',
+                $sqlCols['evidence'],
+                (string) $sqlCols['recordid'],
+                ['serverUrl' => $urihelper->url, 'company' => $this->company],
+            );
             $context = $this->buildContext((int) $sqlCols['inversion'], (int) $sqlCols['recordid'], $sqlCols['evidence'], $urihelper->url.'/c/'.$this->company);
 
             try {
