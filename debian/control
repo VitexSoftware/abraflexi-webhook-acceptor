@@ -49,14 +49,14 @@ Architecture: all
 Description: postgres support for multiabraflexi setup
  Mandatory dependencies for use Multi FlexiBee setup with PostgreSQL database
 
-Package: abraflexi-webhook-acceptor-kafka
-Multi-Arch: foreign
-Pre-Depends: php-rdkafka
-Depends: ${misc:Depends}, abraflexi-webhook-acceptor
-Architecture: all
-Description: Kafka storage backend for AbraFlexi webhook acceptor
- Enables storing AbraFlexi webhook changes as messages in Apache Kafka topics.
- Each evidence type gets its own topic.
+#Package: abraflexi-webhook-acceptor-kafka
+#Multi-Arch: foreign
+#Pre-Depends: php-rdkafka
+#Depends: ${misc:Depends}, abraflexi-webhook-acceptor
+#Architecture: all
+#Description: Kafka storage backend for AbraFlexi webhook acceptor
+# Enables storing AbraFlexi webhook changes as messages in Apache Kafka topics.
+# Each evidence type gets its own topic.
 
 Package: abraflexi-webhook-acceptor-redis
 Multi-Arch: foreign
