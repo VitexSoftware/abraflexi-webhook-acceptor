@@ -21,7 +21,7 @@ Package: abraflexi-webhook-acceptor-sqlite
 Multi-Arch: foreign
 Pre-Depends: dbconfig-sqlite3, php-sqlite3, sqlite3
 Depends: ${misc:Depends},abraflexi-webhook-acceptor
-Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-pgsql
+Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-pgsql, abraflexi-webhook-acceptor-redis, abraflexi-webhook-acceptor-mongodb
 Replaces: multi-flexibee-setup-sqlite
 Architecture: all
 Description: sqlite support for multiabraflexi setup
@@ -31,7 +31,7 @@ Package: abraflexi-webhook-acceptor-mysql
 Multi-Arch: foreign
 Pre-Depends: dbconfig-mysql, php-mysql, php-cakephp-phinx
 Depends: ${misc:Depends},abraflexi-webhook-acceptor
-Conflicts: abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-pgsql
+Conflicts: abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-pgsql, abraflexi-webhook-acceptor-redis, abraflexi-webhook-acceptor-mongodb
 Replaces: multi-flexibee-setup-mysql
 Suggests: mariadb-server
 Architecture: all
@@ -41,8 +41,8 @@ Description: mariadb support for multiabraflexi setup
 Package: abraflexi-webhook-acceptor-pgsql
 Multi-Arch: foreign
 Pre-Depends: dbconfig-pgsql, php-pgsql, php-cakephp-phinx
-Depends: ${misc:Depends},abraflexi-webhook-acceptor, 
-Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-sqlite
+Depends: ${misc:Depends},abraflexi-webhook-acceptor,
+Conflicts: abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-redis, abraflexi-webhook-acceptor-mongodb
 Suggests: postgresql
 Replaces: multi-flexibee-setup-pqsql
 Architecture: all
@@ -62,6 +62,7 @@ Package: abraflexi-webhook-acceptor-redis
 Multi-Arch: foreign
 Pre-Depends: php-redis
 Depends: ${misc:Depends}, abraflexi-webhook-acceptor
+Conflicts: abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-pgsql, abraflexi-webhook-acceptor-mongodb
 Suggests: redis-server
 Architecture: all
 Description: Redis storage backend for AbraFlexi webhook acceptor
@@ -72,6 +73,7 @@ Package: abraflexi-webhook-acceptor-mongodb
 Multi-Arch: foreign
 Pre-Depends: php-mongodb
 Depends: ${misc:Depends}, abraflexi-webhook-acceptor
+Conflicts: abraflexi-webhook-acceptor-sqlite, abraflexi-webhook-acceptor-mysql, abraflexi-webhook-acceptor-pgsql, abraflexi-webhook-acceptor-redis
 Suggests: mongodb-org
 Architecture: all
 Description: MongoDB storage backend for AbraFlexi webhook acceptor
