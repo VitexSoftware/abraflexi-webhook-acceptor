@@ -241,30 +241,49 @@ class HookReciever extends \AbraFlexi\Changes
             $handlerClass = '\\SpojeNet\\System\\whplugins\\'.$handlerClassName;
 
             if (class_exists($handlerClass)) {
-                $saver = new $handlerClass(
-                    $id,
-                    ['evidence' => $evidence, 'operation' => $operation, 'external-ids' => $externalIDs,
-                        'changeid' => $inVersion],
-                );
-                $saver->saveHistory();
+                try {
+                    $saver = new $handlerClass(
+                        $id,
+                        ['evidence' => $evidence, 'operation' => $operation, 'external-ids' => $externalIDs,
+                            'changeid' => $inVersion],
+                    );
+                    $saver->saveHistory();
 
-                switch ($operation) {
-                    case 'update':
-                    case 'create':
-                    case 'delete':
-                        if ($saver->process($operation) && ($this->debug === true)) {
-                            $this->addStatusMessage(
-                                $changepos.'/'.\count($this->changes),
-                                'success',
-                            );
-                        }
+                    switch ($operation) {
+                        case 'update':
+                        case 'create':
+                        case 'delete':
+                            if ($saver->process($operation) && ($this->debug === true)) {
+                                $this->addStatusMessage(
+                                    $changepos.'/'.\count($this->changes),
+                                    'success',
+                                );
+                            }
 
-                        break;
+                            break;
 
-                    default:
-                        $this->addStatusMessage(sprintf(_('Unknown operation %s'), $operation), 'error');
+                        default:
+                            $this->addStatusMessage(sprintf(_('Unknown operation %s'), $operation), 'error');
 
-                        break;
+                            break;
+                    }
+                } catch (\Throwable $exc) {
+                    // A broken change must never block the ones behind it:
+                    // AbraFlexi keeps sending new events regardless of this
+                    // one's outcome, and since changes are always fetched
+                    // from lastProcessedVersion+1, leaving the version
+                    // unadvanced would make every future run re-hit and die
+                    // on this same change forever.
+                    $this->addStatusMessage(sprintf(
+                        _('Change %s/%s version %d ( %s %s/%s ) failed: %s'),
+                        $changepos,
+                        \count($this->changes),
+                        $inVersion,
+                        $operation,
+                        $evidence,
+                        $id,
+                        $exc->getMessage(),
+                    ), 'error');
                 }
             } else {
                 if ($this->debug === true) {
