@@ -322,7 +322,9 @@ class HookReciever extends \AbraFlexi\Changes
                 $this->changes = $changes['winstrom']['changes'];
             }
 
-            $result = is_numeric($changes['winstrom']['next']) ? $changes['winstrom']['next'] - 1 : $this->globalVersion;
+            $result = is_numeric($changes['winstrom']['next'] ?? null)
+                ? ((int) $changes['winstrom']['next']) - 1
+                : $this->globalVersion;
         }
 
         return $result;
