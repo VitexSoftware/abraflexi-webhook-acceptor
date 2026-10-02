@@ -15,8 +15,12 @@ declare(strict_types=1);
 
 namespace AbraFlexi\Acceptor;
 
+use AbraFlexi\Acceptor\Installer\Wizard;
+
 /**
- * System.Spoje.Net - WebHook Acceptor & Saver to SQL Cache.
+ * System.Spoje.Net - WebHook Acceptor installer wizard.
+ *
+ * Step 1: AbraFlexi REST API endpoint, Step 2: credentials, Step 3: company.
  *
  * @author     Vítězslav Dvořák <vitex@vitexsoftware.com>
  * @copyright  2017-2026 Spoje.Net, 2021-2026 VitexSoftware
@@ -26,45 +30,156 @@ namespace AbraFlexi\Acceptor;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-\Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], '../.env');
+$envFile = __DIR__.'/../.env';
+\Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], $envFile);
 
-$success = false;
-$hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
 $oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
+$wizard = new Wizard();
 
-$baseUrl = \dirname(\Ease\WebPage::phpSelf());
+$hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
+$stepTitles = [
+    Wizard::STEP_ENDPOINT => _('AbraFlexi endpoint'),
+    Wizard::STEP_CREDENTIALS => _('Credentials'),
+    Wizard::STEP_COMPANY => _('Company'),
+];
 
-$loginForm = new \AbraFlexi\ui\TWB5\ConnectionForm(['action' => 'install.php']);
+$requested = (int) ($_REQUEST['step'] ?? 1);
+$step = $wizard->clampStep($requested);
+$done = false;
 
-// $loginForm->addInput( new \Ease\Html\InputUrlTag('myurl'), _('My Url'), dirname(\Ease\Page::phpSelf()), sprintf( _('Same url as you can see in browser without %s'), basename( __FILE__ ) ) );
+if (isset($_GET['restart'])) {
+    $wizard->reset();
+    header('Location: '.basename(__FILE__));
 
-$loginForm->fillUp(\Ease\WebPage::isPosted() ? $_REQUEST : \Ease\Shared::instanced()->configuration);
+    exit;
+}
 
-$loginForm->addItem(new \Ease\TWB5\SubmitButton(_('Install WebHook'), 'success btn-lg btn-block'));
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // A POST is only valid for the step the user is allowed to be on
+    $step = $wizard->clampStep((int) ($_POST['step'] ?? 1));
 
-if ($oPage->isPosted()) {
     try {
-        $format = 'json';
-        $hooker = new \AbraFlexi\Hooks(null, $_REQUEST);
-        $hookResult = $hooker->register(\Ease\Functions::addUrlParams($hookurl, ['company' => $hooker->getCompany()]));
-
-        if ($hookResult) {
-            $hooker->addStatusMessage(sprintf(_('Hook %s was registered'), $hookurl), 'success');
-            $hookurl = '';
-        } else {
-            $hooker->addStatusMessage(sprintf(_('Hook %s not registered'), $hookurl), 'warning');
+        if (!$wizard->checkCsrfToken($_POST['csrf'] ?? null)) {
+            throw new \InvalidArgumentException(_('Invalid form token, please try again'));
         }
-    } catch (\Exception $exc) {
+
+        switch ($step) {
+            case Wizard::STEP_ENDPOINT:
+                $wizard->verifyEndpoint((string) ($_POST['url'] ?? ''));
+                header('Location: '.basename(__FILE__).'?step=2');
+
+                exit;
+            case Wizard::STEP_CREDENTIALS:
+                if (isset($_POST['back'])) {
+                    header('Location: '.basename(__FILE__).'?step=1');
+
+                    exit;
+                }
+
+                $wizard->verifyCredentials($_POST, ($_POST['method'] ?? 'password') === 'apikey');
+                header('Location: '.basename(__FILE__).'?step=3');
+
+                exit;
+            case Wizard::STEP_COMPANY:
+                if (isset($_POST['back'])) {
+                    header('Location: '.basename(__FILE__).'?step=2');
+
+                    exit;
+                }
+
+                $registered = $wizard->install((string) ($_POST['company'] ?? ''), $hookurl, $envFile);
+                $oPage->addStatusMessage(sprintf(_('Hook %s was registered'), $registered), 'success');
+                $wizard->reset();
+                $done = true;
+
+                break;
+        }
+    } catch (\InvalidArgumentException $exc) {
         $oPage->addStatusMessage($exc->getMessage(), 'warning');
+    } catch (\Exception $exc) {
+        $oPage->addStatusMessage($exc->getMessage(), 'error');
     }
+}
+
+// Step indicator
+$nav = new \Ease\Html\UlTag(null, ['class' => 'nav nav-pills nav-fill mb-4']);
+
+foreach ($stepTitles as $no => $title) {
+    $class = 'nav-link'.($no === $step ? ' active' : '').(!$done && $no > $wizard->maxAllowedStep() ? ' disabled' : '');
+    $nav->addItem(new \Ease\Html\LiTag(new \Ease\Html\ATag($no <= $wizard->maxAllowedStep() && !$done ? basename(__FILE__).'?step='.$no : '#', $no.'. '.$title, ['class' => $class]), ['class' => 'nav-item']));
+}
+
+$form = new \Ease\TWB5\Form(['method' => 'post', 'action' => basename(__FILE__).'?step='.$step]);
+$form->addItem(new \Ease\Html\InputHiddenTag('step', (string) $step));
+$form->addItem(new \Ease\Html\InputHiddenTag('csrf', $wizard->getCsrfToken()));
+
+if ($done) {
+    $form = new \Ease\Html\DivTag([
+        new \Ease\Html\H2Tag(_('Done')),
+        new \Ease\Html\PTag(sprintf(_('WebHook was registered and the configuration saved to %s'), basename($envFile))),
+        new \Ease\TWB5\LinkButton(basename(__FILE__).'?restart=1', _('Run again'), 'secondary'),
+    ]);
 } else {
-    $oPage->addStatusMessage(_('WebHook Acceptor URL').': '.$baseUrl);
+    switch ($step) {
+        case Wizard::STEP_ENDPOINT:
+            $form->addInput(new \Ease\Html\InputTextTag('url', $_POST['url'] ?? $wizard->get('url', \Ease\Shared::cfg('ABRAFLEXI_URL', ''))), _('RestAPI endpoint url'), 'https://abraflexi.example.com:5434', _('The URL you use to open AbraFlexi'));
+            $form->addItem(new \Ease\TWB5\SubmitButton(_('Verify endpoint and continue'), 'primary btn-lg btn-block'));
+
+            break;
+        case Wizard::STEP_CREDENTIALS:
+            $apikey = ($_POST['method'] ?? 'password') === 'apikey';
+            $form->addItem(new \Ease\Html\DivTag([
+                new \Ease\Html\LabelTag('method', _('Sign in using')),
+                new \Ease\Html\SelectTag('method', ['password' => _('Login and password'), 'apikey' => _('API key (authSessionId)')], $apikey ? 'apikey' : 'password', ['class' => 'form-select', 'id' => 'method', 'onchange' => "document.getElementById('pw').hidden=this.value!=='password';document.getElementById('ak').hidden=this.value!=='apikey';"]),
+            ], ['class' => 'mb-3']));
+
+            $pwBlock = new \Ease\Html\DivTag(null, ['id' => 'pw']);
+            $pwBlock->addItem(new \Ease\Html\DivTag([new \Ease\Html\LabelTag('user', _('REST API Username')), new \Ease\Html\InputTextTag('user', $_POST['user'] ?? $wizard->get('user', \Ease\Shared::cfg('ABRAFLEXI_LOGIN', '')), ['class' => 'form-control'])], ['class' => 'mb-3']));
+            $pwBlock->addItem(new \Ease\Html\DivTag([new \Ease\Html\LabelTag('password', _('Rest API Password')), new \Ease\Html\InputPasswordTag('password', '', ['class' => 'form-control'])], ['class' => 'mb-3']));
+            $akBlock = new \Ease\Html\DivTag(new \Ease\Html\DivTag([new \Ease\Html\LabelTag('authSessionId', _('API key')), new \Ease\Html\InputPasswordTag('authSessionId', '', ['class' => 'form-control'])], ['class' => 'mb-3']), ['id' => 'ak']);
+
+            if ($apikey) {
+                $pwBlock->setTagProperty('hidden', 'hidden');
+            } else {
+                $akBlock->setTagProperty('hidden', 'hidden');
+            }
+
+            $form->addItem([$pwBlock, $akBlock]);
+            $form->addItem(new \Ease\Html\ButtonTag(_('Back'), ['type' => 'submit', 'name' => 'back', 'value' => '1', 'class' => 'btn btn-outline-secondary me-2', 'formnovalidate' => 'formnovalidate']));
+            $form->addItem(new \Ease\Html\ButtonTag(_('Verify login and continue'), ['type' => 'submit', 'class' => 'btn btn-primary']));
+
+            break;
+        case Wizard::STEP_COMPANY:
+            try {
+                $companies = $wizard->listCompanies();
+            } catch (\Exception $exc) {
+                $companies = [];
+                $oPage->addStatusMessage($exc->getMessage(), 'error');
+            }
+
+            if (empty($companies)) {
+                $oPage->addStatusMessage(_('No company available for this user'), 'warning');
+            }
+
+            $form->addItem(new \Ease\Html\DivTag([
+                new \Ease\Html\LabelTag('company', _('Company')),
+                new \Ease\Html\SelectTag('company', $companies, (string) $wizard->get('company', \Ease\Shared::cfg('ABRAFLEXI_COMPANY', '')), ['class' => 'form-select', 'id' => 'company']),
+            ], ['class' => 'mb-3']));
+            $form->addItem(new \Ease\Html\ButtonTag(_('Back'), ['type' => 'submit', 'name' => 'back', 'value' => '1', 'class' => 'btn btn-outline-secondary me-2', 'formnovalidate' => 'formnovalidate']));
+            $form->addItem(new \Ease\Html\ButtonTag(_('Install WebHook'), ['type' => 'submit', 'class' => 'btn btn-success'.($companies ? '' : ' disabled')]));
+
+            break;
+    }
+}
+
+if (!$done && $step === Wizard::STEP_ENDPOINT && !$_POST) {
+    $oPage->addStatusMessage(_('WebHook Acceptor URL').': '.\dirname(\Ease\WebPage::phpSelf()));
 }
 
 if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
-    $_SERVER['REMOTE_HOST'] = $_SERVER['REMOTE_ADDR'];
+    $_SERVER['REMOTE_HOST'] = $_SERVER['REMOTE_ADDR'] ?? '';
 
-    switch ($_SERVER['SERVER_SOFTWARE']) {
+    switch ($_SERVER['SERVER_SOFTWARE'] ?? '') {
         case 'Apache':
             $oPage->addStatusMessage(_('Add "HostnameLookups On" to your Apache configuration'), 'warning');
 
@@ -80,17 +195,10 @@ if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
 }
 
 $setupRow = new \Ease\TWB5\Row();
-
-if ($success) {
-    $setupRow->addColumn(6, new \Ease\Html\H2Tag(_('Done')));
-} else {
-    $setupRow->addColumn(6, $loginForm);
-}
-
+$setupRow->addColumn(6, [$done ? null : $nav, $form]);
 $setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
 
 $oPage->addItem(new \Ease\TWB5\Container($setupRow));
-
 $oPage->addItem(new Ui\PageBottom());
 
 echo $oPage->draw();
