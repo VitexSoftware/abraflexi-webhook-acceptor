@@ -208,7 +208,7 @@ class Wizard
         }
 
         $opts = $this->connectionOptions() + ['company' => $companyCode];
-        $hooker = new \AbraFlexi\Hooks(null, $opts);
+        $hooker = new \AbraFlexi\Hooks(null, $this->explicitOptions($opts));
         $url = \Ease\Functions::addUrlParams($hookUrl, ['company' => $companyCode]);
 
         if (!$hooker->register($url)) {
@@ -266,11 +266,28 @@ class Wizard
     }
 
     /**
+     * Fill unused connection options with empty values.
+     *
+     * AbraFlexi client falls back to ABRAFLEXI_* environment (the current .env)
+     * for every option that is missing. Without this a configured ABRAFLEXI_COMPANY
+     * turns the /c.json company list into a single company and ABRAFLEXI_LOGIN/PASSWORD
+     * would silently authenticate an API key check.
+     *
+     * @param array<string, string> $opts
+     *
+     * @return array<string, string>
+     */
+    private function explicitOptions(array $opts): array
+    {
+        return $opts + ['company' => '', 'user' => '', 'password' => '', 'authSessionId' => ''];
+    }
+
+    /**
      * @param array<string, string> $opts
      */
     private function companyClient(array $opts): \AbraFlexi\Company
     {
-        return new \AbraFlexi\Company(null, $opts + ['throwException' => false, 'autoload' => false, 'timeout' => 10]);
+        return new \AbraFlexi\Company(null, $this->explicitOptions($opts) + ['throwException' => false, 'autoload' => false, 'timeout' => 10]);
     }
 
     private function quote(string $value): string
