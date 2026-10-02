@@ -47,6 +47,10 @@ distributions.each { distro ->
         node {
             ansiColor('xterm') {
                 stage('Checkout ' + distroName) {
+                    // The workspace may be reused from another branch/build; leftovers
+                    // (read-only .git pack files, root-owned build output) make unstash fail
+                    sh 'chmod -R u+w . 2>/dev/null || true'
+                    deleteDir()
                     unstash 'src'
                     def imageName = vendor + '/' + distro
                     buildImage = docker.image(imageName)
@@ -124,6 +128,9 @@ distributions.each { distro ->
                               done < debian/files
                             fi
                         '''
+                        // debuild runs as root: hand the tree back to jenkins so the
+                        // next build/branch reusing this workspace can clean it
+                        sh 'sudo chown -R jenkins:jenkins "$WORKSPACE" || true'
                     }
                 }
             }
