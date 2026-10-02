@@ -30,7 +30,7 @@ use AbraFlexi\Acceptor\Installer\Wizard;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$envFile = __DIR__.'/../.env';
+$envFile = '../.env'; // rewritten to /etc/abraflexi-webhook-acceptor/.env by debian/rules
 \Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], $envFile);
 
 $oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
