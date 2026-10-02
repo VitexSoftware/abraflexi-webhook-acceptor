@@ -1,4 +1,7 @@
 src/favicon.ico                           usr/share/abraflexi-webhook-acceptor
+src/css/installer.css				usr/share/abraflexi-webhook-acceptor/css
+src/js/installer.js				usr/share/abraflexi-webhook-acceptor/js
+src/img/vstux.png				usr/share/abraflexi-webhook-acceptor/img
 db/migrations/*				  usr/lib/abraflexi-webhook-acceptor/db/migrations
 db/seeds/*				  usr/lib/abraflexi-webhook-acceptor/db/seeds
 phinx-adapter.php			  usr/lib/abraflexi-webhook-acceptor

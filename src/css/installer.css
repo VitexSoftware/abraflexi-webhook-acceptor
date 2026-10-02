@@ -1,0 +1,192 @@
+/*
+    AbraFlexi WebHook Acceptor installer – Vitex Software "Západ slunce" (sunset) look,
+    taken from https://vitexsoftware.cz (v.s.cz css/vitex.css, trimmed to what the installer uses).
+    Dark evening sky is the default, light "dawn" via <html data-theme="light">.
+*/
+
+:root {
+    --p1: #ff6f9f; --p2: #5ee7ff; --p3: #ff9d57; --p4: #ffd166; --p5: #b69cff;
+    --bg: #1d1440; --bg-2: #2a1a55;
+    --glass: rgba(255, 255, 255, .06); --glass-2: rgba(255, 255, 255, .1);
+    --border: rgba(255, 160, 200, .22); --border-strong: rgba(255, 160, 200, .44);
+    --text: #fff4f8; --dim: #cdbbe0;
+    --accent: var(--p1);
+    --btn-ink: #fff;
+    --shadow: 0 20px 60px rgba(20, 5, 40, .45);
+    --radius: 18px;
+    --header-h: 76px;
+    --font: "Sora", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+    --p1: #e2447c; --p2: #0a9fc2; --p3: #e8702a; --p4: #c98f00; --p5: #7a5ce6;
+    --bg: #fff6f1; --bg-2: #fdeae6;
+    --glass: rgba(255, 255, 255, .66); --glass-2: rgba(255, 255, 255, .92);
+    --border: rgba(160, 60, 110, .15); --border-strong: rgba(160, 60, 110, .32);
+    --text: #2a1640; --dim: #76618a;
+    --shadow: 0 18px 50px rgba(120, 40, 90, .12);
+    color-scheme: light;
+}
+
+:root,
+:root[data-bs-theme="dark"],
+:root[data-bs-theme="light"] {
+    --bs-body-font-family: var(--font);
+    --bs-body-bg: var(--bg);
+    --bs-body-color: var(--text);
+    --bs-emphasis-color: var(--text);
+    --bs-secondary-color: var(--dim);
+    --bs-border-color: var(--border);
+    --bs-link-color: var(--accent);
+    --bs-link-hover-color: var(--p2);
+    --bs-primary: var(--accent);
+    --bs-heading-color: var(--text);
+    --bs-border-radius: 12px;
+    --bs-border-radius-lg: var(--radius);
+}
+
+/* ---------- base ---------- */
+html, body { overflow-x: clip; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font: 300 1rem/1.65 var(--font);
+    padding-top: var(--header-h);
+    transition: background-color .5s, color .5s;
+}
+h1, h2, h3, h4, h5, h6 { font-family: var(--font); font-weight: 600; letter-spacing: -.02em; line-height: 1.15; }
+b, strong { font-weight: 600; }
+a { text-underline-offset: 3px; }
+code { font-size: .85em; font-weight: 500; color: var(--p2); }
+::selection { background: color-mix(in srgb, var(--p3) 40%, transparent); }
+hr { border-color: var(--border); opacity: 1; }
+.dim { color: var(--dim); }
+.eyebrow { font-size: .78rem; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; color: var(--dim); }
+
+/* ---------- buttons ---------- */
+.btn { border-radius: 999px; font-weight: 500; transition: transform .2s, box-shadow .3s, background .3s, color .3s, border-color .3s; }
+.btn:hover { transform: translateY(-1px); }
+.btn-primary, .btn-success {
+    --bs-btn-color: var(--btn-ink); --bs-btn-hover-color: var(--btn-ink); --bs-btn-active-color: var(--btn-ink);
+    background: linear-gradient(100deg, var(--p1), var(--p3));
+    border: 0;
+    color: var(--btn-ink);
+}
+.btn-primary:hover, .btn-success:hover { color: var(--btn-ink); box-shadow: 0 10px 34px -8px color-mix(in srgb, var(--p3) 70%, transparent); }
+.btn-outline-secondary { --bs-btn-color: var(--dim); --bs-btn-border-color: var(--border-strong); --bs-btn-hover-color: var(--text); --bs-btn-hover-bg: var(--glass-2); --bs-btn-hover-border-color: var(--border-strong); --bs-btn-active-bg: var(--glass-2); --bs-btn-active-color: var(--text); }
+.icon-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--glass); color: var(--text);
+    display: inline-grid; place-items: center; cursor: pointer;
+    transition: border-color .3s, color .3s;
+}
+.icon-btn:hover { border-color: var(--p2); color: var(--p2); }
+
+/* ---------- header ---------- */
+.site-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1030;
+    min-height: var(--header-h);
+    display: flex; align-items: center;
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--border);
+}
+.site-header .bar { width: 100%; max-width: 1320px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 12px; }
+.site-header .brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+.site-header .brand img { border-radius: 10px; }
+.brand-name { font-weight: 400; font-size: 1.05rem; letter-spacing: .22em; text-transform: uppercase; }
+.brand-name b {
+    font-weight: 600;
+    background: linear-gradient(90deg, var(--p2), var(--p3));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.site-header .header-controls { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+/* ---------- hero ---------- */
+.page-hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    padding: 64px 24px 46px;
+    background:
+        radial-gradient(ellipse 55% 90% at 88% 0%, color-mix(in srgb, var(--p3) 24%, transparent), transparent 70%),
+        radial-gradient(ellipse 45% 80% at 62% 120%, color-mix(in srgb, var(--p1) 22%, transparent), transparent 70%),
+        radial-gradient(ellipse 35% 70% at 8% 0%, color-mix(in srgb, var(--p5) 16%, transparent), transparent 70%),
+        var(--bg-2);
+    border-bottom: 1px solid var(--border);
+}
+.page-hero::before {
+    content: ""; position: absolute; z-index: -1; right: -6%; top: 50%; width: 520px; height: 180px;
+    border: 1px dashed color-mix(in srgb, var(--text) 18%, transparent); border-radius: 50%;
+    transform: translateY(-50%) rotate(-14deg);
+}
+.page-hero::after {
+    content: ""; position: absolute; right: calc(-6% + 250px); top: calc(50% - 96px); width: 12px; height: 12px;
+    border-radius: 50%; background: var(--p4); box-shadow: 0 0 18px var(--p4);
+    animation: heroPlanet 12s linear infinite; transform-origin: 6px 96px;
+}
+@keyframes heroPlanet { to { transform: rotate(360deg); } }
+.page-hero-inner { max-width: 1320px; margin: 0 auto; }
+.page-hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); letter-spacing: -.03em; margin: 10px 0 12px; }
+.page-hero .lead { font-size: 1.1rem; color: var(--dim); font-weight: 300; margin: 0; max-width: 760px; }
+
+/* ---------- content ---------- */
+.page-content { max-width: 1320px; margin: 0 auto; padding: 40px 24px 60px; }
+.card {
+    background: var(--glass); border-color: var(--border); color: var(--text);
+    border-radius: var(--radius); backdrop-filter: blur(6px); box-shadow: var(--shadow);
+}
+.card-body { padding: 30px; }
+.form-label, label { font-size: .86rem; font-weight: 500; color: var(--dim); margin-bottom: 6px; }
+.form-control, .form-select {
+    background-color: var(--glass); border-color: var(--border); color: var(--text); border-radius: 12px;
+    padding: .6rem .9rem;
+}
+.form-control:focus, .form-select:focus {
+    background-color: var(--glass-2); border-color: var(--p1); color: var(--text);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--p1) 30%, transparent);
+}
+.form-select option { background: var(--bg-2); color: var(--text); }
+.form-text { color: var(--dim); }
+
+/* step indicator */
+.installer-steps { gap: 8px; }
+.installer-steps .nav-link {
+    border-radius: 999px; border: 1px solid var(--border); background: var(--glass);
+    color: var(--dim); font-size: .9rem; font-weight: 500; padding: 8px 14px;
+    transition: border-color .3s, color .3s, background .3s;
+}
+.installer-steps .nav-link:hover:not(.disabled):not(.active) { border-color: var(--p2); color: var(--p2); }
+.installer-steps .nav-link.active { background: linear-gradient(100deg, var(--p1), var(--p3)); border-color: transparent; color: var(--btn-ink); }
+.installer-steps .nav-link.disabled { color: var(--dim); opacity: .5; }
+
+/* Ease status messages (the logger writes inline colours, recolour them to the palette) */
+.installer-side > div { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.installer-side > div > div {
+    padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border);
+    border-left: 3px solid var(--p2); background: var(--glass);
+    color: var(--text) !important; font-size: .92rem; overflow-wrap: anywhere;
+}
+.installer-side > div > div[style*="AB250E"] { border-left-color: var(--p3); }
+.installer-side > div > div[style*="2C5F23"] { border-left-color: #4cd7a0; }
+.installer-side > div > div[style*="red"] { border-left-color: var(--p1); }
+.alert { border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: var(--text); }
+.installer-side { text-align: center; }
+.installer-side img { max-width: 260px; width: 100%; height: auto; margin: 0 auto 24px; display: block; }
+
+/* ---------- footer ---------- */
+.site-footer {
+    border-top: 1px solid var(--border); padding: 28px 24px; font-size: .9rem; color: var(--dim);
+    max-width: 1320px; margin: 0 auto; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.site-footer a { color: var(--text); text-decoration: none; }
+.site-footer a:hover { color: var(--p2); }
+
+@media (max-width: 600px) {
+    .brand-name { font-size: .92rem; letter-spacing: .16em; }
+    .page-hero { padding-top: 44px; padding-bottom: 34px; }
+    .page-hero::before, .page-hero::after { display: none; }
+    .card-body { padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}

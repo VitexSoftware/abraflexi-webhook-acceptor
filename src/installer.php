@@ -33,7 +33,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 $envFile = '../.env'; // rewritten to /etc/abraflexi-webhook-acceptor/.env by debian/rules
 \Ease\Shared::init(['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'], $envFile);
 
-$oPage = new \Ease\TWB5\WebPage(_('WebHook acceptor installer'));
+$oPage = new Ui\InstallerPage(_('Installation wizard'), _('Connect the WebHook acceptor to your AbraFlexi in three steps.'));
 $wizard = new Wizard();
 
 $hookurl = str_replace(basename(__FILE__), 'webhook.php', \Ease\Document::phpSelf());
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Step indicator
-$nav = new \Ease\Html\UlTag(null, ['class' => 'nav nav-pills nav-fill mb-4']);
+$nav = new \Ease\Html\UlTag(null, ['class' => 'nav nav-pills nav-fill mb-4 installer-steps']);
 
 foreach ($stepTitles as $no => $title) {
     $class = 'nav-link'.($no === $step ? ' active' : '').(!$done && $no > $wizard->maxAllowedStep() ? ' disabled' : '');
@@ -122,8 +122,12 @@ if ($done) {
 } else {
     switch ($step) {
         case Wizard::STEP_ENDPOINT:
-            $form->addInput(new \Ease\Html\InputTextTag('url', $_POST['url'] ?? $wizard->get('url', \Ease\Shared::cfg('ABRAFLEXI_URL', ''))), _('RestAPI endpoint url'), 'https://abraflexi.example.com:5434', _('The URL you use to open AbraFlexi'));
-            $form->addItem(new \Ease\TWB5\SubmitButton(_('Verify endpoint and continue'), 'primary btn-lg btn-block'));
+            $form->addItem(new \Ease\Html\DivTag([
+                new \Ease\Html\LabelTag('url', _('RestAPI endpoint url')),
+                new \Ease\Html\InputTextTag('url', $_POST['url'] ?? $wizard->get('url', \Ease\Shared::cfg('ABRAFLEXI_URL', '')), ['class' => 'form-control', 'id' => 'url', 'placeholder' => 'https://abraflexi.example.com:5434']),
+                new \Ease\Html\SmallTag(_('The URL you use to open AbraFlexi'), ['class' => 'form-text']),
+            ], ['class' => 'mb-4']));
+            $form->addItem(new \Ease\Html\ButtonTag(_('Verify endpoint and continue'), ['type' => 'submit', 'class' => 'btn btn-primary']));
 
             break;
         case Wizard::STEP_CREDENTIALS:
@@ -195,11 +199,10 @@ if (\array_key_exists('REMOTE_HOST', $_SERVER) === false) {
     }
 }
 
-$setupRow = new \Ease\TWB5\Row();
-$setupRow->addColumn(6, [$done ? null : $nav, $form]);
-$setupRow->addColumn(6, [new Ui\AppLogo(), $oPage->getStatusMessagesBlock()]);
+$setupRow = new \Ease\TWB5\Row(null, 0, ['class' => 'g-4']);
+$setupRow->addColumn(7, new \Ease\Html\DivTag(new \Ease\Html\DivTag([$done ? null : $nav, $form], ['class' => 'card-body']), ['class' => 'card']));
+$setupRow->addColumn(5, new \Ease\Html\DivTag([new Ui\AppLogo(), $oPage->getStatusMessagesBlock()], ['class' => 'installer-side']));
 
-$oPage->addItem(new \Ease\TWB5\Container($setupRow));
-$oPage->addItem(new Ui\PageBottom());
+$oPage->content->addItem($setupRow);
 
 echo $oPage->draw();
