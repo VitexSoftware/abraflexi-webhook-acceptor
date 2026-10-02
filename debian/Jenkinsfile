@@ -47,13 +47,17 @@ distributions.each { distro ->
         node {
             ansiColor('xterm') {
                 stage('Checkout ' + distroName) {
-                    // The workspace may be reused from another branch/build; leftovers
-                    // (read-only .git pack files, root-owned build output) make unstash fail
+                    def imageName = vendor + '/' + distro
+                    buildImage = docker.image(imageName)
+                    // The workspace may be reused from another branch/build and contain
+                    // root-owned leftovers (debuild runs as root) or read-only .git packs
+                    // which make deleteDir()/unstash fail. Fix ownership as root first.
+                    buildImage.inside {
+                        sh 'sudo chown -R jenkins:jenkins "$WORKSPACE" || true'
+                    }
                     sh 'chmod -R u+w . 2>/dev/null || true'
                     deleteDir()
                     unstash 'src'
-                    def imageName = vendor + '/' + distro
-                    buildImage = docker.image(imageName)
                     sh 'git checkout debian/changelog'
                     def version = sh (
                         script: 'dpkg-parsechangelog --show-field Version',
