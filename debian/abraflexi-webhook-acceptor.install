@@ -14,5 +14,6 @@ src/*.php				usr/share/abraflexi-webhook-acceptor
 src/AbraFlexi/Acceptor/*.php		usr/lib/abraflexi-webhook-acceptor/Acceptor
 src/AbraFlexi/Acceptor/Saver/*.php	usr/lib/abraflexi-webhook-acceptor/Acceptor/Saver
 src/AbraFlexi/Acceptor/Ui/*.php         usr/lib/abraflexi-webhook-acceptor/Acceptor/Ui
+src/AbraFlexi/Acceptor/Installer/*.php	usr/lib/abraflexi-webhook-acceptor/Acceptor/Installer
 src/AbraFlexi/Acceptor/MetaState/*.php	usr/lib/abraflexi-webhook-acceptor/Acceptor/MetaState
 
