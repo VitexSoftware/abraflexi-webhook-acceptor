@@ -144,7 +144,8 @@ if ($done) {
                 $akBlock->setTagProperty('hidden', 'hidden');
             }
 
-            $form->addItem([$pwBlock, $akBlock]);
+            $form->addItem($pwBlock);
+            $form->addItem($akBlock);
             $form->addItem(new \Ease\Html\ButtonTag(_('Back'), ['type' => 'submit', 'name' => 'back', 'value' => '1', 'class' => 'btn btn-outline-secondary me-2', 'formnovalidate' => 'formnovalidate']));
             $form->addItem(new \Ease\Html\ButtonTag(_('Verify login and continue'), ['type' => 'submit', 'class' => 'btn btn-primary']));
 
