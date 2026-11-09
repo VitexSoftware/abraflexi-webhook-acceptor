@@ -212,7 +212,7 @@ class HookReciever extends \AbraFlexi\Changes
                 // Item-level rules (one work item per invoice item) need the items
                 if ('settled' === $metaState) {
                     try {
-                        $extra['items'] = \array_slice($resolver->fetchItems((int) $change['id'], $evidence), 0, 100);
+                        $extra['items'] = \array_slice($resolver->fetchItems((int) $change['id'], $evidence, $serverUrl), 0, 100);
                     } catch (\Throwable $exc) {
                         $this->addStatusMessage('Items of '.$evidence.' #'.$change['id'].' not loaded: '.$exc->getMessage(), 'warning');
                     }

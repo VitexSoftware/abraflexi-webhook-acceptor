@@ -72,7 +72,7 @@ class InvoiceMetaStateResolver
      */
     public function resolve(int $recordId, string $evidence, string $serverUrl, int $inversion): ?string
     {
-        $current = $this->fetchCurrentState($recordId, $evidence);
+        $current = $this->fetchCurrentState($recordId, $evidence, $serverUrl);
 
         if (null === $current) {
             return null;
@@ -101,10 +101,10 @@ class InvoiceMetaStateResolver
      *
      * @return list<array<string, mixed>>
      */
-    public function fetchItems(int $recordId, string $evidence): array
+    public function fetchItems(int $recordId, string $evidence, string $serverUrl = ''): array
     {
         $itemEvidence = $evidence.'-polozka';
-        $items = new \AbraFlexi\RO(null, ['evidence' => $itemEvidence]);
+        $items = new \AbraFlexi\RO(null, ['evidence' => $itemEvidence] + self::connectionOptions($serverUrl));
         $rows = $items->getColumnsFromAbraFlexi(['id', 'cenik', 'nazev', 'mnozMj'], ['doklFak' => $recordId]);
 
         if (!\is_array($rows)) {
@@ -181,6 +181,23 @@ class InvoiceMetaStateResolver
     }
 
     /**
+     * Connection options (server + company) of the tenant a change belongs to.
+     *
+     * One acceptor serves several AbraFlexi companies; the document must be read
+     * from the company that sent the change, not from the one in the .env file.
+     *
+     * @return array<string, string>
+     */
+    private static function connectionOptions(string $serverUrl): array
+    {
+        if (1 === preg_match('#^(https?://[^/]+)/c/([A-Za-z0-9_\\-]+)/?$#', $serverUrl, $m)) {
+            return ['url' => $m[1], 'company' => $m[2]];
+        }
+
+        return [];
+    }
+
+    /**
      * Fetch relevant invoice header fields from AbraFlexi.
      *
      * Returns the full field set needed for metastate detection plus firma
@@ -188,9 +205,9 @@ class InvoiceMetaStateResolver
      *
      * @return null|array<string, mixed>
      */
-    private function fetchCurrentState(int $recordId, string $evidence): ?array
+    private function fetchCurrentState(int $recordId, string $evidence, string $serverUrl = ''): ?array
     {
-        $invoicer = new \AbraFlexi\FakturaVydana(null, ['evidence' => $evidence]);
+        $invoicer = new \AbraFlexi\FakturaVydana(null, ['evidence' => $evidence] + self::connectionOptions($serverUrl));
         $rows = $invoicer->getColumnsFromAbraFlexi(
             ['kod', 'firma', 'zbyvaUhradit', 'datUhrady', 'datUp1', 'datUp2', 'datSmir', 'datPenale', 'storno', 'poznam'],
             ['id' => $recordId],
