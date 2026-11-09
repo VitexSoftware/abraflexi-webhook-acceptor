@@ -45,6 +45,10 @@ distributions.each { distro ->
         def buildVer = ''
 
         node {
+          // Jenkins and boys share /var/lib/jenkins/workspace over NFS: branches on
+          // different nodes would use the very same directory at once and clobber each
+          // other's unstash. Give every matrix branch its own workspace.
+          ws("${env.JOB_NAME}-${distroCode}") {
             ansiColor('xterm') {
                 stage('Checkout ' + distroName) {
                     def imageName = vendor + '/' + distro
@@ -140,6 +144,7 @@ distributions.each { distro ->
                     }
                 }
             }
+          }
         }
     }
 }
