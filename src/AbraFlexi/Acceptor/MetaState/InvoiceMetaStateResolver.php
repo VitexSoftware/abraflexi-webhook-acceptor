@@ -189,7 +189,7 @@ class InvoiceMetaStateResolver
      * credentials always come from the .env file - the request host is derived
      * from the caller's address and must never receive them. A company is
      * accepted only when it is listed in WHA_ALLOWED_COMPANIES (comma separated);
-     * without that list only the company from .env is served (single tenant).
+     * without that list the .env defaults are used (single tenant).
      *
      * @return array<string, string> empty = use the .env defaults
      */
@@ -199,11 +199,13 @@ class InvoiceMetaStateResolver
             return [];
         }
 
-        if ($m[1] === (string) \Ease\Shared::cfg('ABRAFLEXI_COMPANY', '')) {
-            return [];
-        }
-
+        // ABRAFLEXI_COMPANY cannot be trusted here: webhook.php overrides it from the
+        // request (?company=). Only the explicit allowlist decides.
         $allowed = array_filter(array_map('trim', explode(',', (string) \Ease\Shared::cfg('WHA_ALLOWED_COMPANIES', ''))));
+
+        if ([] === $allowed) {
+            return []; // single tenant: the .env defaults
+        }
 
         if (!\in_array($m[1], $allowed, true)) {
             throw new \RuntimeException('Company '.$m[1].' is not listed in WHA_ALLOWED_COMPANIES');
