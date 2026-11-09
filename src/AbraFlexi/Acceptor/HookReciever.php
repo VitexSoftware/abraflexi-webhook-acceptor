@@ -197,7 +197,18 @@ class HookReciever extends \AbraFlexi\Changes
             $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl, (int) $change['@in-version']);
 
             if (null !== $metaState) {
-                $synthetic[] = array_merge($change, ['@operation' => $metaState]);
+                $extra = ['@operation' => $metaState];
+
+                // Item-level rules (one work item per invoice item) need the items
+                if ('settled' === $metaState) {
+                    try {
+                        $extra['items'] = $resolver->fetchItems((int) $change['id'], $evidence);
+                    } catch (\Throwable $exc) {
+                        $this->addStatusMessage('Items of '.$evidence.' #'.$change['id'].' not loaded: '.$exc->getMessage(), 'warning');
+                    }
+                }
+
+                $synthetic[] = array_merge($change, $extra);
             }
         }
 

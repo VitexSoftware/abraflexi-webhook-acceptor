@@ -97,6 +97,34 @@ class InvoiceMetaStateResolver
     }
 
     /**
+     * Items of an invoice (id, cenik, nazev, mnozMj) for item-level event rules.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function fetchItems(int $recordId, string $evidence): array
+    {
+        $itemEvidence = $evidence.'-polozka';
+        $items = new \AbraFlexi\RO(null, ['evidence' => $itemEvidence]);
+        $rows = $items->getColumnsFromAbraFlexi(['id', 'cenik', 'nazev', 'mnozMj'], ['doklFak' => $recordId]);
+
+        if (!\is_array($rows)) {
+            return [];
+        }
+
+        return array_values(array_map(static function (array $row): array {
+            $cenik = $row['cenik'] ?? '';
+
+            if (\is_object($cenik) && method_exists($cenik, '__toString')) {
+                $cenik = (string) $cenik;
+            }
+
+            $row['cenik'] = $cenik;
+
+            return $row;
+        }, array_filter($rows, 'is_array')));
+    }
+
+    /**
      * @param array<string, mixed> $previous
      * @param array<string, mixed> $current
      */

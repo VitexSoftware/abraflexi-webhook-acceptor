@@ -172,6 +172,9 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
                 (string) $sqlCols['recordid'],
                 ['serverUrl' => $urihelper->url, 'company' => $this->company],
             );
+            $items = !empty($apiData['items']) && \is_array($apiData['items'])
+                ? json_encode($apiData['items'], \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES)
+                : null;
             $context = $this->buildContext((int) $sqlCols['inversion'], (int) $sqlCols['recordid'], $sqlCols['evidence'], $urihelper->url.'/c/'.$this->company);
 
             try {
@@ -179,6 +182,8 @@ class PdoSQL extends \Ease\SQL\Engine implements saver
                     ['source' => $source, 'target' => 'system'],
                     $sqlCols,
                     ['document_uri' => $documentUri, 'context' => $context],
+                    // only when present, so a schema without the items column keeps working
+                    null === $items ? [] : ['items' => $items],
                 ))->execute();
             } catch (\Exception $exc) {
                 $this->addStatusMessage($exc->getMessage().' Unknown server ?: '.$urihelper->url, 'warning');
