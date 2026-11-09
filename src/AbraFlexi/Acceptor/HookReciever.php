@@ -157,6 +157,16 @@ class HookReciever extends \AbraFlexi\Changes
     public function saveWebhookData(array $changes)
     {
         $results = [];
+
+        // `items` is trusted data that only the metastate resolver may attach;
+        // never accept it from the (external) webhook body.
+        $changes = array_map(static function ($change) {
+            if (\is_array($change)) {
+                unset($change['items']);
+            }
+
+            return $change;
+        }, $changes);
         $changes = array_merge($changes, $this->resolveMetaStateChanges($changes));
 
         foreach ($this->saver as $saver) {
@@ -202,7 +212,7 @@ class HookReciever extends \AbraFlexi\Changes
                 // Item-level rules (one work item per invoice item) need the items
                 if ('settled' === $metaState) {
                     try {
-                        $extra['items'] = $resolver->fetchItems((int) $change['id'], $evidence);
+                        $extra['items'] = \array_slice($resolver->fetchItems((int) $change['id'], $evidence), 0, 100);
                     } catch (\Throwable $exc) {
                         $this->addStatusMessage('Items of '.$evidence.' #'.$change['id'].' not loaded: '.$exc->getMessage(), 'warning');
                     }
