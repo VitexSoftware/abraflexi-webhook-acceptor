@@ -181,20 +181,35 @@ class InvoiceMetaStateResolver
     }
 
     /**
-     * Connection options (server + company) of the tenant a change belongs to.
+     * Connection options of the tenant a change belongs to.
      *
-     * One acceptor serves several AbraFlexi companies; the document must be read
-     * from the company that sent the change, not from the one in the .env file.
+     * One acceptor serves several AbraFlexi companies, so the document has to be
+     * read from the company that sent the change. Only the company is taken from
+     * the request (it is part of the change source); the server and the
+     * credentials always come from the .env file - the request host is derived
+     * from the caller's address and must never receive them. A company is
+     * accepted only when it is listed in WHA_ALLOWED_COMPANIES (comma separated);
+     * without that list only the company from .env is served (single tenant).
      *
-     * @return array<string, string>
+     * @return array<string, string> empty = use the .env defaults
      */
     private static function connectionOptions(string $serverUrl): array
     {
-        if (1 === preg_match('#^(https?://[^/]+)/c/([A-Za-z0-9_\\-]+)/?$#', $serverUrl, $m)) {
-            return ['url' => $m[1], 'company' => $m[2]];
+        if (1 !== preg_match('#/c/([A-Za-z0-9_\\-]{1,64})/?$#', $serverUrl, $m)) {
+            return [];
         }
 
-        return [];
+        if ($m[1] === (string) \Ease\Shared::cfg('ABRAFLEXI_COMPANY', '')) {
+            return [];
+        }
+
+        $allowed = array_filter(array_map('trim', explode(',', (string) \Ease\Shared::cfg('WHA_ALLOWED_COMPANIES', ''))));
+
+        if (!\in_array($m[1], $allowed, true)) {
+            throw new \RuntimeException('Company '.$m[1].' is not listed in WHA_ALLOWED_COMPANIES');
+        }
+
+        return ['company' => $m[1]];
     }
 
     /**

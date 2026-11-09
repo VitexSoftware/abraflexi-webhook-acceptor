@@ -204,7 +204,13 @@ class HookReciever extends \AbraFlexi\Changes
                 continue;
             }
 
-            $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl, (int) $change['@in-version']);
+            try {
+                $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl, (int) $change['@in-version']);
+            } catch (\Throwable $exc) {
+                $this->addStatusMessage('Metastate of '.$evidence.' #'.$change['id'].' not resolved: '.$exc->getMessage(), 'warning');
+
+                continue;
+            }
 
             if (null !== $metaState) {
                 $extra = ['@operation' => $metaState];
