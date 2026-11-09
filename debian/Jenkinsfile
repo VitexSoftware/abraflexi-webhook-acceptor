@@ -56,7 +56,9 @@ distributions.each { distro ->
                         sh 'sudo chown -R jenkins:jenkins "$WORKSPACE" || true'
                     }
                     sh 'chmod -R u+w . 2>/dev/null || true'
-                    deleteDir()
+                    // Empty in place (deleteDir() races with delayed unlink on NFS workspaces);
+                    // the shared checkout workspace has read-only .git packs unstash cannot overwrite.
+                    sh 'find . -mindepth 1 -delete 2>/dev/null || true'
                     unstash 'src'
                     sh 'git checkout debian/changelog'
                     def version = sh (
