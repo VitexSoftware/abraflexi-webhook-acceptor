@@ -46,6 +46,30 @@ final class InvoiceMetastate extends AbstractMigration
                 .'ADD id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST, '
                 .'ADD INDEX idx_changes_cache_inversion (inversion)',
             );
+        } elseif ('sqlite' === $adapter) {
+            // SQLite cannot add an AUTOINCREMENT column to an existing table
+            // ("AUTOINCREMENT is only allowed on an INTEGER PRIMARY KEY"), so the
+            // table is rebuilt with the surrogate key and the rows are copied over.
+            $this->execute(
+                'CREATE TABLE changes_cache_new ('
+                .'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+                .'inversion INTEGER NOT NULL, '
+                .'recordid INTEGER NOT NULL, '
+                .'evidence VARCHAR(60) NOT NULL, '
+                .'operation VARCHAR(30) NULL, '
+                .'externalids VARCHAR(300) NOT NULL, '
+                .'created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, '
+                .'source INTEGER NOT NULL, '
+                .'target VARCHAR(30) NOT NULL)',
+            );
+            $this->execute(
+                'INSERT INTO changes_cache_new (inversion, recordid, evidence, operation, externalids, created, source, target) '
+                .'SELECT inversion, recordid, evidence, operation, externalids, created, source, target '
+                .'FROM changes_cache ORDER BY inversion',
+            );
+            $this->execute('DROP TABLE changes_cache');
+            $this->execute('ALTER TABLE changes_cache_new RENAME TO changes_cache');
+            $this->execute('CREATE INDEX changes_cache_inversion ON changes_cache (inversion)');
         } else {
             $table = $this->table('changes_cache');
             $table

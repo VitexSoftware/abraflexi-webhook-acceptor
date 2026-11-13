@@ -5,6 +5,8 @@ abraflexi-webhook-acceptor (1.4.1) trixie; urgency=medium
     dbconfig-common (generating /etc/abraflexi-webhook-acceptor/.env) and
     `phinx migrate`; composer-debian stays removed.
     Without it a fresh install had no tables and answered webhooks with HTTP 500.
+  * Fix migration 20260705100000 on SQLite: rebuild changes_cache with the new
+    AUTOINCREMENT id instead of ALTER TABLE ADD COLUMN (not allowed in SQLite)
 
  -- Vitex <info@vitexsoftware.cz>  Fri, 13 Nov 2026 21:30:00 +0100
 
