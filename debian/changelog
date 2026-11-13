@@ -1,3 +1,13 @@
+abraflexi-webhook-acceptor (1.4.1) trixie; urgency=medium
+
+  [ Vitex ]
+  * Restore database setup lost in d906cd5: the sqlite/mysql/pgsql backend
+    packages again run dbconfig-common (generating /etc/abraflexi-webhook-acceptor/.env)
+    and `phinx migrate` in postinst; the main package keeps the web server setup.
+    Without it a fresh install had no tables and answered webhooks with HTTP 500.
+
+ -- Vitex <info@vitexsoftware.cz>  Fri, 13 Nov 2026 21:30:00 +0100
+
 abraflexi-webhook-acceptor (1.4.0) trixie; urgency=medium
 
   [ Vitex ]
