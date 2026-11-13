@@ -4,6 +4,30 @@ set -e
 
 . /usr/share/debconf/confmodule
 
+if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
+    . /usr/share/dbconfig-common/dpkg/postinst
+    dbc_generate_include_args="-U -o template_infile=/usr/lib/abraflexi-webhook-acceptor/.env.template"
+    dbc_generate_include=template:/etc/abraflexi-webhook-acceptor/.env
+    dbc_generate_include_owner="root:www-data"
+    dbc_generate_include_perms="664"
+    dbc_dbfile_owner="www-data:www-data"
+    dbc_dbfile_perms="0664"
+
+    dbc_go abraflexi-webhook-acceptor "$@"
+
+    phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
+
+	if [ -f /var/lib/abraflexi-webhook-acceptor/webhookacceptor ] ; then
+            chown root:www-data /var/lib/abraflexi-webhook-acceptor/
+            chmod ug+rw /var/lib/abraflexi-webhook-acceptor/
+            chown root:www-data /var/lib/abraflexi-webhook-acceptor/webhookacceptor
+            chmod ug+rw /var/lib/abraflexi-webhook-acceptor/webhookacceptor
+        fi
+
+fi
+
+
+
 pathfind() {
     OLDIFS="$IFS"
     IFS=:
