@@ -17,6 +17,31 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
 
     phinx migrate -c /usr/lib/abraflexi-webhook-acceptor/phinx-adapter.php
 
+    # dbconfig-common has just regenerated .env from the template: put the AbraFlexi
+    # connection kept in debconf back, so an upgrade never loses it
+    wha_env=/etc/abraflexi-webhook-acceptor/.env
+    wha_tmp=$(mktemp)
+    if [ -f "$wha_env" ]; then
+        grep -v -E '^(ABRAFLEXI_URL|ABRAFLEXI_COMPANY|ABRAFLEXI_LOGIN|ABRAFLEXI_PASSWORD|WHA_ALLOWED_COMPANIES)=' "$wha_env" > "$wha_tmp" || true
+        wha_secret=no
+        for pair in abraflexi-url:ABRAFLEXI_URL abraflexi-company:ABRAFLEXI_COMPANY \
+                    abraflexi-login:ABRAFLEXI_LOGIN abraflexi-password:ABRAFLEXI_PASSWORD \
+                    allowed-companies:WHA_ALLOWED_COMPANIES; do
+            db_get "abraflexi-webhook-acceptor/${pair%%:*}" || RET=""
+            if [ -n "$RET" ]; then
+                printf '%s=%s\n' "${pair##*:}" "$RET" >> "$wha_tmp"
+                [ "${pair##*:}" = ABRAFLEXI_PASSWORD ] && wha_secret=yes
+            fi
+        done
+        cat "$wha_tmp" > "$wha_env"
+        # a stored password must not be world readable
+        if [ "$wha_secret" = yes ]; then
+            chown root:www-data "$wha_env"
+            chmod 660 "$wha_env"
+        fi
+    fi
+    rm -f "$wha_tmp"
+
 	if [ -f /var/lib/abraflexi-webhook-acceptor/webhookacceptor ] ; then
             chown root:www-data /var/lib/abraflexi-webhook-acceptor/
             chmod ug+rw /var/lib/abraflexi-webhook-acceptor/

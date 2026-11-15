@@ -1,3 +1,14 @@
+abraflexi-webhook-acceptor (1.4.2) trixie; urgency=medium
+
+  * The connection to AbraFlexi (ABRAFLEXI_URL/COMPANY/LOGIN/PASSWORD and
+    WHA_ALLOWED_COMPANIES) is kept in the debconf database and written back to
+    /etc/abraflexi-webhook-acceptor/.env by postinst after dbconfig-common
+    regenerates it, so a package upgrade no longer loses it. Without it the
+    meta-state resolver had no server to read the changed invoice from
+    ("No host part in the URL") and no "settled" event was raised.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Sun, 15 Nov 2026 16:38:13 +0100
+
 abraflexi-webhook-acceptor (1.4.1) trixie; urgency=medium
 
   [ Vitex ]

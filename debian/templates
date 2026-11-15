@@ -1,0 +1,35 @@
+Template: abraflexi-webhook-acceptor/abraflexi-url
+Type: string
+Default:
+Description: AbraFlexi server URL used to read changed documents:
+ Address of the AbraFlexi server whose webhooks are accepted, e.g.
+ https://abraflexi.example.com:5434. The acceptor reads the changed invoices
+ from it to derive meta-states (settled, reminders, ...). Leave empty to
+ configure it by hand in /etc/abraflexi-webhook-acceptor/.env.
+
+Template: abraflexi-webhook-acceptor/abraflexi-company
+Type: string
+Default:
+Description: AbraFlexi company (default):
+ Company code in AbraFlexi used when the webhook does not name one.
+
+Template: abraflexi-webhook-acceptor/abraflexi-login
+Type: string
+Default:
+Description: AbraFlexi login:
+ User the acceptor reads documents as (read-only access is enough).
+
+Template: abraflexi-webhook-acceptor/abraflexi-password
+Type: password
+Default:
+Description: AbraFlexi password:
+ Password of the AbraFlexi user above. It is stored in the debconf database
+ (readable by root only) and written to /etc/abraflexi-webhook-acceptor/.env,
+ so it survives package upgrades.
+
+Template: abraflexi-webhook-acceptor/allowed-companies
+Type: string
+Default:
+Description: Companies the acceptor may read from (comma separated):
+ Webhooks naming any other company are not looked up in AbraFlexi.
+ Leave empty for a single-company installation.
