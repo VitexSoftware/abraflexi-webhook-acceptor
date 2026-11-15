@@ -12,6 +12,9 @@ abraflexi-webhook-acceptor (1.4.2) trixie; urgency=medium
     The link is followed to the invoice (links to anything but a payment, e.g.
     the deduction of an advance, are ignored) and an invoice seen for the first
     time by such a link that has nothing left to pay counts as settled.
+    The link must be in AbraFlexi's own change log at the version the webhook
+    names: the webhook body is not authenticated, so a forged change naming an
+    old link must not announce an old invoice as settled.
   * .env is now generated with mode 640 root:www-data instead of 664: it holds
     the database and AbraFlexi passwords and was readable by everyone.
 

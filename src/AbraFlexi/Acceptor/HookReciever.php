@@ -206,6 +206,13 @@ class HookReciever extends \AbraFlexi\Changes
             // A payment paired with an invoice logs the new link, not a change of the invoice
             if ('vazba' === $evidence && 'create' === $operation) {
                 try {
+                    // the webhook body is not authenticated: trust only a link AbraFlexi itself logged
+                    if (!$resolver->linkChangeExists((int) $change['id'], (int) $change['@in-version'], $serverUrl)) {
+                        $this->addStatusMessage('Link #'.$change['id'].' is not in the change log at version '.$change['@in-version'].': ignored', 'warning');
+
+                        continue;
+                    }
+
                     $paid = $resolver->invoicesPaidByLink((int) $change['id'], $serverUrl);
                 } catch (\Throwable $exc) {
                     $this->addStatusMessage('Link #'.$change['id'].' not resolved: '.$exc->getMessage(), 'warning');

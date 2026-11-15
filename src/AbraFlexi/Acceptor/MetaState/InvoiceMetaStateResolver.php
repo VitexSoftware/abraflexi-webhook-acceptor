@@ -184,6 +184,48 @@ class InvoiceMetaStateResolver
     }
 
     /**
+     * Does AbraFlexi's own change log hold this creation of a link at this version?
+     *
+     * The body of a webhook is not authenticated: anybody who can reach the endpoint can send a
+     * change naming an old link, and an invoice seen for the first time through it would be
+     * announced as settled now. The change log of AbraFlexi cannot be forged that way.
+     */
+    public function linkChangeExists(int $linkId, int $inversion, string $serverUrl = ''): bool
+    {
+        $options = self::connectionOptions($serverUrl);
+        $company = $options['company'] ?? (string) \Ease\Shared::cfg('ABRAFLEXI_COMPANY', '');
+        $base = rtrim((string) \Ease\Shared::cfg('ABRAFLEXI_URL', ''), '/');
+
+        if ('' === $base || '' === $company) {
+            return false;
+        }
+
+        $curl = curl_init($base.'/c/'.rawurlencode($company).'/changes.json?start='.$inversion.'&limit=20');
+        curl_setopt_array($curl, [
+            \CURLOPT_RETURNTRANSFER => true,
+            \CURLOPT_TIMEOUT => 30,
+            \CURLOPT_USERPWD => \Ease\Shared::cfg('ABRAFLEXI_LOGIN', '').':'.\Ease\Shared::cfg('ABRAFLEXI_PASSWORD', ''),
+            \CURLOPT_HTTPHEADER => ['Accept: application/json'],
+        ]);
+        $body = curl_exec($curl);
+        $code = (int) curl_getinfo($curl, \CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        $decoded = 200 === $code && \is_string($body) ? json_decode($body, true) : null;
+        $rows = \is_array($decoded) ? ($decoded['winstrom']['changes'] ?? []) : [];
+
+        foreach ($rows as $row) {
+            if (\is_array($row) && (int) ($row['@in-version'] ?? 0) === $inversion
+                && 'vazba' === ($row['@evidence'] ?? '') && 'create' === ($row['@operation'] ?? '')
+                && (int) ($row['id'] ?? 0) === $linkId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Invoices a payment link (evidence "vazba") ties to a bank or cash movement.
      *
      * Pairing a payment with an invoice through the bank record changes the invoice in AbraFlexi
