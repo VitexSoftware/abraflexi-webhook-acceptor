@@ -70,7 +70,7 @@ class InvoiceMetaStateResolver
      *
      * @param int $inversion AbraFlexi change version from the webhook (@in-version)
      */
-    public function resolve(int $recordId, string $evidence, string $serverUrl, int $inversion): ?string
+    public function resolve(int $recordId, string $evidence, string $serverUrl, int $inversion, bool $paymentLinked = false): ?string
     {
         $current = $this->fetchCurrentState($recordId, $evidence, $serverUrl);
 
@@ -90,7 +90,10 @@ class InvoiceMetaStateResolver
         };
 
         if (null === $previous) {
-            return null;
+            // First sighting. Only a payment that was just linked to the invoice (a bank or cash
+            // movement paired with it) proves it was settled now: an invoice seen for the first
+            // time by any other change says nothing about when it was paid.
+            return $paymentLinked && (float) ($current['zbyvaUhradit'] ?? 1) === 0.0 ? 'settled' : null;
         }
 
         return $this->detectMetaState($previous, $current);
@@ -178,6 +181,58 @@ class InvoiceMetaStateResolver
         }
 
         return false;
+    }
+
+    /**
+     * Invoices a payment link (evidence "vazba") ties to a bank or cash movement.
+     *
+     * Pairing a payment with an invoice through the bank record changes the invoice in AbraFlexi
+     * (the remaining amount drops) without logging an "update" of the invoice, only the new link.
+     * Links to anything but a payment (the deduction of an advance, ...) give nothing.
+     *
+     * @return list<int> ids of the invoices (faktura-vydana) paid by the link
+     */
+    public function invoicesPaidByLink(int $linkId, string $serverUrl = ''): array
+    {
+        $links = new \AbraFlexi\RO(null, ['evidence' => 'vazba'] + self::connectionOptions($serverUrl));
+        $rows = $links->getColumnsFromAbraFlexi(['a', 'b'], ['id' => $linkId]);
+
+        return self::invoicesOfPaymentLink(\is_array($rows) && isset($rows[0]) && \is_array($rows[0]) ? $rows[0] : []);
+    }
+
+    /**
+     * @param array<string, mixed> $link the ends of a link: "a" and "b" (a relation or its "@ref")
+     *
+     * @return list<int>
+     */
+    public static function invoicesOfPaymentLink(array $link): array
+    {
+        $ends = [];
+
+        foreach (['a', 'b'] as $end) {
+            $ref = $link[$end.'@ref'] ?? (\is_object($link[$end] ?? null) ? ($link[$end]->ref ?? '') : '');
+            $ends[] = 1 === preg_match('#/([a-z0-9-]+)/(\d+)(?:\.json)?$#', (string) $ref, $m) ? [$m[1], (int) $m[2]] : [null, 0];
+        }
+
+        $payment = false;
+
+        foreach ($ends as [$evidence]) {
+            $payment = $payment || \in_array($evidence, ['banka', 'pokladni-pohyb'], true);
+        }
+
+        if (!$payment) {
+            return [];
+        }
+
+        $invoices = [];
+
+        foreach ($ends as [$evidence, $id]) {
+            if ('faktura-vydana' === $evidence && $id > 0) {
+                $invoices[] = $id;
+            }
+        }
+
+        return $invoices;
     }
 
     /**

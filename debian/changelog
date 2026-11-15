@@ -6,6 +6,12 @@ abraflexi-webhook-acceptor (1.4.2) trixie; urgency=medium
     regenerates it, so a package upgrade no longer loses it. Without it the
     meta-state resolver had no server to read the changed invoice from
     ("No host part in the URL") and no "settled" event was raised.
+  * "settled" is now raised also when the payment is paired with the invoice
+    through a bank/cash record: AbraFlexi then logs only the new link ("vazba
+    create"), not a change of the invoice, so no settled event was ever made.
+    The link is followed to the invoice (links to anything but a payment, e.g.
+    the deduction of an advance, are ignored) and an invoice seen for the first
+    time by such a link that has nothing left to pay counts as settled.
   * .env is now generated with mode 640 root:www-data instead of 664: it holds
     the database and AbraFlexi passwords and was readable by everyone.
 

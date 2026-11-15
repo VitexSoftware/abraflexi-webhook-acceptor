@@ -196,40 +196,92 @@ class HookReciever extends \AbraFlexi\Changes
         $resolver = new \AbraFlexi\Acceptor\MetaState\InvoiceMetaStateResolver();
         $serverUrl = $this->url.'/c/'.$this->company;
 
+        $resolved = [];
+
         foreach ($changes as $change) {
             $evidence = $change['@evidence'] ?? '';
             $operation = $change['@operation'] ?? '';
+            $paymentLinked = false;
+
+            // A payment paired with an invoice logs the new link, not a change of the invoice
+            if ('vazba' === $evidence && 'create' === $operation) {
+                try {
+                    $paid = $resolver->invoicesPaidByLink((int) $change['id'], $serverUrl);
+                } catch (\Throwable $exc) {
+                    $this->addStatusMessage('Link #'.$change['id'].' not resolved: '.$exc->getMessage(), 'warning');
+
+                    continue;
+                }
+
+                foreach ($paid as $invoiceId) {
+                    if (isset($resolved[$invoiceId])) {
+                        continue;
+                    }
+
+                    $resolved[$invoiceId] = true;
+                    $synthetic = array_merge($synthetic, $this->resolveInvoiceChange(
+                        $resolver,
+                        ['@evidence' => 'faktura-vydana', '@operation' => 'update', 'id' => $invoiceId] + $change,
+                        $serverUrl,
+                        true,
+                    ));
+                }
+
+                continue;
+            }
 
             if (!$resolver->supports($evidence, $operation)) {
                 continue;
             }
 
-            try {
-                $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl, (int) $change['@in-version']);
-            } catch (\Throwable $exc) {
-                $this->addStatusMessage('Metastate of '.$evidence.' #'.$change['id'].' not resolved: '.$exc->getMessage(), 'warning');
-
-                continue;
+            if ('faktura-vydana' === $evidence) {
+                $resolved[(int) $change['id']] = true;
             }
 
-            if (null !== $metaState) {
-                $extra = ['@operation' => $metaState];
-
-                // Item-level rules (one work item per invoice item) need the items
-                if ('settled' === $metaState) {
-                    try {
-                        $extra['items'] = \array_slice($resolver->fetchItems((int) $change['id'], $evidence, $serverUrl), 0, 100);
-                    } catch (\Throwable $exc) {
-                        $this->addStatusMessage('Items of '.$evidence.' #'.$change['id'].' not loaded: '.$exc->getMessage(), 'warning');
-                    }
-                }
-
-                $synthetic[] = array_merge($change, $extra);
-            }
+            $synthetic = array_merge($synthetic, $this->resolveInvoiceChange($resolver, $change, $serverUrl));
         }
 
         return $synthetic;
     }
+
+    /**
+     * The synthetic change of the meta-state an invoice change brought, if any.
+     *
+     * @param array<string, mixed> $change        the change as an "update" of the invoice
+     * @param bool                 $paymentLinked the change comes from a payment linked to the invoice
+     *
+     * @return list<array<string, mixed>> none or one change
+     */
+    private function resolveInvoiceChange(\AbraFlexi\Acceptor\MetaState\InvoiceMetaStateResolver $resolver, array $change, string $serverUrl, bool $paymentLinked = false): array
+    {
+        $evidence = $change['@evidence'] ?? '';
+
+        try {
+            $metaState = $resolver->resolve((int) $change['id'], $evidence, $serverUrl, (int) $change['@in-version'], $paymentLinked);
+        } catch (\Throwable $exc) {
+            $this->addStatusMessage('Metastate of '.$evidence.' #'.$change['id'].' not resolved: '.$exc->getMessage(), 'warning');
+
+            return [];
+        }
+
+        if (null === $metaState) {
+            return [];
+        }
+
+        $extra = ['@operation' => $metaState];
+
+        // Item-level rules (one work item per invoice item) need the items
+        if ('settled' === $metaState) {
+            try {
+                $extra['items'] = \array_slice($resolver->fetchItems((int) $change['id'], $evidence, $serverUrl), 0, 100);
+            } catch (\Throwable $exc) {
+                $this->addStatusMessage('Items of '.$evidence.' #'.$change['id'].' not loaded: '.$exc->getMessage(), 'warning');
+            }
+        }
+
+        return [array_merge($change, $extra)];
+    }
+
 
     /**
      * Zpracuje změny.
