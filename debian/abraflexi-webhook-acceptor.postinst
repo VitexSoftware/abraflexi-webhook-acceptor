@@ -9,7 +9,7 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
     dbc_generate_include_args="-U -o template_infile=/usr/lib/abraflexi-webhook-acceptor/.env.template"
     dbc_generate_include=template:/etc/abraflexi-webhook-acceptor/.env
     dbc_generate_include_owner="root:www-data"
-    dbc_generate_include_perms="664"
+    dbc_generate_include_perms="640"
     dbc_dbfile_owner="www-data:www-data"
     dbc_dbfile_perms="0664"
 
@@ -23,22 +23,19 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst ]; then
     wha_tmp=$(mktemp)
     if [ -f "$wha_env" ]; then
         grep -v -E '^(ABRAFLEXI_URL|ABRAFLEXI_COMPANY|ABRAFLEXI_LOGIN|ABRAFLEXI_PASSWORD|WHA_ALLOWED_COMPANIES)=' "$wha_env" > "$wha_tmp" || true
-        wha_secret=no
         for pair in abraflexi-url:ABRAFLEXI_URL abraflexi-company:ABRAFLEXI_COMPANY \
                     abraflexi-login:ABRAFLEXI_LOGIN abraflexi-password:ABRAFLEXI_PASSWORD \
                     allowed-companies:WHA_ALLOWED_COMPANIES; do
             db_get "abraflexi-webhook-acceptor/${pair%%:*}" || RET=""
             if [ -n "$RET" ]; then
                 printf '%s=%s\n' "${pair##*:}" "$RET" >> "$wha_tmp"
-                [ "${pair##*:}" = ABRAFLEXI_PASSWORD ] && wha_secret=yes
             fi
         done
+        # never world readable: it holds the database and the AbraFlexi passwords.
+        # Restrict first, write after, so no moment exposes the new content.
+        chown root:www-data "$wha_env"
+        chmod 640 "$wha_env"
         cat "$wha_tmp" > "$wha_env"
-        # a stored password must not be world readable
-        if [ "$wha_secret" = yes ]; then
-            chown root:www-data "$wha_env"
-            chmod 660 "$wha_env"
-        fi
     fi
     rm -f "$wha_tmp"
 
